@@ -3,12 +3,14 @@ const { connectToDatabase } = require('./config/db');
 const userRoutes = require('./routes/userRoutes');
 const { errorHandler } = require('./middleware/errorMiddleware');
 require('dotenv').config(); // Load environment variables
+const cors = require('cors');
 
 const app = express();
 
 // Connect to the database
 connectToDatabase();
 
+app.use(cors())
 // Middleware
 app.use(express.json()); // Parse JSON request bodies
 
