@@ -1,14 +1,23 @@
-import { StyleSheet, Text, View } from 'react-native'
-import React from 'react'
+// Assuming you are using a stack navigator
+import { createStackNavigator } from '@react-navigation/stack';
+import MainService from '../../components/Services/MainService';
+import DigiGold from '../../components/Services/DigiGold ';
+// import GoldLoan from '../../components/Services/GoldLoan';
+import Insurance from '../../components/Services/Insurance '
 
-const Services = () => {
-  return (
-    <View>
-      <Text>Services</Text>
-    </View>
-  )
-}
+// import DigiGold from './screens/DigiGold';
+// import GoldLoan from './screens/GoldLoan';
+// import Insurance from './screens/Insurance';
 
-export default Services
+const Stack = createStackNavigator();
 
-const styles = StyleSheet.create({})
+const AppNavigator = () => (
+  <Stack.Navigator>
+    <Stack.Screen name="MainService" component={MainService} />
+    <Stack.Screen name="DigiGold" component={DigiGold} />
+    {/* <Stack.Screen name="GoldLoan" component={GoldLoan} /> */}
+    <Stack.Screen name="Insurance" component={Insurance} />
+  </Stack.Navigator>
+);
+
+export default AppNavigator;
