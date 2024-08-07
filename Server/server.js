@@ -7,10 +7,16 @@ const cors = require('cors');
 
 const app = express();
 
+// Check if JWT_SECRET is defined
+if (!process.env.JWT_SECRET) {
+    console.error('FATAL ERROR: JWT_SECRET is not defined.');
+    process.exit(1);
+}
+
 // Connect to the database
 connectToDatabase();
 
-app.use(cors())
+app.use(cors());
 // Middleware
 app.use(express.json()); // Parse JSON request bodies
 
