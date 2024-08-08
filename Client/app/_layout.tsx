@@ -1,6 +1,6 @@
 import { useFonts } from 'expo-font';
 import { Stack } from 'expo-router';
-
+import CategoryPage from '../components/ProductsAll/CategoryPage'
 
 export default function RootLayout() {
   useFonts({
@@ -13,6 +13,7 @@ export default function RootLayout() {
       <Stack.Screen name="login" />
       <Stack.Screen name="register" />
       <Stack.Screen name="(tabs)" />
+      <Stack.Screen name="CategoryPage"/>
     </Stack>
   );
 }
