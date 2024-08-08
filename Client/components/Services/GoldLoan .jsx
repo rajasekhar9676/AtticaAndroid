@@ -11,4 +11,4 @@ const GoldLoan  = () => {
 
 export default GoldLoan 
 
-const styles = StyleSheet.create({})
+const styles = StyleSheet.create({})  
