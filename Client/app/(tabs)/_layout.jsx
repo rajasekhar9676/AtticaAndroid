@@ -4,12 +4,16 @@ import { Tabs } from 'expo-router'
 import Ionicons from '@expo/vector-icons/Ionicons';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
+import { Colors } from './../../constants/Colors';
 // import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 
 const RootLayout = () => {
   return (
     
-      <Tabs >
+      <Tabs screenOptions={{
+        headerShown: false, 
+        tabBarActiveTintColor:Colors.PRIMARY
+      }}>
        <Tabs.Screen name="Home" 
        options={{tabBarLabel:"Home",
         tabBarIcon:({color})=> <Ionicons name="home" size={24} color={color} />
