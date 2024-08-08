@@ -6,13 +6,19 @@ import { useRouter } from 'expo-router';
 const Register = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [mobile, setMobile] = useState('');
+  const [address, setAddress] = useState('');
+  const [username, setUsername] = useState('');
   const router = useRouter(); // Hook for navigation
 
   const handleRegister = async () => {
     try {
       const response = await axios.post('https://e89c-2401-4900-1f28-6e01-74c0-d168-60ec-e67.ngrok-free.app/api/users/register', {
+        username,
         email,
         password,
+        mobile,
+        address
       });
       Alert.alert('Success', 'Registration successful!');
       router.push('/login'); // Navigate to login screen
@@ -26,6 +32,12 @@ const Register = () => {
       <Text style={styles.header}>Register</Text>
       <TextInput
         style={styles.input}
+        placeholder="Name"
+        value={username}
+        onChangeText={setUsername}
+      />
+      <TextInput
+        style={styles.input}
         placeholder="Email"
         value={email}
         onChangeText={setEmail}
@@ -37,6 +49,19 @@ const Register = () => {
         value={password}
         onChangeText={setPassword}
         secureTextEntry
+      />
+      <TextInput
+        style={styles.input}
+        placeholder="Mobile Number"
+        value={mobile}
+        onChangeText={setMobile}
+        keyboardType="number"
+      />
+      <TextInput
+        style={styles.input}
+        placeholder="Address"
+        value={address}
+        onChangeText={setAddress}
       />
       <Button title="Register" onPress={handleRegister} />
       <Button
