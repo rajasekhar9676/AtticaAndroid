@@ -10,8 +10,8 @@ const generateToken = (id) => {
 // Register new user
 const registerUser = async (req, res) => {
   try {
-    const { email, password } = req.body;
-    const user = new User({ email, password });
+    const { username, email, password, mobile, address } = req.body;
+    const user = new User({username,  email, password, mobile, address });
     await user.save();
     const token = generateToken(user._id);
     res.status(201).json({ message: 'User registered successfully', token });
@@ -29,11 +29,13 @@ const loginUser = async (req, res) => {
       return res.status(401).json({ message: 'Invalid email or password' });
     }
     const token = generateToken(user._id);
-    res.json({ token });
+    res.json({ token, username: user.username, email: user.email, mobile: user.mobile, address: user.address });
   } catch (error) {
     res.status(400).json({ message: error.message });
   }
 };
+
+
 
 module.exports = { registerUser, loginUser };
 

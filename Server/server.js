@@ -4,6 +4,7 @@ const userRoutes = require('./routes/userRoutes');
 const { errorHandler } = require('./middleware/errorMiddleware');
 require('dotenv').config(); // Load environment variables
 const cors = require('cors');
+const branchRoutes = require('./routes/branchRoutes');
 
 const app = express();
 
@@ -22,6 +23,7 @@ app.use(express.json()); // Parse JSON request bodies
 
 // Routes
 app.use('/api/users', userRoutes);
+app.use('/api/branches', branchRoutes); 
 
 // Error handling middleware
 app.use(errorHandler);

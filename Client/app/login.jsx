@@ -15,8 +15,16 @@ const Login = () => {
         email,
         password,
       });
-      const { token } = response.data;
-      await AsyncStorage.setItem('@token', token);
+
+      const { token, username,  email: userEmail, mobile, address } = response.data;
+
+      // Ensure all data is stored correctly
+      await AsyncStorage.setItem('username', username);
+      await AsyncStorage.setItem('token', token);
+      await AsyncStorage.setItem('email', userEmail);
+      await AsyncStorage.setItem('mobile', mobile.toString()); // Convert mobile to string
+      await AsyncStorage.setItem('address', address);
+
       Alert.alert('Success', 'Login successful!');
       router.push('/Home'); // Navigate to home screen
     } catch (error) {

@@ -1,33 +1,58 @@
-import React from 'react';
-import { StyleSheet, Text, View, Image, ScrollView, TouchableOpacity, Dimensions } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { StyleSheet, Text, View, Image, ScrollView, TouchableOpacity, Dimensions, Alert } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient'; // For Expo gradient background
 import * as Animatable from 'react-native-animatable'; // For animations
 import { MaterialIcons } from '@expo/vector-icons'; // For icons
 import { useRouter } from 'expo-router';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const { width } = Dimensions.get('window');
 
 const Profile = () => {
+  const [userData, setUserData] = useState({
+    username: '',
+    email: '',
+    mobile: '',
+    address: '',
+  });
   const router = useRouter();
 
-  // Dummy user data
-  const user = {
-    name: 'John Doe',
-    email: 'john.doe@example.com',
-    address: '123 Main Street, Springfield, USA',
-    image: require('../../assets/images/UserProfile.jpg'), // Use a local image
-  };
+  useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        const username = await AsyncStorage.getItem('username');
+        const email = await AsyncStorage.getItem('email');
+        const mobile = await AsyncStorage.getItem('mobile');
+        const address = await AsyncStorage.getItem('address');
+
+        if (email && mobile && address) {
+          setUserData({
+            username,
+            email,
+            mobile,
+            address
+          });
+        }
+      } catch (error) {
+        console.error('Failed to load user data from AsyncStorage', error);
+        Alert.alert('Error', 'Failed to load user data.');
+      }
+    };
+
+    fetchUserData();
+  }, []);
 
   return (
     <LinearGradient colors={['#4c669f', '#3b5998', '#192f5d']} style={styles.container}>
       <ScrollView contentContainerStyle={styles.scrollContainer}>
         <View style={styles.profileContainer}>
           <Animatable.View animation="fadeIn" duration={1500} style={styles.imageContainer}>
-            <Image source={user.image} style={styles.image} />
+            <Image source={require('../../assets/images/UserProfile.jpg')} style={styles.image} />
           </Animatable.View>
-          <Animatable.Text animation="fadeInUp" duration={1500} style={styles.name}>{user.name}</Animatable.Text>
-          <Animatable.Text animation="fadeInUp" duration={1700} style={styles.email}>{user.email}</Animatable.Text>
-          <Animatable.Text animation="fadeInUp" duration={1900} style={styles.address}>{user.address}</Animatable.Text>
+          <Animatable.Text animation="fadeInUp" duration={1500} style={styles.name}>{userData.username}</Animatable.Text>
+          <Animatable.Text animation="fadeInUp" duration={1700} style={styles.email}>{userData.email}</Animatable.Text>
+          <Animatable.Text animation="fadeInUp" duration={1700} style={styles.mobile}>{userData.mobile}</Animatable.Text>
+          <Animatable.Text animation="fadeInUp" duration={1900} style={styles.address}>{userData.address}</Animatable.Text>
           
           {/* Additional Info Section */}
           <View style={styles.additionalInfoContainer}>
