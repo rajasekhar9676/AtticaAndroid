@@ -1,85 +1,88 @@
-import { FlatList, StyleSheet, Text, View, Image, TouchableOpacity } from 'react-native';
-import React from 'react';
-import { useNavigation } from '@react-navigation/native'; // Import the navigation hook
-// import CategoryPage from './components/Productsall/CategoryPage';
-import CategoryPage from '../../components/ProductsAll/CategoryPage';
-
+import { FlatList, StyleSheet, Text, View, Image, TouchableOpacity, ScrollView, ActivityIndicator, Alert } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { useNavigation } from '@react-navigation/native';
+import axios from 'axios';
+import { BASE_URL } from '../../constants';
 
 const ProductCategory = () => {
-  const navigation = useNavigation(); // Use the navigation hook
+  const [categories, setCategories] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const navigation = useNavigation();
 
-  const categories = [
-    { id: '1', name: 'Bangles', price: '₹50148', image: require('./../../assets/images/aboutus11.jpeg') },
-    { id: '2', name: 'Bharat & Beyond', price: '₹32999', image: require('./../../assets/images/Necklaces.jpeg') },
-    { id: '3', name: 'Bangles', price: '₹50148', image: require('./../../assets/images/aboutus11.jpeg') },
-    { id: '4', name: 'Bharat & Beyond', price: '₹32999', image: require('./../../assets/images/Necklaces.jpeg') },
-    // Add more categories as needed
-  ];
+  useEffect(() => {
+    const fetchCategories = async () => {
+      setLoading(true);
+      try {
+        const response = await axios.get(`${BASE_URL}/api/products/getproducts`);
+        if (Array.isArray(response.data)) {
+          const uniqueCategories = [];
+          const filteredCategories = response.data.filter(item => {
+            if (item.category && !uniqueCategories.includes(item.category)) {
+              uniqueCategories.push(item.category);
+              return true;
+            }
+            return false;
+          });
+          setCategories(filteredCategories);
+        } else {
+          Alert.alert('Error', 'Unexpected data format received.');
+        }
+      } catch (error) {
+        Alert.alert('Error', error.response?.data?.message || 'Failed to fetch categories');
+      } finally {
+        setLoading(false);
+      }
+    };
 
-  const trending = [
-    { id: '1', name: '1Gm Gold Coin (999 purity)', image: require('./../../assets/images/abc.jpeg') },
-    { id: '2', name: 'Augmont 0.1Gm Gold Coin (999 purity)', image: require('./../../assets/images/banner.jpeg') },
-    { id: '3', name: '1Gm Gold Coin (999 purity)', image: require('./../../assets/images/abc.jpeg') },
-    { id: '4', name: 'Augmont 0.1Gm Gold Coin (999 purity)', image: require('./../../assets/images/banner.jpeg') },
-    // Add more trending items as needed
-  ];
-
+    fetchCategories();
+  }, []);
 
   const handleCategoryPress = (category) => {
     navigation.navigate('CategoryPage', { category });
   };
 
   const renderCategoryItem = ({ item }) => (
-    <View style={{borderWidth:1,borderColor:'gray', margin:5,borderRadius:15}}>
-      <TouchableOpacity style={styles.categoryItem} onPress={() => handleCategoryPress(item)}>
-        <Image source={item.image} style={styles.categoryImage} />
-        <Text style={styles.categoryName}>{item.name}</Text>
-        <Text style={styles.categoryPrice}>{item.price}</Text>
+    <View style={styles.categoryContainer}>
+      <TouchableOpacity style={styles.categoryItem} onPress={() => handleCategoryPress(item.category)}>
+        <Image source={{ uri: item.image ? (item.image.startsWith('http') ? item.image : `${BASE_URL}/uploads/${item.image}`) : null }} style={styles.categoryImage} />
+        <Text style={styles.categoryName}>{item.category}</Text>
+        <Text style={styles.categoryPrice}>Starts at ₹{item.price}</Text>
       </TouchableOpacity>
     </View>
   );
 
-  const renderTrendingItem = ({ item }) => (
-    <View  style={{borderWidth:1,borderColor:'gray', margin:5,borderRadius:15}}>
-      <TouchableOpacity style={styles.trendingItem}>
-        <Image source={item.image} style={styles.trendingImage} />
-        <Text style={styles.trendingName}>{item.name}</Text>
-      </TouchableOpacity>
-    </View>
-  );
-
-  
   return (
-    <View style={styles.container}>
-      {/* Landing page */}
+    <ScrollView contentContainerStyle={styles.container}>
       <View style={styles.logoContainer}>
         <Image source={require('./../../assets/images/logo4.png')} style={styles.logo} />
       </View>
 
-      {/* Product Categories */}
       <View style={styles.section}>
         <Text style={styles.sectionTitle}>Product Categories</Text>
-        <FlatList
-          data={categories}
-          renderItem={renderCategoryItem}
-          keyExtractor={item => item.id}
-          horizontal
-        />
+        {loading ? (
+          <ActivityIndicator size="large" color="#0000ff" />
+        ) : (
+          <FlatList
+            data={categories}
+            renderItem={renderCategoryItem}
+            keyExtractor={item => (item.id ? item.id.toString() : Math.random().toString())}
+            horizontal
+          />
+        )}
       </View>
 
-      {/* What's Trending */}
       <View style={styles.section}>
         <Text style={styles.sectionTitle}>What's Trending</Text>
         <FlatList
-          data={trending}
-          renderItem={renderTrendingItem}
-          keyExtractor={item => item.id}
+          data={categories.slice(0, 4)}
+          renderItem={renderCategoryItem}
+          keyExtractor={item => (item.id ? item.id.toString() : Math.random().toString())}
           horizontal
         />
       </View>
-    </View>
+    </ScrollView>
   );
-}
+};
 
 export default ProductCategory;
 
@@ -105,6 +108,12 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     marginLeft: 10,
   },
+  categoryContainer: {
+    borderWidth: 1,
+    borderColor: 'gray',
+    margin: 5,
+    borderRadius: 15,
+  },
   categoryItem: {
     margin: 10,
     alignItems: 'center',
@@ -122,18 +131,5 @@ const styles = StyleSheet.create({
     marginTop: 5,
     fontSize: 14,
     color: 'grey',
-  },
-  trendingItem: {
-    margin: 10,
-    alignItems: 'center',
-  },
-  trendingImage: {
-    width: 100,
-    height: 100,
-    resizeMode: 'contain',
-  },
-  trendingName: {
-    marginTop: 5,
-    fontSize: 16,
   },
 });

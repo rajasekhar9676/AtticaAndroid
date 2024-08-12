@@ -1,7 +1,10 @@
-// const Product = require('../models/Product');
-const Product=require('../models/productModel')
+
 const multer = require('multer');
 const path = require('path');
+const Product = require('../models/productModel'); // Adjust the path as necessary
+
+
+
 
 // Set up multer storage
 const storage = multer.diskStorage({
@@ -19,16 +22,18 @@ const upload = multer({ storage: storage });
 // Create a new product with image upload
 const createProduct = async (req, res) => {
     try {
-        const { name, description, price, category, image } = req.body;
-
-        let imagePath = image; // Assume image is an external URL
+        const { name, description, price, category, weights } = req.body;
+        let imagePath = req.body.image; 
 
         if (req.file) {
-            // If there's an uploaded file, use the internal image path
             imagePath = req.file.filename;
-        } else if (!image || !image.startsWith('http')) {
-            // If there's no valid image provided, return an error
+        } else if (!imagePath || !imagePath.startsWith('http')) {
             return res.status(400).json({ message: 'Image upload failed or invalid image URL' });
+        }
+
+        // Ensure weights is an array and has values
+        if (!Array.isArray(weights) || weights.length === 0) {
+            return res.status(400).json({ message: 'Weights data is required and must be an array.' });
         }
 
         const newProduct = new Product({
@@ -36,7 +41,8 @@ const createProduct = async (req, res) => {
             description,
             price,
             image: imagePath,
-            category
+            category,
+            weights,
         });
 
         const savedProduct = await newProduct.save();
@@ -47,32 +53,17 @@ const createProduct = async (req, res) => {
 };
 
 
-
-// Create a new product
-// const createProduct = async (req, res) => {
-//     try {
-//         const { name, description, price, image } = req.body;
-
-//         const newProduct = new Product({
-//             name,
-//             description,
-//             price,
-//             image // Assuming this is a URL or base64 encoded string
-//         });
-
-//         const savedProduct = await newProduct.save();
-//         res.status(201).json(savedProduct);
-//     } catch (error) {
-//         res.status(500).json({ message: error.message });
-//     }
-// };
-
-
-
-// Get all products
+// Get all products, with optional filtering by category
 const getAllProducts = async (req, res) => {
     try {
-        const products = await Product.find();
+        const { category } = req.query;
+        let filter = {};
+
+        if (category) {
+            filter.category = category;
+        }
+
+        const products = await Product.find(filter);
         res.status(200).json(products);
     } catch (error) {
         res.status(500).json({ message: error.message });
@@ -84,24 +75,25 @@ const getAllProducts = async (req, res) => {
 const getProductById = async (req, res) => {
     try {
         const product = await Product.findById(req.params.id);
+
         if (!product) {
             return res.status(404).json({ message: 'Product not found' });
         }
+
         res.status(200).json(product);
     } catch (error) {
         res.status(500).json({ message: error.message });
     }
 };
 
-
 // Update a product by ID
 const updateProductById = async (req, res) => {
     try {
-        const { name, description, price, image } = req.body;
+        const { name, description, price, image, category, weights } = req.body;
 
         const updatedProduct = await Product.findByIdAndUpdate(
             req.params.id,
-            { name, description, price, image },
+            { name, description, price, image, category, weights },
             { new: true, runValidators: true }
         );
 
@@ -131,14 +123,12 @@ const deleteProductById = async (req, res) => {
 };
 
 
+
 module.exports = {
     createProduct,
     upload,
     getAllProducts,
     getProductById,
     updateProductById,
-    deleteProductById
+    deleteProductById,
 };
-
-
-
