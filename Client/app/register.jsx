@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { View, Text, TextInput, Button, StyleSheet, Alert } from 'react-native';
 import axios from 'axios';
 import { useRouter } from 'expo-router';
+import { BASE_URL } from '../constants';
 
 const Register = () => {
   const [email, setEmail] = useState('');
@@ -13,7 +14,7 @@ const Register = () => {
 
   const handleRegister = async () => {
     try {
-      const response = await axios.post('https://e0ec-2401-4900-1cc5-4d95-c861-271e-2c9f-bf7b.ngrok-free.app/api/users/register', {
+      const response = await axios.post(`${BASE_URL}/api/users/register`, {
         username,
         email,
         password,

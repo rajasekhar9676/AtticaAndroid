@@ -1,5 +1,6 @@
 import React from 'react';
 import { View, Text, StyleSheet, FlatList, Image } from 'react-native';
+import AllProducts from './AllProducts'
 
 const CategoryPage = ({ route }) => {
   const { category } = route.params;
@@ -12,6 +13,7 @@ const CategoryPage = ({ route }) => {
   ];
 
   const renderItem = ({ item }) => (
+
     <View style={styles.itemContainer}>
       <Image source={item.image} style={styles.itemImage} />
       <Text style={styles.itemName}>{item.name}</Text>
@@ -20,14 +22,17 @@ const CategoryPage = ({ route }) => {
   );
 
   return (
+
+    <>
+    
     <View style={styles.container}>
       <Text style={styles.title}>{category.name}</Text>
       <FlatList
         data={items}
         renderItem={renderItem}
-        keyExtractor={item => item.id}
-      />
+        keyExtractor={item => item.id} />
     </View>
+    </>
   );
 };
 
@@ -67,3 +72,5 @@ const styles = StyleSheet.create({
     marginTop: 5,
   },
 });
+
+

@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "595324334337",
+    "project_id": "atticaandroidapp",
+    "storage_bucket": "atticaandroidapp.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:595324334337:android:ac8947d21513f1464aeb00",
+        "android_client_info": {
+          "package_name": "com.atticagold.attica_android"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDUk_A6EUV3bskmGe4G9LFO66R_JpuG_d0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

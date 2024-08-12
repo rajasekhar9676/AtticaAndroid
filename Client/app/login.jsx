@@ -3,6 +3,7 @@ import { View, Text, TextInput, Button, StyleSheet, Alert } from 'react-native';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useRouter } from 'expo-router';
+import {BASE_URL} from '../constants'
 
 const Login = () => {
   const [email, setEmail] = useState('');
@@ -11,7 +12,7 @@ const Login = () => {
 
   const handleLogin = async () => {
     try {
-      const response = await axios.post('https://e0ec-2401-4900-1cc5-4d95-c861-271e-2c9f-bf7b.ngrok-free.app/api/users/login', {
+      const response = await axios.post(`${BASE_URL}/api/users/login`, {
         email,
         password,
       });

@@ -14,6 +14,7 @@ export default function RootLayout() {
       <Stack.Screen name="register" />
       <Stack.Screen name="(tabs)" />
       <Stack.Screen name="CategoryPage"/>
+      <Stack.Screen name="PhoneAuthScreen"/>
     </Stack>
   );
 }
