@@ -4,7 +4,7 @@ import React from 'react'
 import { createStackNavigator } from '@react-navigation/stack';
 import ProductCategory from '../../components/ProductsAll/ProductCategory';
 import CategoryPage from '../../components/ProductsAll/CategoryPage';
-
+import AllProducts from '../../components/ProductsAll/AllProducts';
 
 const Stack = createStackNavigator();
 
@@ -14,8 +14,10 @@ const Products = () => {
   return (
     
      <Stack.Navigator screenOptions={{headerShown:false}}>
+      <Stack.Screen name='AllProducts' component={AllProducts}/>
       <Stack.Screen name='ProductCategory' component={ProductCategory}/>
       <Stack.Screen name='CategoryPage' component={CategoryPage}/>
+      
      </Stack.Navigator>
   )
 }

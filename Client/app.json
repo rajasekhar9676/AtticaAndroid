@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "attica-android",
-    "slug": "attica-android",
+    "name": "attica_android",
+    "slug": "attica_android",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
@@ -12,10 +12,14 @@
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
+    
     "ios": {
+      "bundleIdentifier": "com.atticagold.attica_android",
       "supportsTablet": true
     },
     "android": {
+      "package": "com.atticagold.attica_android",
+      "googleServicesFile": "./google-services.json",
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
@@ -24,13 +28,30 @@
     "web": {
       "bundler": "metro",
       "output": "static",
-      "favicon": "./assets/images/favicon.png"
+      "favicon": "./assets/images/favicon.png",
+      "config": {
+        "firebase": {
+          "apiKey": "AIzaSyDUk_A6EUV3bskmGe4G9LFO66R_JpuG_d0",
+          "authDomain": "atticaandroidapp.firebaseapp.com",
+          "projectId": "atticaandroidapp",
+          "storageBucket": "atticaandroidapp.appspot.com",
+          "messagingSenderId": "595324334337",
+          "appId": "1:595324334337:web:ac8947d21513f1464aeb00",
+          "measurementId": "YOUR_MEASUREMENT_ID" 
+        }
+      }
     },
     "plugins": [
-      "expo-router"
+      "expo-router",
+      "@react-native-firebase/app",
+      "@react-native-firebase/auth",
+      "@react-native-firebase/crashlytics"
     ],
     "experiments": {
       "typedRoutes": true
     }
   }
 }
+
+
+

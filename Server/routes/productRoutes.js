@@ -1,12 +1,29 @@
-const express=require('express')
-const productController=require('../controllers/productController')
+// const express=require('express')
+// const productController=require('../controllers/productController')
 
-const router=express.Router()
+// const router=express.Router()
 
-router.post('/products',productController.createProduct)
-router.get('/products',productController.getAllProducts)
-router.get('/products/:id',productController.getProductById)
-router.put('/products/:id',productController.updateProductById) 
-router.delete('/products/:id',productController.deleteProductById)
+// // router.post('/uploadProducts',productController.createProduct)
+// router.post('/uploadProducts', productController.upload.single('image'));
+// router.get('/getproducts',productController.getAllProducts)
+// router.get('/getOneproducts/:id',productController.getProductById)
+// router.put('/updateProducts/:id',productController.updateProductById) 
+// router.delete('/deleteproducts/:id',productController.deleteProductById)
 
-module.exports=router 
+// module.exports=router 
+
+
+const express = require('express');
+const productController = require('../controllers/productController');
+
+const router = express.Router();
+
+// Corrected POST route with image upload
+router.post('/uploadProducts', productController.upload.single('image'), productController.createProduct);
+
+router.get('/getproducts', productController.getAllProducts);
+router.get('/getOneproducts/:id', productController.getProductById);
+router.put('/updateProducts/:id', productController.updateProductById);
+router.delete('/deleteproducts/:id', productController.deleteProductById);
+
+module.exports = router;
