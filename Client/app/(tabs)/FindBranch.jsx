@@ -41,10 +41,12 @@ const FindBranch = () => {
       }
 
       // Construct the API URL with latitude and longitude
-      const apiUrl = `https://e89c-2401-4900-1f28-6e01-74c0-d168-60ec-e67.ngrok-free.app/api/branches/find-nearest?latitude=${latitude}&longitude=${longitude}`;
+      const apiUrl = `https://androidbackend-15.onrender.com/api/branches/find-nearest?latitude=${latitude}&longitude=${longitude}`;
 
       // Make the API request to find nearest branches
       const response = await axios.get(apiUrl);
+
+      console.log(response.data, "reposnseeeeeeeeeeeeeee")
 
       // Check if the response data is an array
       if (Array.isArray(response.data)) {
@@ -64,16 +66,13 @@ const FindBranch = () => {
       <FlatList
         data={branches}
         keyExtractor={(item) => item._id}
-        renderItem={({ item }) => {
-          console.log('Branch Item:', item); // Log each item for debugging
-          return (
-            <View style={styles.branch}>
-              <Text style={styles.branchName}>{item.name}</Text>
-              <Text>Distance: {item.distance.toFixed(2)} meters</Text>
-              <Text>{item.state}</Text>
-            </View>
-          );
-        }}
+        renderItem={({ item }) => (
+          <View style={styles.branch}>
+            <Text style={styles.branchName}>{item.name}</Text>
+            <Text>Distance: {item.distance.toFixed(2)} meters</Text>
+            <Text>{item.state}</Text>
+          </View>
+        )}
       />
     </View>
   );

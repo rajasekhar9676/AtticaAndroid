@@ -37,9 +37,11 @@ const findNearestBranches = async (req, res) => {
       return { ...branch.toObject(), distance };
     });
 
+    // Sort by distance and limit to top 5
     branchesWithDistance.sort((a, b) => a.distance - b.distance);
+    const top5Branches = branchesWithDistance.slice(0, 5);
 
-    res.json(branchesWithDistance);
+    res.json(top5Branches);
   } catch (error) {
     res.status(500).json({ message: 'Error fetching branches' });
   }
