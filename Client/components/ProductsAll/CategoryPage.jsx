@@ -44,6 +44,7 @@ const CategoryPage = ({ route }) => {
     <TouchableOpacity onPress={() => navigation.navigate('ProductDetails', { product: item })}>
 
       <View style={styles.itemContainer}>
+      
         <Image source={{ uri: item.image ? (item.image.startsWith('http') ? item.image : `${BASE_URL}/uploads/${item.image}`) : null }} style={styles.itemImage} />
         <Text style={styles.itemName}>{item.name}</Text>
         <Text style={styles.itemPrice}>₹{item.price}</Text>
@@ -55,7 +56,7 @@ const CategoryPage = ({ route }) => {
     <View style={styles.container}>
       {/* Header */}
       <View style={styles.header}>
-        <Text style={styles.title}>Bangles</Text>
+        <Text style={styles.title}>{category}</Text>
         <TouchableOpacity onPress={handleSortChange} style={styles.sortButton}>
           <Text style={styles.sortText}>Sort By Price: {sortOrder === 'asc' ? 'Low to High' : 'High to Low'}</Text>
           <Icon name={sortOrder === 'asc' ? 'arrow-down' : 'arrow-up'} size={16} color="#000" />

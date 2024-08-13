@@ -23,7 +23,7 @@ const upload = multer({ storage: storage });
 const createProduct = async (req, res) => {
     try {
         const { name, description, price, category, weights } = req.body;
-        let imagePath = req.body.image; 
+        let imagePath = req.body.image;
 
         if (req.file) {
             imagePath = req.file.filename;
@@ -31,10 +31,8 @@ const createProduct = async (req, res) => {
             return res.status(400).json({ message: 'Image upload failed or invalid image URL' });
         }
 
-        // Ensure weights is an array and has values
-        if (!Array.isArray(weights) || weights.length === 0) {
-            return res.status(400).json({ message: 'Weights data is required and must be an array.' });
-        }
+        // Convert weights to array if it's not already
+        const weightArray = Array.isArray(weights) ? weights : [weights];
 
         const newProduct = new Product({
             name,
@@ -42,7 +40,7 @@ const createProduct = async (req, res) => {
             price,
             image: imagePath,
             category,
-            weights,
+            weights: weightArray,
         });
 
         const savedProduct = await newProduct.save();
@@ -51,6 +49,7 @@ const createProduct = async (req, res) => {
         res.status(500).json({ message: error.message });
     }
 };
+
 
 
 // Get all products, with optional filtering by category

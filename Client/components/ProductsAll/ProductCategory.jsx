@@ -6,6 +6,7 @@ import { BASE_URL } from '../../constants';
 
 const ProductCategory = () => {
   const [categories, setCategories] = useState([]);
+  const [bars, setBars] = useState([]); // State for storing "Bars" category products
   const [loading, setLoading] = useState(false);
   const navigation = useNavigation();
 
@@ -16,14 +17,18 @@ const ProductCategory = () => {
         const response = await axios.get(`${BASE_URL}/api/products/getproducts`);
         if (Array.isArray(response.data)) {
           const uniqueCategories = [];
+          const barsCategory = [];
           const filteredCategories = response.data.filter(item => {
             if (item.category && !uniqueCategories.includes(item.category)) {
               uniqueCategories.push(item.category);
-              return true;
             }
-            return false;
+            if (item.category === 'Bars') {
+              barsCategory.push(item); // Collect items in the "Bars" category
+            }
+            return uniqueCategories.includes(item.category);
           });
           setCategories(filteredCategories);
+          setBars(barsCategory); // Set state for "Bars" category products
         } else {
           Alert.alert('Error', 'Unexpected data format received.');
         }
@@ -72,6 +77,19 @@ const ProductCategory = () => {
       </View>
 
       <View style={styles.section}>
+        <Text style={styles.sectionTitle}>Gold Bars</Text>
+        {loading ? (
+          <ActivityIndicator size="large" color="#0000ff" />
+        ) : (
+          <FlatList
+            data={bars} // Use bars state for displaying "Bars" category products
+            renderItem={renderCategoryItem}
+            keyExtractor={item => (item.id ? item.id.toString() : Math.random().toString())}
+            horizontal
+          />
+        )}
+      </View>
+      <View style={styles.section}>
         <Text style={styles.sectionTitle}>What's Trending</Text>
         <FlatList
           data={categories.slice(0, 4)}
@@ -80,6 +98,20 @@ const ProductCategory = () => {
           horizontal
         />
       </View>
+
+      {/* <View style={styles.section}>
+        <Text style={styles.sectionTitle}>Gold Bars</Text>
+        {loading ? (
+          <ActivityIndicator size="large" color="#0000ff" />
+        ) : (
+          <FlatList
+            data={bars} // Use bars state for displaying "Bars" category products
+            renderItem={renderCategoryItem}
+            keyExtractor={item => (item.id ? item.id.toString() : Math.random().toString())}
+            horizontal
+          />
+        )}
+      </View> */}
     </ScrollView>
   );
 };

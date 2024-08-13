@@ -5,34 +5,29 @@ import Icon from 'react-native-vector-icons/Ionicons';
 const ProductDetailsPage = ({ route, navigation }) => {
   const [loading, setLoading] = useState(true);
   const [product, setProduct] = useState(null);
+  const [selectedWeight, setSelectedWeight] = useState(null); // Initialize with null
 
   useEffect(() => {
     if (route.params && route.params.product) {
-        setProduct(route.params.product);
-        setLoading(false);
+      setProduct(route.params.product);
+      setLoading(false);
+      if (Array.isArray(route.params.product.weights) && route.params.product.weights.length > 0) {
+        setSelectedWeight(route.params.product.weights[0]); // Set default weight here
+      }
     } else {
-        console.error("No product data provided.");
-        setLoading(false);
+      console.error("No product data provided.");
+      setLoading(false);
     }
-}, [route.params]);
+  }, [route.params]);
 
-if (!product || !Array.isArray(product.weights) || product.weights.length === 0) {
+  if (!product || !Array.isArray(product.weights) || product.weights.length === 0) {
     console.error("Product or weights data is missing.");
     return <Text style={styles.errorText}>Error: Product details are missing.</Text>;
-}
-
+  }
 
   if (loading) {
     return <ActivityIndicator size="large" color="#0000ff" style={styles.loader} />;
   }
-
-//   if (!product || !Array.isArray(product.weights) || product.weights.length === 0) {
-//     console.error("Product or weights data is missing.");
-//     return <Text style={styles.errorText}>Error: Product details are missing.</Text>;
-// }
-
-
-  const [selectedWeight, setSelectedWeight] = useState(product.weights[0]);
 
   return (
     <ScrollView style={styles.container}>
@@ -201,3 +196,5 @@ const styles = StyleSheet.create({
 });
 
 export default ProductDetailsPage;
+
+
