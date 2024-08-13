@@ -9,6 +9,10 @@ const branchRoutes = require('./routes/branchRoutes');
 const productRoutes=require('./routes/productRoutes')
 
 const app = express();
+app.get('/', (req, res) => {
+    res.send('Server is running!');
+});
+
 
 // Check if JWT_SECRET is defined
 if (!process.env.JWT_SECRET) {
