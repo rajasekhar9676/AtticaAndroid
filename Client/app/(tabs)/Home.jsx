@@ -11,7 +11,9 @@ const Home = () => {
   const [goldPrice, setGoldPrice] = useState(null);
   const [error, setError] = useState(null);
   const scrollViewRef = useRef(null);
+  const productScrollRef = useRef(null);
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [productIndex, setProductIndex] = useState(0);
 
   const screenWidth = Dimensions.get('window').width;
 
@@ -39,7 +41,10 @@ const Home = () => {
     require('../../assets/images/slider2.png'),
     require('../../assets/images/slider3.png'),
     require('../../assets/images/slider4.png'),
+    require('../../assets/images/slider4.png'),
   ];
+
+
 
   const handleNext = () => {
     const nextIndex = currentIndex === images.length - 1 ? 0 : currentIndex + 1;
@@ -61,63 +66,92 @@ const Home = () => {
     return () => clearInterval(interval);
   }, [currentIndex]);
 
+
+
   return (
     <View style={styles.container}>
-      {/* Fixed Header */}
       <View style={styles.headerContainer}>
         <FontAwesome6 name="bars" size={24} color="white" />
-        <Image source={require('../../assets/images/logo.png')} style={{ width: 150, height: 50 }} />
+        <Image source={require('../../assets/images/logo.png')} style={styles.logo} />
         <AntDesign name="shoppingcart" size={24} color="white" />
       </View>
 
-      {/* Fixed Location and Rate */}
-      <View style={styles.locationRateContainer}>
-        <View style={styles.rateSection}>
-          <SimpleLineIcons name="options-vertical" size={24} color="#8d181a" />
-          <Text style={styles.rateText}>22KT Gold Rate 6,425.00/gm INR</Text>
+      <ScrollView contentContainerStyle={styles.scrollableContent}>
+        {/* Fixed Location and Rate */}
+        <View style={styles.locationRateContainer}>
+          <View style={styles.rateSection}>
+            <SimpleLineIcons name="options-vertical" size={24} color="#8d181a" />
+            <Text style={styles.rateText}>22KT Gold Rate 6,425.00/gm INR</Text>
+          </View>
+          <View style={styles.locationSection}>
+            <EvilIcons name="location" size={24} color="#8d181a" />
+            <Text style={styles.locationText}>
+              You are in #Indian express, Bangalore, Karnataka, India
+            </Text>
+          </View>
         </View>
-        <View style={styles.locationSection}>
-          <EvilIcons name="location" size={24} color="#8d181a" />
-          <Text style={styles.locationText}>
-            You are in #Indian express, Bangalore, Karnataka, India
-          </Text>
+
+        {/* Sliding Content */}
+        <View style={styles.sliderContainer}>
+          <TouchableOpacity style={styles.arrowLeft} onPress={handlePrev}>
+            <Entypo name="chevron-thin-left" size={24} color="white" />
+          </TouchableOpacity>
+          <ScrollView
+            ref={scrollViewRef}
+            horizontal
+            pagingEnabled
+            showsHorizontalScrollIndicator={false}
+            style={styles.scrollView}
+            onScroll={(event) => {
+              const index = Math.round(event.nativeEvent.contentOffset.x / screenWidth);
+              setCurrentIndex(index);
+            }}
+          >
+            {images.map((image, index) => (
+              <Image key={index} source={image} style={styles.image} resizeMode="cover" />
+            ))}
+          </ScrollView>
+          <TouchableOpacity style={styles.arrowRight} onPress={handleNext}>
+            <Entypo name="chevron-thin-right" size={24} color="white" />
+          </TouchableOpacity>
         </View>
-      </View>
 
-      {/* Sliding Content */}
-      <View style={styles.sliderContainer}>
-        <TouchableOpacity style={styles.arrowLeft} onPress={handlePrev}>
-          <Entypo name="chevron-thin-left" size={24} color="white" />
-        </TouchableOpacity>
-        <ScrollView
-          ref={scrollViewRef}
-          horizontal
-          pagingEnabled
-          showsHorizontalScrollIndicator={false}
-          style={styles.scrollView}
-          onScroll={(event) => {
-            const index = Math.round(event.nativeEvent.contentOffset.x / screenWidth);
-            setCurrentIndex(index);
-          }}
-        >
-          {images.map((image, index) => (
-            <Image key={index} source={image} style={styles.image} resizeMode="cover" />
-          ))}
-        </ScrollView>
-        <TouchableOpacity style={styles.arrowRight} onPress={handleNext}>
-          <Entypo name="chevron-thin-right" size={24} color="white" />
-        </TouchableOpacity>
-      </View>
-
-      {/* Content Below Sliding */}
-      <ScrollView style={styles.scrollableContent}>
+        {/* Content Below Sliding */}
         <Image source={require('../../assets/images/constants.png')} style={styles.constantImage} />
 
         <View style={styles.contentContainer}>
-          <View style={styles.header}>
-            <Text style={styles.livePrice}>Live Gold Price: ₹ {goldPrice ? goldPrice : 'Loading...'}/gm</Text>
-            {error && <Text style={styles.error}>{error}</Text>}
+          {/* <View>
+          <View style={styles.main}> 
+          <Image source={require('../../assets/images/logo.png')} style={styles.logo1} />
+            <Text style={styles.logo1}>PROMISE</Text>
           </View>
+          <View>
+            <View>
+              <Text>Complete Transparency</Text>
+            </View>
+            <View>
+              <Text>Tested and Certified Gold</Text>
+            </View>
+            <View>
+              <Text>Zero-Deduction Gold Exchange</Text>
+            </View>
+            <View>
+              <Text>Fair Price Policy</Text>
+            </View>
+            <View>
+              <Text>916 Hallmarked</Text>
+            </View>
+            <View>
+              <Text>Guaranteed</Text>
+            </View>
+            <View>
+              <Text>Assured Life Time Maintenance</Text>
+            </View>
+          </View>
+              </View> */}
+
+
+
           <View style={styles.getStartedContainer}>
             <TouchableOpacity style={styles.getStartedButton}>
               <Text style={styles.buttonText}>Get gold loan at lowest interest rates</Text>
@@ -127,61 +161,44 @@ const Home = () => {
             </TouchableOpacity>
           </View>
 
-
           {/* Our Collections */}
           <View style={styles.shopContainer}>
-  <Text style={styles.sectionTitle}>Our Collection</Text>
-  <Text style={{ textAlign: 'center', marginBottom: 10 }}>Discover our latest jewellery collection!</Text>
-  <View style={styles.productContainer}>
-    <View style={styles.product}>
-      <Image source={require('../../assets/images/Anklet.png')} style={styles.Collection} />
-      <Text style={{color:"#8d181a" }}>Anklet</Text>
-    </View>
-    <View style={styles.product}>
-      <Image source={require('../../assets/images/bangels.png')} style={styles.Collection} />
-      <Text style={{color:"#8d181a" }}>Bangels</Text>
-    </View>
-    <View style={styles.product}>
-      <Image source={require('../../assets/images/earring.png')} style={styles.Collection} />
-      <Text style={{color:"#8d181a" }}>Earrings</Text>
-    </View>
-    <View style={styles.product}>
-      <Image source={require('../../assets/images/Gold-Chain.png')} style={styles.Collection} />
-      <Text style={{color:"#8d181a" }}>Gold-Chain</Text>
-    </View>
-    <View style={styles.product}>
-      <Image source={require('../../assets/images/Gold-Pendant.png')} style={styles.Collection} />
-      <Text style={{color:"#8d181a" }}>Gold-Pendant</Text>
-    </View>
-    <View style={styles.product}>
-      <Image source={require('../../assets/images/Necklase.png')} style={styles.Collection} />
-      <Text style={{color:"#8d181a" }}>Necklase</Text>
-    </View>
-    <View style={styles.product}>
-      <Image source={require('../../assets/images/ring.png')} style={styles.Collection} />
-      <Text style={{color:"#8d181a" }}>Gold-Ring</Text>
-    </View>
-    <View style={styles.product}>
-      <Image source={require('../../assets/images/mangalasutra.png')} style={styles.Collection} />
-      <Text style={{color:"#8d181a" }}>Mangalasutra</Text>
-    </View>
-    <View style={styles.product}>
-      <Image source={require('../../assets/images/Nosepin.png')} style={styles.Collection} />
-      <Text style={{color:"#8d181a" }}>Nosepin</Text>
-    </View>
-    <View style={styles.product}>
-      <Image source={require('../../assets/images/bracelet.png')} style={styles.Collection} />
-      <Text style={{color:"#8d181a" }}>Bracelet</Text>
-    </View>
-  </View>
-</View>
+            <Text style={styles.sectionTitle}>Our Collection</Text>
+            <Text style={{ textAlign: 'center', marginBottom: 10 }}>Discover our latest jewellery collection!</Text>
+            <View style={styles.productContainer}>
+              {/* Example Products */}
+              {[
+                { id: 1, name: 'Anklet', image: require('../../assets/images/Anklet.png') },
+                { id: 2, name: 'Bangels', image: require('../../assets/images/bangels.png') },
+                { id: 3, name: 'Earrings', image: require('../../assets/images/earring.png') },
+                { id: 4, name: 'Gold-Chain', image: require('../../assets/images/Gold-Chain.png') },
+                { id: 5, name: 'Gold-Pendant', image: require('../../assets/images/Gold-Pendant.png') },
+                { id: 6, name: 'Necklase', image: require('../../assets/images/Necklase.png') },
+                { id: 7, name: 'Gold-Ring', image: require('../../assets/images/ring.png') },
+                { id: 8, name: 'Mangalasutra', image: require('../../assets/images/mangalasutra.png') },
+                { id: 9, name: 'Nosepin', image: require('../../assets/images/Nosepin.png') },
+                { id: 10, name: 'Bracelet', image: require('../../assets/images/bracelet.png') },
+              ].map((product) => (
+                <View key={product.id} style={styles.product}>
+                  <Image source={product.image} style={styles.Collection} />
+                  <Text style={styles.productText}>{product.name}</Text>
+                </View>
+              ))}
+            </View>
+          </View>
 
-
-
+          {/* Invest in Silver */}
           <View style={styles.investContainer}>
             <Text style={styles.sectionTitle}>Invest in Silver</Text>
-            <Text style={styles.investDetails}>Grow your wealth by 9% p.a.</Text>
-            <Text style={styles.silverPrice}>₹ 80.91/gm</Text>
+            <Text style={styles.investDetails}>Explore the benefits of investing in silver.</Text>
+            <TouchableOpacity style={styles.investButton}>
+              <Text style={styles.investButtonText}>Invest Now</Text>
+            </TouchableOpacity>
+          </View>
+
+          {/* Footer */}
+          <View style={styles.footerContainer}>
+            <Text style={styles.footerText}>Powered by React Native</Text>
           </View>
         </View>
       </ScrollView>
@@ -192,7 +209,7 @@ const Home = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#F5F5F5',
+    backgroundColor: 'white',
   },
   headerContainer: {
     position: 'absolute',
@@ -200,137 +217,142 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     backgroundColor: '#8d181a',
-    padding: 10,
     flexDirection: 'row',
-    alignItems: 'center',
     justifyContent: 'space-between',
-    zIndex: 10,
+    alignItems: 'center',
+    paddingVertical: 15,
+    paddingHorizontal: 10,
+    zIndex: 1000, // Ensures the header stays on top
+  },
+  logo: {
+    width: 150,
+    height: 50,
+  },
+  logo1: {
+    width: 100,
+    height: 30,
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  scrollableContent: {
+    flexGrow: 1,
+    paddingTop: 70, // Add padding to ensure content doesn't overlap with fixed header
   },
   locationRateContainer: {
-    position: 'absolute',
-    top: 60, // Adjust based on the height of your header
-    left: 0,
-    right: 0,
-    backgroundColor: '#F5F5F5',
-    padding: 10,
     flexDirection: 'row',
-    justifyContent: 'space-between',
-    zIndex: 10,
+    backgroundColor: '#f5f5f5',
+    padding: 15,
   },
   rateSection: {
     flex: 1,
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'flex-end',
-  },
-  rateText: {
-    color: '#8d181a',
   },
   locationSection: {
     flex: 1,
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'flex-start',
+  },
+  rateText: {
+    color: '#8d181a',
+    fontSize: 12,
+    fontWeight: 'bold',
+    marginLeft: 10,
   },
   locationText: {
     color: '#8d181a',
+    fontSize: 10,
+    marginLeft: 10,
   },
   sliderContainer: {
-    marginTop: 120, // Adjust based on the combined height of header and location/rate sections
-    position: 'relative',
+    flexDirection: 'row',
     alignItems: 'center',
+    position: 'relative',
   },
   scrollView: {
-    width: Dimensions.get('window').width,
+    flex: 1,
   },
   image: {
     width: Dimensions.get('window').width,
     height: 200,
-    resizeMode: 'cover',
   },
   arrowLeft: {
     position: 'absolute',
     left: 10,
-    top: '50%',
     zIndex: 1,
-    backgroundColor: '#8d181a',
-    padding: 10,
-    borderRadius: 20,
   },
   arrowRight: {
     position: 'absolute',
     right: 10,
-    top: '50%',
     zIndex: 1,
-    backgroundColor: '#8d181a',
-    padding: 10,
-    borderRadius: 20,
-  },
-  scrollableContent: {
-    flex: 1,
-    marginTop: 0, // Adjust to match the bottom of the slider container
   },
   constantImage: {
-    width: Dimensions.get('window').width,
+    width: '100%',
     height: 200,
-    borderColor: 'white',
-    borderWidth: 1,
+    resizeMode: 'cover',
+    marginVertical: 1,
   },
   contentContainer: {
-    padding: 16,
-  },
-  header: {
+    paddingHorizontal: 20,
+    justifyContent: 'center',
     alignItems: 'center',
-    marginBottom: 20,
+    margin: 10,
   },
   livePrice: {
-    fontSize: 18,
+    fontSize: 20,
     fontWeight: 'bold',
+    color: '#8d181a',
+    marginBottom: 10,
   },
   error: {
     color: 'red',
+    fontSize: 16,
   },
   getStartedContainer: {
     marginVertical: 20,
   },
   getStartedButton: {
-    backgroundColor: '#FFD700',
+    backgroundColor: '#8d181a',
     padding: 15,
     borderRadius: 5,
-    marginVertical: 5,
-    alignItems: 'center',
+    marginBottom: 10,
   },
   buttonText: {
+    color: 'white',
     fontSize: 16,
-    fontWeight: 'bold',
+    textAlign: 'center',
   },
   shopContainer: {
     marginVertical: 20,
-    paddingHorizontal: 16,
   },
   sectionTitle: {
-    fontSize: 18,
+    fontSize: 22,
     fontWeight: 'bold',
+    color: '#8d181a',
     marginBottom: 10,
     textAlign: 'center',
   },
   productContainer: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    justifyContent: 'space-between', // Space between the items
+    justifyContent: 'space-between',
+  },
+  productList: {
+    flexDirection: 'row',
   },
   product: {
-    width: '48%', // 48% width to allow space for margin and two items per row
-    marginBottom: 10,
+    width: Dimensions.get('window').width / 3,
+    marginBottom: 20,
     alignItems: 'center',
   },
-  productName: {
-    fontSize: 16,
-    fontWeight: 'bold',
+  Collection: {
+    width: 100,
+    height: 100,
+    marginBottom: 10,
   },
-  productPrice: {
-    fontSize: 14,
-    color: '#888',
+  productText: {
+    color: '#8d181a',
   },
   investContainer: {
     marginVertical: 20,
@@ -338,19 +360,28 @@ const styles = StyleSheet.create({
   },
   investDetails: {
     fontSize: 16,
-    marginBottom: 5,
+    color: '#555',
+    marginBottom: 10,
   },
-  silverPrice: {
-    fontSize: 18,
-    fontWeight: 'bold',
+  investButton: {
+    backgroundColor: '#8d181a',
+    padding: 15,
+    borderRadius: 5,
   },
-  Collection: {
-  width: 150, 
-  height: 120, 
-  borderWidth: 1,
-   borderColor:'#8d181a', 
-   borderRadius:'5',
-  }
+  investButtonText: {
+    color: 'white',
+    fontSize: 16,
+  },
+  footerContainer: {
+    marginTop: 20,
+    alignItems: 'center',
+    paddingVertical: 20,
+    backgroundColor: '#8d181a',
+  },
+  footerText: {
+    color: 'white',
+    fontSize: 16,
+  },
 });
 
 export default Home;

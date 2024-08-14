@@ -131,9 +131,11 @@ const styles = StyleSheet.create({
   logo: {
     height: 200,
     resizeMode: 'contain',
+    backgroundColor: 'black',
   },
   section: {
     marginTop: 20,
+    backgroundColor: '#faebd6',
   },
   sectionTitle: {
     fontSize: 18,
