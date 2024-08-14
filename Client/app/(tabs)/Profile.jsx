@@ -1,160 +1,161 @@
-import React, { useEffect, useState } from 'react';
-import { StyleSheet, Text, View, Image, ScrollView, TouchableOpacity, Dimensions, Alert } from 'react-native';
-import { LinearGradient } from 'expo-linear-gradient'; // For Expo gradient background
-import * as Animatable from 'react-native-animatable'; // For animations
-import { MaterialIcons } from '@expo/vector-icons'; // For icons
+import React, { useState, useEffect } from 'react';
+import { View, Text, TouchableOpacity, StyleSheet, Dimensions, Alert } from 'react-native';
+import * as Animatable from 'react-native-animatable';
 import { useRouter } from 'expo-router';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
+import AntDesign from '@expo/vector-icons/AntDesign';
 
 const { width } = Dimensions.get('window');
 
 const Profile = () => {
-  const [userData, setUserData] = useState({
-    username: '',
-    email: '',
-    mobile: '',
-    address: '',
-  });
+  const [showPopup, setShowPopup] = useState(false);
   const router = useRouter();
 
-  useEffect(() => {
-    const fetchUserData = async () => {
-      try {
-        const username = await AsyncStorage.getItem('username');
-        const email = await AsyncStorage.getItem('email');
-        const mobile = await AsyncStorage.getItem('mobile');
-        const address = await AsyncStorage.getItem('address');
-
-        if (email && mobile && address) {
-          setUserData({
-            username,
-            email,
-            mobile,
-            address
-          });
-        }
-      } catch (error) {
-        console.error('Failed to load user data from AsyncStorage', error);
-        Alert.alert('Error', 'Failed to load user data.');
+  // Function to check if the client is registered
+  const checkRegistrationStatus = async () => {
+    try {
+      const isRegistered = await AsyncStorage.getItem('isRegistered');
+      if (isRegistered) {
+        router.push('/login');
+      } else {
+        router.push('/register');
       }
-    };
-
-    fetchUserData();
-  }, []);
+    } catch (error) {
+      Alert.alert('Error', 'Failed to check registration status');
+    }
+  };
 
   return (
-    <LinearGradient colors={['#4c669f', '#3b5998', '#192f5d']} style={styles.container}>
-      <ScrollView contentContainerStyle={styles.scrollContainer}>
-        <View style={styles.profileContainer}>
-          <Animatable.View animation="fadeIn" duration={1500} style={styles.imageContainer}>
-            <Image source={require('../../assets/images/UserProfile.jpg')} style={styles.image} />
-          </Animatable.View>
-          <Animatable.Text animation="fadeInUp" duration={1500} style={styles.name}>{userData.username}</Animatable.Text>
-          <Animatable.Text animation="fadeInUp" duration={1700} style={styles.email}>{userData.email}</Animatable.Text>
-          <Animatable.Text animation="fadeInUp" duration={1700} style={styles.mobile}>{userData.mobile}</Animatable.Text>
-          <Animatable.Text animation="fadeInUp" duration={1900} style={styles.address}>{userData.address}</Animatable.Text>
-          
-          {/* Additional Info Section */}
-          <View style={styles.additionalInfoContainer}>
-            <TouchableOpacity style={styles.button}>
-              <MaterialIcons name="edit" size={24} color="#fff" />
-              <Text style={styles.buttonText}>Edit Profile</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.button}>
-              <MaterialIcons name="settings" size={24} color="#fff" />
-              <Text style={styles.buttonText}>Settings</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={[styles.button, styles.historyButton]}
-              onPress={() => router.push('/user-history')}
-            >
-              <MaterialIcons name="history" size={24} color="#fff" />
-              <Text style={styles.buttonText}>User History</Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-      </ScrollView>
-    </LinearGradient>
+    <View style={styles.container}>
+      {/* Header */}
+      <View style={styles.headerContainer}>
+        <FontAwesome6 name="bars" size={24} color="white" />
+        <AntDesign name="shoppingcart" size={24} color="white" />
+      </View>
+
+      {/* Profile Box */}
+      <Animatable.View animation="fadeIn" style={styles.profileBox}>
+        <Text style={styles.heading}>Create Profile</Text>
+        <Text style={styles.subText}>Onboard to experience the best</Text>
+        <TouchableOpacity
+          style={styles.button}
+          onPress={() => setShowPopup(true)}
+        >
+          <Text style={styles.buttonText}>Sign Up / Sign In</Text>
+        </TouchableOpacity>
+      </Animatable.View>
+
+      {/* Popup Window */}
+      {showPopup && (
+        <Animatable.View
+          animation="fadeInUp"
+          duration={500}
+          style={styles.popupContainer}
+        >
+          <Text style={styles.popupHeading}>Welcome to Attica Gold</Text>
+          <Text style={styles.popupText}>Register your account to start saving</Text>
+          <TouchableOpacity
+            style={styles.popupButton}
+            onPress={checkRegistrationStatus} // Call the function to check registration status
+          >
+            <Text style={styles.popupButtonText}>Register / Sign-In Now →</Text>
+          </TouchableOpacity>
+        </Animatable.View>
+      )}
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingTop: 20, // Add padding at the top
-  },
-  scrollContainer: {
-    flexGrow: 1,
+    backgroundColor: '#f4f4f4',
+    justifyContent: 'center',
     alignItems: 'center',
-    paddingBottom: 20, // Add bottom padding
   },
-  profileContainer: {
+  headerContainer: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    backgroundColor: '#8d181a',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
     alignItems: 'center',
-    padding: 30, // Increased padding for better spacing
+    paddingVertical: 15,
+    paddingHorizontal: 10,
+    zIndex: 1000,
+  },
+  profileBox: {
     backgroundColor: '#fff',
-    borderRadius: 20, // Rounded corners
-    marginHorizontal: 20, // Horizontal margin for better layout
-    marginVertical: 30,
-    elevation: 8, // Increased shadow for more depth
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.2,
-    shadowRadius: 15,
-  },
-  imageContainer: {
-    borderRadius: 80, // Circular container
-    overflow: 'hidden',
-    borderWidth: 6,
-    borderColor: '#fff',
-    marginBottom: 15,
-  },
-  image: {
-    width: 160,
-    height: 160,
-    borderRadius: 80, // Circular image
-    transform: [{ scale: 1.05 }], // Slight zoom effect
-  },
-  name: {
-    fontSize: 30,
-    fontWeight: 'bold',
-    color: '#333', // Darker text for better readability
-    marginVertical: 10,
-  },
-  email: {
-    fontSize: 18,
-    color: '#555', // Slightly lighter text for email
-    marginBottom: 5,
-  },
-  address: {
-    fontSize: 16,
-    color: '#777', // Even lighter text for address
-    textAlign: 'center',
-    marginBottom: 20,
-  },
-  additionalInfoContainer: {
-    width: '100%',
+    padding: 30,
+    borderRadius: 10,
     alignItems: 'center',
+    elevation: 10,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 5 },
+    shadowOpacity: 0.2,
+    shadowRadius: 10,
+  },
+  heading: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    marginBottom: 10,
+  },
+  subText: {
+    fontSize: 16,
+    color: '#777',
+    marginBottom: 20,
   },
   button: {
     backgroundColor: '#007BFF',
-    flexDirection: 'row',
-    alignItems: 'center',
     paddingVertical: 12,
     paddingHorizontal: 20,
     borderRadius: 25,
-    width: '85%',
-    justifyContent: 'center',
-    marginVertical: 8,
-    elevation: 2, // Slight shadow for buttons
   },
   buttonText: {
     color: '#fff',
     fontSize: 18,
     fontWeight: 'bold',
-    marginLeft: 10,
   },
-  historyButton: {
-    backgroundColor: '#28a745', // Green button for user history
+  popupContainer: {
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
+    backgroundColor: '#fff',
+    padding: 30,
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20,
+    alignItems: 'center',
+    elevation: 20,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 5 },
+    shadowOpacity: 0.3,
+    shadowRadius: 15,
+  },
+  popupHeading: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    marginBottom: 10,
+  },
+  popupText: {
+    fontSize: 16,
+    color: '#555',
+    marginBottom: 20,
+    textAlign: 'center',
+  },
+  popupButton: {
+    backgroundColor: '#28a745',
+    paddingVertical: 12,
+    paddingHorizontal: 20,
+    borderRadius: 25,
+  },
+  popupButtonText: {
+    color: '#fff',
+    fontSize: 18,
+    fontWeight: 'bold',
   },
 });
 

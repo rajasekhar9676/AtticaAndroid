@@ -29,6 +29,7 @@ const AllProducts = () => {
   }, []);
 
   return (
+    <>
     <ScrollView contentContainerStyle={styles.container}>
       {loading ? (
         <ActivityIndicator size="large" color="#0000ff" />
@@ -50,6 +51,7 @@ const AllProducts = () => {
         )
       )}
     </ScrollView>
+    </>
   );
 };
 
@@ -60,6 +62,7 @@ const styles = StyleSheet.create({
     padding: 16,
     backgroundColor: '#f5f5f5',
   },
+ 
   productContainer: {
     marginBottom: 20,
     backgroundColor: '#fff',

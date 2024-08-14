@@ -3,6 +3,8 @@ import React, { useState, useEffect } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import axios from 'axios';
 import { BASE_URL } from '../../constants';
+import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
+import AntDesign from '@expo/vector-icons/AntDesign';
 
 const ProductCategory = () => {
   const [categories, setCategories] = useState([]);
@@ -57,9 +59,18 @@ const ProductCategory = () => {
   );
 
   return (
+    <>
+  {/* Header */}
+    <View style={styles.headerContainer}>
+    <FontAwesome6 name="bars" size={24} color="white" />
+    <Image source={require('../../assets/images/logo.png')} style={styles.logo} />
+    <AntDesign name="shoppingcart" size={24} color="white" />
+  </View>
+
+  {/* Mian container */}
     <ScrollView contentContainerStyle={styles.container}>
       <View style={styles.logoContainer}>
-        <Image source={require('./../../assets/images/logo4.png')} style={styles.logo} />
+        <Image source={require('./../../assets/images/logo4.png')} style={styles.logo1} />
       </View>
 
       <View style={styles.section}>
@@ -113,6 +124,7 @@ const ProductCategory = () => {
         )}
       </View> */}
     </ScrollView>
+    </>
   );
 };
 
@@ -122,13 +134,31 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff',
+    marginTop: 100,
+  },
+  headerContainer: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    backgroundColor: '#8d181a',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingVertical: 15,
+    paddingHorizontal: 10,
+    zIndex: 1000, // Ensures the header stays on top
+  },
+  logo: {
+    width: 150,
+    height: 50,
   },
   logoContainer: {
     display: 'flex',
     alignItems: 'center',
     padding: 20,
   },
-  logo: {
+  logo1: {
     height: 200,
     resizeMode: 'contain',
     backgroundColor: 'black',
