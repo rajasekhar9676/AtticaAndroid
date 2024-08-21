@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, Dimensions, Alert } from 'react-native';
+import React, { useState } from 'react';
+import { View, Text, TouchableOpacity, Image,StyleSheet, Dimensions, Alert, ImageBackground } from 'react-native';
 import * as Animatable from 'react-native-animatable';
 import { useRouter } from 'expo-router';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -27,52 +27,68 @@ const Profile = () => {
   };
 
   return (
-    <View style={styles.container}>
-      {/* Header */}
-      <View style={styles.headerContainer}>
-        <FontAwesome6 name="bars" size={24} color="white" />
-        <AntDesign name="shoppingcart" size={24} color="white" />
-      </View>
+    <ImageBackground
+      source={require('../../assets/images/back6.png')}
+      style={styles.backgroundImage}
+    >
+      <View style={styles.container}>
+        {/* Header */}
+        <View style={styles.headerContainer}>
+          <FontAwesome6 name="bars" size={24} color="white" />
+          <Image source={require('../../assets/images/logo.png')} style={styles.logo} />
+          <AntDesign name="shoppingcart" size={24} color="white" />
+        </View>
 
-      {/* Profile Box */}
-      <Animatable.View animation="fadeIn" style={styles.profileBox}>
-        <Text style={styles.heading}>Create Profile</Text>
-        <Text style={styles.subText}>Onboard to experience the best</Text>
-        <TouchableOpacity
-          style={styles.button}
-          onPress={() => setShowPopup(true)}
-        >
-          <Text style={styles.buttonText}>Sign Up / Sign In</Text>
-        </TouchableOpacity>
-      </Animatable.View>
-
-      {/* Popup Window */}
-      {showPopup && (
-        <Animatable.View
-          animation="fadeInUp"
-          duration={500}
-          style={styles.popupContainer}
-        >
-          <Text style={styles.popupHeading}>Welcome to Attica Gold</Text>
-          <Text style={styles.popupText}>Register your account to start saving</Text>
+        {/* Profile Box */}
+        <Animatable.View animation="fadeIn" style={styles.profileBox}>
+          <Text style={styles.heading}>Create Profile</Text>
+          <Text style={styles.subText}>Onboard to experience the best</Text>
           <TouchableOpacity
-            style={styles.popupButton}
-            onPress={checkRegistrationStatus} // Call the function to check registration status
+            style={styles.button}
+            onPress={() => setShowPopup(true)}
           >
-            <Text style={styles.popupButtonText}>Register / Sign-In Now →</Text>
+            <Text style={styles.buttonText}>Sign Up / Sign In</Text>
           </TouchableOpacity>
         </Animatable.View>
-      )}
-    </View>
+
+        {/* Popup Window */}
+        {showPopup && (
+          <Animatable.View
+            animation="fadeInUp"
+            duration={500}
+            style={styles.popupContainer}
+          >
+            <Text style={styles.popupHeading}>Welcome to Attica Gold</Text>
+            <Text style={styles.popupText}>Register your account to start saving</Text>
+            <TouchableOpacity
+              style={styles.popupButton}
+              onPress={checkRegistrationStatus} // Call the function to check registration status
+            >
+              <Text style={styles.popupButtonText}>Register / Sign-In Now →</Text>
+            </TouchableOpacity>
+          </Animatable.View>
+        )}
+      </View>
+    </ImageBackground>
   );
 };
 
 const styles = StyleSheet.create({
+  backgroundImage: {
+    flex: 1,
+    width: '100%', // Full width of the screen
+    height: '100%', // Full height of the screen
+    resizeMode: 'cover', // Ensures the image covers the entire screen
+  },
   container: {
     flex: 1,
-    backgroundColor: '#f4f4f4',
+    backgroundColor: 'transparent', // Ensure the container's background is transparent
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  logo: {
+    width: 150,
+    height: 50,
   },
   headerContainer: {
     position: 'absolute',

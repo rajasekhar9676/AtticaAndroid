@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { StyleSheet, Text, View, TouchableOpacity, ScrollView, TextInput } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity, ScrollView, TextInput, ImageBackground } from 'react-native';
+import * as Animatable from 'react-native-animatable';
 
 const GoldLoan = () => {
   const [selectedOption, setSelectedOption] = useState(null);
@@ -9,68 +10,80 @@ const GoldLoan = () => {
   };
 
   return (
-    <ScrollView style={styles.container}>
-      <View style={styles.header}>
-        <Text style={styles.headerText}>Gold Loan Services</Text>
-      </View>
+    <ImageBackground
+      source={require('../../assets/images/back6.png')}
+      style={styles.backgroundImage}
+    >
+      <ScrollView contentContainerStyle={styles.container}>
+        <Animatable.View animation="fadeInDown" duration={1200} style={styles.header}>
+          <Text style={styles.headerText}>Gold Loan Services</Text>
+        </Animatable.View>
 
-      <TouchableOpacity
-        style={styles.box}
-        onPress={() => handleOptionClick('loanAgainstGold')}
-      >
-        <Text style={styles.boxText}>Loan Against Gold</Text>
-      </TouchableOpacity>
+        <Animatable.View animation="fadeInUp" duration={1000} delay={200} style={styles.boxContainer}>
+          <TouchableOpacity
+            style={styles.box}
+            onPress={() => handleOptionClick('loanAgainstGold')}
+          >
+            <Text style={styles.boxText}>Loan Against Gold</Text>
+          </TouchableOpacity>
 
-      {selectedOption === 'loanAgainstGold' && (
-        <View style={styles.detailsBox}>
-          <Text style={styles.step}>1. Apply for Gold Loan</Text>
-          <Text style={styles.step}>2. Assess Your Gold</Text>
-          <Text style={styles.step}>3. Get Your Loan</Text>
+          {selectedOption === 'loanAgainstGold' && (
+            <Animatable.View animation="fadeIn" duration={1000} style={styles.detailsBox}>
+              <Text style={styles.step}>1. Apply for Gold Loan</Text>
+              <Text style={styles.step}>2. Assess Your Gold</Text>
+              <Text style={styles.step}>3. Get Your Loan</Text>
 
-          <View style={styles.calculatorBox}>
-            <Text style={styles.calculatorTitle}>Loan Calculator</Text>
-            <TextInput
-              style={styles.input}
-              placeholder="Enter Gold Weight (grams)"
-              keyboardType="numeric"
-            />
-            <TextInput
-              style={styles.input}
-              placeholder="Enter Gold Purity (%)"
-              keyboardType="numeric"
-            />
-            <TouchableOpacity style={styles.calculateButton}>
-              <Text style={styles.calculateButtonText}>Calculate</Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-      )}
+              <View style={styles.calculatorBox}>
+                <Text style={styles.calculatorTitle}>Loan Calculator</Text>
+                <TextInput
+                  style={styles.input}
+                  placeholder="Enter Gold Weight (grams)"
+                  keyboardType="numeric"
+                />
+                <TextInput
+                  style={styles.input}
+                  placeholder="Enter Gold Purity (%)"
+                  keyboardType="numeric"
+                />
+                <TouchableOpacity style={styles.calculateButton}>
+                  <Text style={styles.calculateButtonText}>Calculate</Text>
+                </TouchableOpacity>
+              </View>
+            </Animatable.View>
+          )}
 
-      <TouchableOpacity
-        style={styles.box}
-        onPress={() => handleOptionClick('sellOldGold')}
-      >
-        <Text style={styles.boxText}>Sell Old Gold</Text>
-      </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.box}
+            onPress={() => handleOptionClick('sellOldGold')}
+          >
+            <Text style={styles.boxText}>Sell Old Gold</Text>
+          </TouchableOpacity>
 
-      {selectedOption === 'sellOldGold' && (
-        <View style={styles.detailsBox}>
-          <Text style={styles.step}>1. Bring Your Old Gold</Text>
-          <Text style={styles.step}>2. Test for Purity</Text>
-          <Text style={styles.step}>3. Receive Instant Cash</Text>
-        </View>
-      )}
-    </ScrollView>
+          {selectedOption === 'sellOldGold' && (
+            <Animatable.View animation="fadeIn" duration={1000} style={styles.detailsBox}>
+              <Text style={styles.step}>1. Bring Your Old Gold</Text>
+              <Text style={styles.step}>2. Test for Purity</Text>
+              <Text style={styles.step}>3. Receive Instant Cash</Text>
+            </Animatable.View>
+          )}
+        </Animatable.View>
+      </ScrollView>
+    </ImageBackground>
   );
 };
 
 export default GoldLoan;
 
 const styles = StyleSheet.create({
-  container: {
+  backgroundImage: {
     flex: 1,
+    width: '100%',
+    height: '100%',
+    resizeMode: 'cover',
+  },
+  container: {
+    flexGrow: 1,
     padding: 20,
-    backgroundColor: '#fafafa',
   },
   header: {
     alignItems: 'center',
@@ -79,7 +92,13 @@ const styles = StyleSheet.create({
   headerText: {
     fontSize: 26,
     fontWeight: 'bold',
-    color: '#d4af37', // Gold color for the title
+    color: 'black',
+    textShadowOffset: { width: 1, height: 1 },
+    textShadowRadius: 10,
+  },
+  boxContainer: {
+    flex: 1,
+    justifyContent: 'center',
   },
   box: {
     backgroundColor: '#fff',
@@ -117,6 +136,8 @@ const styles = StyleSheet.create({
     backgroundColor: '#f0f0f0',
     padding: 20,
     borderRadius: 10,
+    borderWidth: 1,
+    borderColor: '#ddd',
   },
   calculatorTitle: {
     fontSize: 18,

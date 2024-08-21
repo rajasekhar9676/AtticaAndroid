@@ -5,6 +5,7 @@ import axios from 'axios';
 import { BASE_URL } from '../../constants';
 import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
 import AntDesign from '@expo/vector-icons/AntDesign';
+import * as Animatable from 'react-native-animatable';
 
 const ProductCategory = () => {
   const [categories, setCategories] = useState([]);
@@ -49,82 +50,69 @@ const ProductCategory = () => {
   };
 
   const renderCategoryItem = ({ item }) => (
-    <View style={styles.categoryContainer}>
+    <Animatable.View animation="slideInUp" duration={500} style={styles.categoryContainer}>
       <TouchableOpacity style={styles.categoryItem} onPress={() => handleCategoryPress(item.category)}>
         <Image source={{ uri: item.image ? (item.image.startsWith('http') ? item.image : `${BASE_URL}/uploads/${item.image}`) : null }} style={styles.categoryImage} />
         <Text style={styles.categoryName}>{item.category}</Text>
         <Text style={styles.categoryPrice}>Starts at ₹{item.price}</Text>
       </TouchableOpacity>
-    </View>
+    </Animatable.View>
   );
 
   return (
-    <>
-  {/* Header */}
-    <View style={styles.headerContainer}>
-    <FontAwesome6 name="bars" size={24} color="white" />
-    <Image source={require('../../assets/images/logo.png')} style={styles.logo} />
-    <AntDesign name="shoppingcart" size={24} color="white" />
-  </View>
+    <View style={styles.container}>
+      {/* Header */}
+      <Animatable.View animation="fadeInDown" duration={800} style={styles.headerContainer}>
+        <FontAwesome6 name="bars" size={24} color="white" />
+        <Image source={require('../../assets/images/logo.png')} style={styles.logo} />
+        <AntDesign name="shoppingcart" size={24} color="white" />
+      </Animatable.View>
 
-  {/* Mian container */}
-    <ScrollView contentContainerStyle={styles.container}>
-      <View style={styles.logoContainer}>
-        <Image source={require('./../../assets/images/logo4.png')} style={styles.logo1} />
-      </View>
+      {/* Main container */}
+      <ScrollView contentContainerStyle={styles.scrollContainer}>
+        <View style={styles.logoContainer}>
+          <Image source={require('./../../assets/images/logo4.png')} style={styles.logo1} />
+        </View>
 
-      <View style={styles.section}>
-        <Text style={styles.sectionTitle}>Product Categories</Text>
-        {loading ? (
-          <ActivityIndicator size="large" color="#0000ff" />
-        ) : (
+        <Animatable.View animation="fadeIn" duration={1000} style={styles.section}>
+          <Text style={styles.sectionTitle}>Product Categories</Text>
+          {loading ? (
+            <ActivityIndicator size="large" color="#0000ff" />
+          ) : (
+            <FlatList
+              data={categories}
+              renderItem={renderCategoryItem}
+              keyExtractor={item => (item.id ? item.id.toString() : Math.random().toString())}
+              horizontal
+            />
+          )}
+        </Animatable.View>
+
+        <Animatable.View animation="fadeIn" duration={1000} style={styles.section}>
+          <Text style={styles.sectionTitle}>Gold Bars</Text>
+          {loading ? (
+            <ActivityIndicator size="large" color="#0000ff" />
+          ) : (
+            <FlatList
+              data={bars} // Use bars state for displaying "Bars" category products
+              renderItem={renderCategoryItem}
+              keyExtractor={item => (item.id ? item.id.toString() : Math.random().toString())}
+              horizontal
+            />
+          )}
+        </Animatable.View>
+
+        <Animatable.View animation="fadeIn" duration={1000} style={styles.section}>
+          <Text style={styles.sectionTitle}>What's Trending</Text>
           <FlatList
-            data={categories}
+            data={categories.slice(0, 4)}
             renderItem={renderCategoryItem}
             keyExtractor={item => (item.id ? item.id.toString() : Math.random().toString())}
             horizontal
           />
-        )}
-      </View>
-
-      <View style={styles.section}>
-        <Text style={styles.sectionTitle}>Gold Bars</Text>
-        {loading ? (
-          <ActivityIndicator size="large" color="#0000ff" />
-        ) : (
-          <FlatList
-            data={bars} // Use bars state for displaying "Bars" category products
-            renderItem={renderCategoryItem}
-            keyExtractor={item => (item.id ? item.id.toString() : Math.random().toString())}
-            horizontal
-          />
-        )}
-      </View>
-      <View style={styles.section}>
-        <Text style={styles.sectionTitle}>What's Trending</Text>
-        <FlatList
-          data={categories.slice(0, 4)}
-          renderItem={renderCategoryItem}
-          keyExtractor={item => (item.id ? item.id.toString() : Math.random().toString())}
-          horizontal
-        />
-      </View>
-
-      {/* <View style={styles.section}>
-        <Text style={styles.sectionTitle}>Gold Bars</Text>
-        {loading ? (
-          <ActivityIndicator size="large" color="#0000ff" />
-        ) : (
-          <FlatList
-            data={bars} // Use bars state for displaying "Bars" category products
-            renderItem={renderCategoryItem}
-            keyExtractor={item => (item.id ? item.id.toString() : Math.random().toString())}
-            horizontal
-          />
-        )}
-      </View> */}
-    </ScrollView>
-    </>
+        </Animatable.View>
+      </ScrollView>
+    </View>
   );
 };
 
@@ -133,8 +121,11 @@ export default ProductCategory;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
-    marginTop: 100,
+    backgroundColor: 'black', // Black background for the entire screen
+  },
+  scrollContainer: {
+    padding: 20,
+    marginTop: 40,
   },
   headerContainer: {
     position: 'absolute',
@@ -165,22 +156,27 @@ const styles = StyleSheet.create({
   },
   section: {
     marginTop: 20,
-    backgroundColor: '#faebd6',
+    backgroundColor: 'white', // Dark background for each section
+    padding: 10,
+    borderRadius: 10,
   },
   sectionTitle: {
     fontSize: 18,
     fontWeight: 'bold',
-    marginLeft: 10,
+    color: 'black', // Adjusted for better visibility on white background
   },
   categoryContainer: {
     borderWidth: 1,
     borderColor: 'gray',
     margin: 5,
     borderRadius: 15,
+    backgroundColor: '#e6747d', // Dark background for category items
   },
   categoryItem: {
     margin: 10,
     alignItems: 'center',
+    padding: 10,
+    borderRadius: 10,
   },
   categoryImage: {
     width: 100,
@@ -190,10 +186,11 @@ const styles = StyleSheet.create({
   categoryName: {
     marginTop: 5,
     fontSize: 16,
+    color: 'white',
   },
   categoryPrice: {
     marginTop: 5,
     fontSize: 14,
-    color: 'grey',
+    color: 'white',
   },
 });

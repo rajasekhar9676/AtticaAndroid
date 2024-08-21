@@ -4,6 +4,7 @@ import axios from 'axios';
 import { BASE_URL } from '../../constants';
 import Icon from 'react-native-vector-icons/Ionicons'; // For icons
 import { useNavigation } from '@react-navigation/native'; 
+import * as Animatable from 'react-native-animatable'; // For animations
 
 const CategoryPage = ({ route }) => {
   const navigation = useNavigation();
@@ -31,7 +32,6 @@ const CategoryPage = ({ route }) => {
           setLoading(false);
       }
   };
-  
 
     fetchProducts();
   }, [category, sortOrder]);
@@ -41,30 +41,30 @@ const CategoryPage = ({ route }) => {
   };
 
   const renderItem = ({ item }) => (
-    <TouchableOpacity onPress={() => navigation.navigate('ProductDetails', { product: item })}>
-
-      <View style={styles.itemContainer}>
-      
+    <Animatable.View animation="fadeInUp" duration={800} style={styles.itemContainer}>
+      <TouchableOpacity onPress={() => navigation.navigate('ProductDetails', { product: item })}>
         <Image source={{ uri: item.image ? (item.image.startsWith('http') ? item.image : `${BASE_URL}/uploads/${item.image}`) : null }} style={styles.itemImage} />
         <Text style={styles.itemName}>{item.name}</Text>
         <Text style={styles.itemPrice}>₹{item.price}</Text>
-      </View>
-    </TouchableOpacity>
+      </TouchableOpacity>
+    </Animatable.View>
   );
   
   return (
     <View style={styles.container}>
       {/* Header */}
-      <View style={styles.header}>
+      <Animatable.View animation="fadeInDown" duration={1200} style={styles.header}>
         <Text style={styles.title}>{category}</Text>
-        <TouchableOpacity onPress={handleSortChange} style={styles.sortButton}>
-          <Text style={styles.sortText}>Sort By Price: {sortOrder === 'asc' ? 'Low to High' : 'High to Low'}</Text>
-          <Icon name={sortOrder === 'asc' ? 'arrow-down' : 'arrow-up'} size={16} color="#000" />
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.filterButton}>
-          <Icon name="filter" size={24} color="#000" />
-        </TouchableOpacity>
-      </View>
+        <View style={styles.headerActions}>
+          <TouchableOpacity onPress={handleSortChange} style={styles.sortButton}>
+            <Text style={styles.sortText}>Sort By Price: {sortOrder === 'asc' ? 'Low to High' : 'High to Low'}</Text>
+            <Icon name={sortOrder === 'asc' ? 'arrow-down' : 'arrow-up'} size={16} color="#fff" />
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.filterButton}>
+            <Icon name="filter" size={24} color="#fff" />
+          </TouchableOpacity>
+        </View>
+      </Animatable.View>
 
       {/* Category Tabs */}
       <View style={styles.categoryTabs}>
@@ -77,7 +77,7 @@ const CategoryPage = ({ route }) => {
 
       {/* Products List */}
       {loading ? (
-        <ActivityIndicator size="large" color="#0000ff" />
+        <ActivityIndicator size="large" color="#ffd700" style={styles.loader} />
       ) : (
         <FlatList
           data={products}
@@ -97,24 +97,39 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 10,
-    backgroundColor: '#fff',
+    backgroundColor: '#f5f5f5', // Light gray background
   },
   header: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
+    backgroundColor: '#000', // Dark background for header
+    padding: 10,
+    borderRadius: 10,
+    marginBottom: 10,
+    shadowColor: '#000',
+    shadowOpacity: 0.3,
+    shadowRadius: 10,
+    elevation: 5,
   },
   title: {
     fontSize: 24,
     fontWeight: 'bold',
+    color: '#fff',
+  },
+  headerActions: {
+    flexDirection: 'row',
+    alignItems: 'center',
   },
   sortButton: {
     flexDirection: 'row',
     alignItems: 'center',
+    marginRight: 10,
   },
   sortText: {
     marginRight: 5,
     fontSize: 16,
+    color: '#fff',
   },
   filterButton: {
     padding: 5,
@@ -128,7 +143,7 @@ const styles = StyleSheet.create({
     paddingVertical: 5,
     paddingHorizontal: 15,
     borderRadius: 20,
-    backgroundColor: '#f0f0f0',
+    backgroundColor: '#dcdcdc', // Light gray for inactive tabs
   },
   activeTab: {
     backgroundColor: '#FFD700', // Gold color for active tab
@@ -148,10 +163,14 @@ const styles = StyleSheet.create({
     margin: 5,
     alignItems: 'center',
     borderWidth: 1,
-    borderColor: 'gray',
+    borderColor: '#ddd',
     padding: 10,
     borderRadius: 10,
-    maxWidth: '48%', // Each item takes 48% of the width
+    backgroundColor: '#fff',
+    shadowColor: '#000',
+    shadowOpacity: 0.1,
+    shadowRadius: 10,
+    elevation: 4,
   },
   itemImage: {
     width: 100,
@@ -161,11 +180,16 @@ const styles = StyleSheet.create({
   itemName: {
     fontSize: 18,
     marginTop: 10,
+    color: '#333',
   },
   itemPrice: {
     fontSize: 16,
-    color: 'gray',
+    color: '#888',
     marginTop: 5,
   },
+  loader: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
 });
-

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, Button, StyleSheet, Alert, Image, FlatList } from 'react-native';
+import { View, Text, Button, StyleSheet, Alert, Image, FlatList, ImageBackground } from 'react-native';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as Location from 'expo-location';
@@ -63,12 +63,14 @@ const FindBranch = () => {
   };
 
   return (
-    <>
-
+    <ImageBackground
+      source={require('../../assets/images/back6.png')}
+      style={styles.backgroundImage}
+    >
       {/* Header */}
       <View style={styles.headerContainer}>
         <FontAwesome6 name="bars" size={24} color="white" />
-        <Image source={require('../../assets/images/logo.png')} style={styles.logo}/>
+        <Image source={require('../../assets/images/logo.png')} style={styles.logo} />
         <AntDesign name="shoppingcart" size={24} color="white" />
       </View>
 
@@ -87,11 +89,17 @@ const FindBranch = () => {
           )}
         />
       </View>
-    </>
+    </ImageBackground>
   );
 };
 
 const styles = StyleSheet.create({
+  backgroundImage: {
+    flex: 1,
+    width: '100%',
+    height: '100%',
+    resizeMode: 'cover',
+  },
   headerContainer: {
     position: 'absolute',
     top: 0,
@@ -125,11 +133,6 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: 'bold',
   },
-
-
-
-
-  
 });
 
 export default FindBranch;

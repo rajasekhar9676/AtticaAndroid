@@ -6,3 +6,6 @@ const { findNearestBranches } = require('../controllers/branchController');
 router.get('/find-nearest', findNearestBranches);
 
 module.exports = router;
+
+
+

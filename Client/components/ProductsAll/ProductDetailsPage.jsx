@@ -1,18 +1,19 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, Image, TouchableOpacity, ScrollView, ActivityIndicator } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
+import * as Animatable from 'react-native-animatable';
 
 const ProductDetailsPage = ({ route, navigation }) => {
   const [loading, setLoading] = useState(true);
   const [product, setProduct] = useState(null);
-  const [selectedWeight, setSelectedWeight] = useState(null); // Initialize with null
+  const [selectedWeight, setSelectedWeight] = useState(null);
 
   useEffect(() => {
     if (route.params && route.params.product) {
       setProduct(route.params.product);
       setLoading(false);
       if (Array.isArray(route.params.product.weights) && route.params.product.weights.length > 0) {
-        setSelectedWeight(route.params.product.weights[0]); // Set default weight here
+        setSelectedWeight(route.params.product.weights[0]);
       }
     } else {
       console.error("No product data provided.");
@@ -20,13 +21,12 @@ const ProductDetailsPage = ({ route, navigation }) => {
     }
   }, [route.params]);
 
-  if (!product || !Array.isArray(product.weights) || product.weights.length === 0) {
-    console.error("Product or weights data is missing.");
-    return <Text style={styles.errorText}>Error: Product details are missing.</Text>;
+  if (loading) {
+    return <ActivityIndicator size="large" color="#007bff" style={styles.loader} />;
   }
 
-  if (loading) {
-    return <ActivityIndicator size="large" color="#0000ff" style={styles.loader} />;
+  if (!product || !Array.isArray(product.weights) || product.weights.length === 0) {
+    return <Text style={styles.errorText}>Error: Product details are missing.</Text>;
   }
 
   return (
@@ -34,47 +34,55 @@ const ProductDetailsPage = ({ route, navigation }) => {
       {/* Header */}
       <View style={styles.header}>
         <TouchableOpacity onPress={() => navigation.goBack()}>
-          <Icon name="arrow-back" size={24} color="#000" />
+          <Icon name="arrow-back" size={24} color="#fff" />
         </TouchableOpacity>
-        <TouchableOpacity>
-          <Icon name="share-outline" size={24} color="#000" />
-        </TouchableOpacity>
-        <TouchableOpacity>
-          <Icon name="heart-outline" size={24} color="#000" />
-        </TouchableOpacity>
-        <TouchableOpacity>
-          <Icon name="cart-outline" size={24} color="#000" />
-        </TouchableOpacity>
+        <View style={styles.headerIcons}>
+          <TouchableOpacity>
+            <Icon name="share-outline" size={24} color="#fff" />
+          </TouchableOpacity>
+          <TouchableOpacity>
+            <Icon name="heart-outline" size={24} color="#fff" />
+          </TouchableOpacity>
+          <TouchableOpacity>
+            <Icon name="cart-outline" size={24} color="#fff" />
+          </TouchableOpacity>
+        </View>
       </View>
 
       {/* Product Image */}
-      <View style={styles.imageContainer}>
+      <Animatable.View animation="fadeIn" duration={1200} style={styles.imageContainer}>
         <Image source={{ uri: product.image }} style={styles.productImage} />
         <View style={styles.imageThumbnails}>
           {product.images?.map((img, index) => (
             <Image key={index} source={{ uri: img }} style={styles.thumbnail} />
           ))}
         </View>
-      </View>
+      </Animatable.View>
 
       {/* Product Name and Price */}
-      <Text style={styles.productName}>{product.name}</Text>
-      <Text style={styles.productPrice}>₹{product.price}</Text>
-      <Text style={styles.emiText}>EMI starts from just ₹{(product.price / 12).toFixed(2)}/month</Text>
+      <Animatable.View animation="fadeInUp" duration={1200} style={styles.productDetails}>
+        <Text style={styles.productName}>{product.name}</Text>
+        <Text style={styles.productPrice}>₹{product.price}</Text>
+        <Text style={styles.emiText}>EMI starts from just ₹{(product.price / 12).toFixed(2)}/month</Text>
+      </Animatable.View>
 
       {/* Weight Selection */}
       <Text style={styles.sectionTitle}>Choose weight</Text>
       <View style={styles.weightsContainer}>
         {product.weights.map((weight, index) => (
-          <TouchableOpacity 
-            key={index} 
-            style={[styles.weightOption, selectedWeight === weight && styles.selectedWeight]} 
-            onPress={() => setSelectedWeight(weight)}
+          <Animatable.View
+            key={index}
+            animation="bounceIn"
+            duration={800}
+            delay={index * 100}
+            style={[styles.weightOption, selectedWeight === weight && styles.selectedWeight]}
           >
-            <Text style={[styles.weightText, selectedWeight === weight && styles.selectedWeightText]}>
-              {weight}
-            </Text>
-          </TouchableOpacity>
+            <TouchableOpacity onPress={() => setSelectedWeight(weight)}>
+              <Text style={[styles.weightText, selectedWeight === weight && styles.selectedWeightText]}>
+                {weight}
+              </Text>
+            </TouchableOpacity>
+          </Animatable.View>
         ))}
       </View>
 
@@ -105,7 +113,13 @@ const styles = StyleSheet.create({
   header: {
     flexDirection: 'row',
     justifyContent: 'space-between',
+    alignItems: 'center',
     marginBottom: 15,
+  },
+  headerIcons: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    width: 100,
   },
   imageContainer: {
     alignItems: 'center',
@@ -115,6 +129,7 @@ const styles = StyleSheet.create({
     height: 250,
     resizeMode: 'contain',
     marginBottom: 15,
+    borderRadius: 10,
   },
   imageThumbnails: {
     flexDirection: 'row',
@@ -125,44 +140,54 @@ const styles = StyleSheet.create({
     height: 50,
     resizeMode: 'contain',
     marginHorizontal: 5,
+    borderRadius: 5,
+    borderWidth: 1,
+    borderColor: '#ddd',
+  },
+  productDetails: {
+    marginBottom: 20,
   },
   productName: {
-    fontSize: 24,
+    fontSize: 26,
     fontWeight: 'bold',
+    color: '#333',
     marginBottom: 10,
   },
   productPrice: {
-    fontSize: 20,
-    color: '#666',
+    fontSize: 22,
+    color: '#555',
     marginBottom: 10,
   },
   emiText: {
-    fontSize: 14,
-    color: '#999',
+    fontSize: 16,
+    color: '#888',
     marginBottom: 20,
   },
   sectionTitle: {
-    fontSize: 18,
+    fontSize: 20,
     fontWeight: 'bold',
     marginBottom: 10,
   },
   weightsContainer: {
     flexDirection: 'row',
+    flexWrap: 'wrap',
     marginBottom: 20,
   },
   weightOption: {
     paddingVertical: 10,
     paddingHorizontal: 20,
-    borderRadius: 5,
+    borderRadius: 20,
     backgroundColor: '#f0f0f0',
-    marginRight: 10,
+    margin: 5,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   selectedWeight: {
     backgroundColor: '#007bff',
   },
   weightText: {
     fontSize: 16,
-    color: '#000',
+    color: '#333',
   },
   selectedWeightText: {
     color: '#fff',
@@ -170,19 +195,23 @@ const styles = StyleSheet.create({
   actionButtonsContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginTop: 20,
   },
   emiButton: {
     backgroundColor: '#007bff',
     paddingVertical: 15,
     paddingHorizontal: 30,
-    borderRadius: 5,
+    borderRadius: 10,
+    alignItems: 'center',
+    flex: 1,
+    marginRight: 10,
   },
   buyNowButton: {
     backgroundColor: '#28a745',
     paddingVertical: 15,
     paddingHorizontal: 30,
-    borderRadius: 5,
+    borderRadius: 10,
+    alignItems: 'center',
+    flex: 1,
   },
   buttonText: {
     color: '#fff',
@@ -196,5 +225,3 @@ const styles = StyleSheet.create({
 });
 
 export default ProductDetailsPage;
-
-

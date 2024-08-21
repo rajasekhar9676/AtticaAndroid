@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, ScrollView, TouchableOpacity, Image, Dimensions } from 'react-native';
+import { StyleSheet, Text, View, ScrollView, TouchableOpacity, Image, Dimensions, Modal, Pressable, TextInput, Alert } from 'react-native';
 import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
 import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
@@ -10,12 +10,21 @@ import Entypo from '@expo/vector-icons/Entypo';
 const Home = () => {
   const [goldPrice, setGoldPrice] = useState(null);
   const [error, setError] = useState(null);
+  const [modalVisible, setModalVisible] = useState(false);
+  const [autoDetectModalVisible, setAutoDetectModalVisible] = useState(false);
+  const [manualLocationModalVisible, setManualLocationModalVisible] = useState(false);
+  const [currentLocation, setCurrentLocation] = useState('You are in #Indian express, Bangalore, Karnataka, India');
+  const [manualLocation, setManualLocation] = useState('');
   const scrollViewRef = useRef(null);
-  const productScrollRef = useRef(null);
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const [productIndex, setProductIndex] = useState(0);
-
   const screenWidth = Dimensions.get('window').width;
+  const images = [
+    require('../../assets/images/slider1.png'),
+    require('../../assets/images/slider2.png'),
+    require('../../assets/images/slider3.png'),
+    require('../../assets/images/slider4.png'),
+    require('../../assets/images/slider4.png'),
+  ];
+  const [currentIndex, setCurrentIndex] = useState(0);
 
   useEffect(() => {
     const fetchPrices = async () => {
@@ -35,16 +44,6 @@ const Home = () => {
 
     fetchPrices();
   }, []);
-
-  const images = [
-    require('../../assets/images/slider1.png'),
-    require('../../assets/images/slider2.png'),
-    require('../../assets/images/slider3.png'),
-    require('../../assets/images/slider4.png'),
-    require('../../assets/images/slider4.png'),
-  ];
-
-
 
   const handleNext = () => {
     const nextIndex = currentIndex === images.length - 1 ? 0 : currentIndex + 1;
@@ -66,11 +65,27 @@ const Home = () => {
     return () => clearInterval(interval);
   }, [currentIndex]);
 
+  const handleAutoDetectLocation = () => {
+    setModalVisible(false);
+    setAutoDetectModalVisible(true);
+    // Add functionality for auto-detect location here
+    // For demonstration, we'll just simulate a location change
+    setCurrentLocation('Location changed successfully');
+  };
 
+  const handleManualLocation = () => {
+    setModalVisible(false);
+    setManualLocationModalVisible(true);
+  };
+
+  const handleConfirmManualLocation = () => {
+    setCurrentLocation(manualLocation);
+    setManualLocation('');
+    setManualLocationModalVisible(false);
+  };
 
   return (
     <View style={styles.container}>
-      
       {/* Header */}
       <View style={styles.headerContainer}>
         <FontAwesome6 name="bars" size={24} color="white" />
@@ -85,12 +100,13 @@ const Home = () => {
             <SimpleLineIcons name="options-vertical" size={24} color="#8d181a" />
             <Text style={styles.rateText}>22KT Gold Rate 6,425.00/gm INR</Text>
           </View>
-          <View style={styles.locationSection}>
+          <TouchableOpacity
+            style={styles.locationSection}
+            onPress={() => setModalVisible(true)} // Open the modal
+          >
             <EvilIcons name="location" size={24} color="#8d181a" />
-            <Text style={styles.locationText}>
-              You are in #Indian express, Bangalore, Karnataka, India
-            </Text>
-          </View>
+            <Text style={styles.locationText}>{currentLocation}</Text>
+          </TouchableOpacity>
         </View>
 
         {/* Sliding Content */}
@@ -122,38 +138,6 @@ const Home = () => {
         <Image source={require('../../assets/images/constants.png')} style={styles.constantImage} />
 
         <View style={styles.contentContainer}>
-          {/* <View>
-          <View style={styles.main}> 
-          <Image source={require('../../assets/images/logo.png')} style={styles.logo1} />
-            <Text style={styles.logo1}>PROMISE</Text>
-          </View>
-          <View>
-            <View>
-              <Text>Complete Transparency</Text>
-            </View>
-            <View>
-              <Text>Tested and Certified Gold</Text>
-            </View>
-            <View>
-              <Text>Zero-Deduction Gold Exchange</Text>
-            </View>
-            <View>
-              <Text>Fair Price Policy</Text>
-            </View>
-            <View>
-              <Text>916 Hallmarked</Text>
-            </View>
-            <View>
-              <Text>Guaranteed</Text>
-            </View>
-            <View>
-              <Text>Assured Life Time Maintenance</Text>
-            </View>
-          </View>
-              </View> */}
-
-
-
           <View style={styles.getStartedContainer}>
             <TouchableOpacity style={styles.getStartedButton}>
               <Text style={styles.buttonText}>Get gold loan at lowest interest rates</Text>
@@ -197,13 +181,87 @@ const Home = () => {
               <Text style={styles.investButtonText}>Invest Now</Text>
             </TouchableOpacity>
           </View>
-
-          {/* Footer */}
-          <View style={styles.footerContainer}>
-            <Text style={styles.footerText}>Powered by React Native</Text>
-          </View>
         </View>
       </ScrollView>
+
+      {/* Location Selection Modal */}
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={modalVisible}
+        onRequestClose={() => setModalVisible(false)}
+      >
+        <View style={styles.modalView}>
+          <Text style={styles.modalTitle}>Choose Location</Text>
+          <TouchableOpacity
+            style={styles.modalButton}
+            onPress={handleAutoDetectLocation}
+          >
+            <Text style={styles.modalButtonText}>Auto-detect Location</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.modalButton}
+            onPress={handleManualLocation}
+          >
+            <Text style={styles.modalButtonText}>Select Location Manually</Text>
+          </TouchableOpacity>
+          <Pressable
+            style={[styles.modalButton, styles.closeButton]}
+            onPress={() => setModalVisible(false)}
+          >
+            <Text style={styles.modalButtonText}>Close</Text>
+          </Pressable>
+        </View>
+      </Modal>
+
+      {/* Auto-detect Location Modal */}
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={autoDetectModalVisible}
+        onRequestClose={() => setAutoDetectModalVisible(false)}
+      >
+        <View style={styles.modalView}>
+          <Text style={styles.modalTitle}>Location Updated</Text>
+          <Text style={styles.modalMessage}>{currentLocation}</Text>
+          <Pressable
+            style={[styles.modalButton, styles.closeButton]}
+            onPress={() => setAutoDetectModalVisible(false)}
+          >
+            <Text style={styles.modalButtonText}>OK</Text>
+          </Pressable>
+        </View>
+      </Modal>
+
+      {/* Manual Location Modal */}
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={manualLocationModalVisible}
+        onRequestClose={() => setManualLocationModalVisible(false)}
+      >
+        <View style={styles.modalView}>
+          <Text style={styles.modalTitle}>Enter Location</Text>
+          <TextInput
+            style={styles.textInput}
+            placeholder="Enter your location"
+            value={manualLocation}
+            onChangeText={setManualLocation}
+          />
+          <Pressable
+            style={[styles.modalButton, styles.confirmButton]}
+            onPress={handleConfirmManualLocation}
+          >
+            <Text style={styles.modalButtonText}>Confirm</Text>
+          </Pressable>
+          <Pressable
+            style={[styles.modalButton, styles.closeButton]}
+            onPress={() => setManualLocationModalVisible(false)}
+          >
+            <Text style={styles.modalButtonText}>Cancel</Text>
+          </Pressable>
+        </View>
+      </Modal>
     </View>
   );
 };
@@ -211,159 +269,127 @@ const Home = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: 'white',
+    backgroundColor: '#fff',
   },
   headerContainer: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    backgroundColor: '#8d181a',
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    paddingVertical: 15,
-    paddingHorizontal: 10,
-    zIndex: 1000, // Ensures the header stays on top
+    backgroundColor: '#8d181a',
+    padding: 10,
   },
   logo: {
-    width: 150,
-    height: 50,
-  },
-  logo1: {
     width: 100,
-    height: 30,
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
+    height: 40,
   },
   scrollableContent: {
     flexGrow: 1,
-    paddingTop: 70, // Add padding to ensure content doesn't overlap with fixed header
   },
   locationRateContainer: {
     flexDirection: 'row',
+    justifyContent: 'space-between',
+    padding: 10,
     backgroundColor: '#f5f5f5',
-    padding: 15,
+    borderBottomWidth: 1,
+    borderBottomColor: '#ddd',
   },
   rateSection: {
-    flex: 1,
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  locationSection: {
-    flex: 1,
     flexDirection: 'row',
     alignItems: 'center',
   },
   rateText: {
+    fontSize: 16,
     color: '#8d181a',
-    fontSize: 12,
-    fontWeight: 'bold',
-    marginLeft: 10,
+    marginLeft: 5,
   },
-  locationText: {
-    color: '#8d181a',
-    fontSize: 10,
-    marginLeft: 10,
-  },
-  sliderContainer: {
+  locationSection: {
     flexDirection: 'row',
     alignItems: 'center',
+  },
+  locationText: {
+    fontSize: 16,
+    color: '#8d181a',
+    marginLeft: 5,
+  },
+  sliderContainer: {
     position: 'relative',
-  },
-  scrollView: {
-    flex: 1,
-  },
-  image: {
-    width: Dimensions.get('window').width,
     height: 200,
   },
   arrowLeft: {
     position: 'absolute',
     left: 10,
+    top: '50%',
+    transform: [{ translateY: -12 }],
     zIndex: 1,
   },
   arrowRight: {
     position: 'absolute',
     right: 10,
+    top: '50%',
+    transform: [{ translateY: -12 }],
     zIndex: 1,
+  },
+  scrollView: {
+    height: '100%',
+  },
+  image: {
+    width: Dimensions.get('window').width,
+    height: '100%',
   },
   constantImage: {
     width: '100%',
-    height: 200,
-    resizeMode: 'cover',
-    marginVertical: 1,
+    height: 150,
+    marginVertical: 10,
   },
   contentContainer: {
-    paddingHorizontal: 20,
-    justifyContent: 'center',
-    alignItems: 'center',
-    margin: 10,
-  },
-  livePrice: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    color: '#8d181a',
-    marginBottom: 10,
-  },
-  error: {
-    color: 'red',
-    fontSize: 16,
+    padding: 10,
   },
   getStartedContainer: {
-    marginVertical: 20,
+    marginVertical: 10,
   },
   getStartedButton: {
     backgroundColor: '#8d181a',
     padding: 15,
     borderRadius: 5,
-    marginBottom: 10,
+    marginVertical: 5,
   },
   buttonText: {
-    color: 'white',
-    fontSize: 16,
+    color: '#fff',
     textAlign: 'center',
   },
   shopContainer: {
-    marginVertical: 20,
+    marginVertical: 10,
   },
   sectionTitle: {
-    fontSize: 22,
+    fontSize: 18,
     fontWeight: 'bold',
-    color: '#8d181a',
     marginBottom: 10,
-    textAlign: 'center',
   },
   productContainer: {
     flexDirection: 'row',
     flexWrap: 'wrap',
     justifyContent: 'space-between',
   },
-  productList: {
-    flexDirection: 'row',
-  },
   product: {
-    width: Dimensions.get('window').width / 3,
-    marginBottom: 20,
+    width: '30%',
     alignItems: 'center',
+    marginBottom: 10,
   },
   Collection: {
     width: 100,
     height: 100,
-    marginBottom: 10,
+    marginBottom: 5,
   },
   productText: {
-    color: '#8d181a',
+    textAlign: 'center',
+    fontSize: 14,
   },
   investContainer: {
-    marginVertical: 20,
-    alignItems: 'center',
+    marginVertical: 10,
   },
   investDetails: {
-    fontSize: 16,
-    color: '#555',
     marginBottom: 10,
+    fontSize: 16,
   },
   investButton: {
     backgroundColor: '#8d181a',
@@ -371,18 +397,63 @@ const styles = StyleSheet.create({
     borderRadius: 5,
   },
   investButtonText: {
-    color: 'white',
-    fontSize: 16,
+    color: '#fff',
+    textAlign: 'center',
   },
   footerContainer: {
-    marginTop: 20,
+    padding: 10,
     alignItems: 'center',
-    paddingVertical: 20,
-    backgroundColor: '#8d181a',
   },
   footerText: {
-    color: 'white',
+    color: '#8d181a',
+  },
+  modalView: {
+    margin: 20,
+    backgroundColor: 'white',
+    borderRadius: 10,
+    padding: 35,
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5,
+  },
+  modalTitle: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    marginBottom: 15,
+  },
+  modalMessage: {
     fontSize: 16,
+    marginBottom: 15,
+    textAlign: 'center',
+  },
+  modalButton: {
+    backgroundColor: '#8d181a',
+    padding: 10,
+    borderRadius: 5,
+    marginVertical: 5,
+    width: '100%',
+  },
+  confirmButton: {
+    backgroundColor: '#4CAF50',
+  },
+  closeButton: {
+    backgroundColor: '#f44336',
+  },
+  modalButtonText: {
+    color: '#fff',
+    textAlign: 'center',
+  },
+  textInput: {
+    height: 40,
+    borderColor: '#ddd',
+    borderWidth: 1,
+    borderRadius: 5,
+    marginBottom: 15,
+    width: '100%',
+    paddingHorizontal: 10,
   },
 });
 
