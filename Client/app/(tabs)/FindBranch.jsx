@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
-import { View, Text, Button, StyleSheet, Alert, Image, FlatList, ImageBackground } from 'react-native';
+import { View, Text, Button, StyleSheet, Alert, Image, FlatList, ImageBackground, Linking } from 'react-native';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as Location from 'expo-location';
 import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
 import AntDesign from '@expo/vector-icons/AntDesign';
+import { BASE_URL } from '../../constants';
 
 const FindBranch = () => {
   const [branches, setBranches] = useState([]);
@@ -27,6 +28,7 @@ const FindBranch = () => {
     }
   };
 
+
   // Function to fetch nearest branches
   const findNearestBranch = async () => {
     try {
@@ -43,12 +45,12 @@ const FindBranch = () => {
       }
 
       // Construct the API URL with latitude and longitude
-      const apiUrl = `https://androidbackend-15.onrender.com/api/branches/find-nearest?latitude=${latitude}&longitude=${longitude}`;
+      const apiUrl = `${BASE_URL}/api/branches/find-nearest?latitude=${latitude}&longitude=${longitude}`;
 
       // Make the API request to find nearest branches
       const response = await axios.get(apiUrl);
 
-      console.log(response.data, "reposnseeeeeeeeeeeeeee")
+      console.log(response.data, "response");
 
       // Check if the response data is an array
       if (Array.isArray(response.data)) {
@@ -60,6 +62,13 @@ const FindBranch = () => {
       console.error('Error fetching nearest branches:', error);
       Alert.alert('Error', 'Failed to fetch nearest branches');
     }
+  };
+
+
+  // Function to open a map with the branch's location
+  const openMap = (latitude, longitude) => {
+    const url = `https://www.google.com/maps/search/?api=1&query=${latitude},${longitude}`;
+    Linking.openURL(url);
   };
 
   return (
@@ -85,6 +94,7 @@ const FindBranch = () => {
               <Text style={styles.branchName}>{item.name}</Text>
               <Text>Distance: {item.distance.toFixed(2)} meters</Text>
               <Text>{item.state}</Text>
+              <Button title="Open in Maps" onPress={() => openMap(item.latitude, item.longitude)} />
             </View>
           )}
         />
@@ -136,3 +146,4 @@ const styles = StyleSheet.create({
 });
 
 export default FindBranch;
+

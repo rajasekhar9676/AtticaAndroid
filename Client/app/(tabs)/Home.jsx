@@ -1,5 +1,5 @@
-import { StyleSheet, Text, View, ScrollView, TouchableOpacity, Image, Dimensions, Modal, Pressable, TextInput, Alert } from 'react-native';
-import { StyleSheet, Text, View, ScrollView, TouchableOpacity, Image, Dimensions, FlatList,  ActivityIndicator, Alert} from 'react-native';
+import { StyleSheet, Text, View, ScrollView, TouchableOpacity, Image, Dimensions, Modal, Pressable, TextInput,FlatList,  ActivityIndicator, Alert } from 'react-native';
+// import { StyleSheet, Text, View, ScrollView, TouchableOpacity, Image, Dimensions, FlatList,  ActivityIndicator, Alert} from 'react-native';
 import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
 import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
@@ -22,14 +22,14 @@ const Home = () => {
   const [currentLocation, setCurrentLocation] = useState('You are in #Indian express, Bangalore, Karnataka, India');
   const [manualLocation, setManualLocation] = useState('');
   const scrollViewRef = useRef(null);
-  const screenWidth = Dimensions.get('window').width;
-  const images = [
-    require('../../assets/images/slider1.png'),
-    require('../../assets/images/slider2.png'),
-    require('../../assets/images/slider3.png'),
-    require('../../assets/images/slider4.png'),
-    require('../../assets/images/slider4.png'),
-  ];
+  // const screenWidth = Dimensions.get('window').width;
+  // const images = [
+  //   require('../../assets/images/slider1.png'),
+  //   require('../../assets/images/slider2.png'),
+  //   require('../../assets/images/slider3.png'),
+  //   require('../../assets/images/slider4.png'),
+  //   require('../../assets/images/slider4.png'),
+  // ];
   const [currentIndex, setCurrentIndex] = useState(0);
   const [productIndex, setProductIndex] = useState(0);
   const [categories, setCategories] = useState([]);
@@ -155,6 +155,7 @@ const Home = () => {
     </View>
   );
 
+
   return (
     <View style={styles.container}>
       {/* Header */}
@@ -219,13 +220,13 @@ const Home = () => {
 
             
              
-            <TouchableOpacity style={styles.getStartedButton}>
+            <TouchableOpacity style={styles.getStartedButton}   onPress={()=>navigation.navigate('GoldLoan')}>
               <Text style={styles.buttonText}>Sell your gold at the best possible price</Text>
             </TouchableOpacity>
           </View>
 
           <View style={styles.section}>
-        <Text style={styles.sectionTitle}>Product Categories</Text>
+        <Text style={styles.sectionTitle}>Our Collection</Text>
         {loading ? (
           <ActivityIndicator size="large" color="#0000ff" />
         ) : (
@@ -239,11 +240,11 @@ const Home = () => {
       </View>
 
           {/* Our Collections */}
-          <View style={styles.shopContainer}>
+          {/* <View style={styles.shopContainer}>
             <Text style={styles.sectionTitle}>Our Collection</Text>
             <Text style={{ textAlign: 'center', marginBottom: 10 }}>Discover our latest jewellery collection!</Text>
             <View style={styles.productContainer}>
-              {/* Example Products */}
+            
               {[
                 { id: 1, name: 'Anklet', image: require('../../assets/images/Anklet.png') },
                 { id: 2, name: 'Bangels', image: require('../../assets/images/bangels.png') },
@@ -262,7 +263,7 @@ const Home = () => {
                 </View>
               ))}
             </View>
-          </View>
+          </View> */}
 
           {/* Invest in Silver */}
           <View style={styles.investContainer}>

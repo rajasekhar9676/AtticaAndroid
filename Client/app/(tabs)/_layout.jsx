@@ -27,7 +27,7 @@ const RootLayout = () => {
 
        />
        <Tabs.Screen name="FindBranch"
-       options={{tabBarLabel:"FindBranch",
+       options={{tabBarLabel:"Branch",
         tabBarIcon:({color})=><Ionicons name="location-sharp" size={24} color={color} />
        }}
        />
