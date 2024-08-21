@@ -1,4 +1,19 @@
-import { StyleSheet, Text, View, ScrollView, TouchableOpacity, Image, Dimensions, Modal, Pressable, TextInput, Alert, FlatList,  ActivityIndicator } from 'react-native';
+import { 
+  StyleSheet, 
+  Text, 
+  View, 
+  ScrollView, 
+  TouchableOpacity, 
+  Image, 
+  Dimensions, 
+  Modal, 
+  Pressable, 
+  TextInput, 
+  Alert, 
+  FlatList,  
+  ActivityIndicator,
+  SafeAreaView // Import SafeAreaView
+} from 'react-native';
 // import { StyleSheet, Text, View, ScrollView, TouchableOpacity, Image, Dimensions, FlatList,  ActivityIndicator, Alert} from 'react-native';
 import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
@@ -157,7 +172,7 @@ const Home = () => {
 
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}> {/* Wrap with SafeAreaView */}
       {/* Header */}
       <View style={styles.headerContainer}>
         <FontAwesome6 name="bars" size={24} color="white" />
@@ -214,164 +229,135 @@ const Home = () => {
            
           <TouchableOpacity
   style={styles.getStartedButton}
-  onPress={() => navigation.navigate('GoldLoan')}>
-  <Text style={styles.buttonText}>Get gold loan at lowest interest rates</Text>
+  onPress={() => navigation.navigate('Services')}
+>
+  <Text style={styles.getStartedButtonText}>Get Started</Text>
 </TouchableOpacity>
-
-            
-             
-            <TouchableOpacity style={styles.getStartedButton}   onPress={()=>navigation.navigate('GoldLoan')}>
-              <Text style={styles.buttonText}>Sell your gold at the best possible price</Text>
-            </TouchableOpacity>
           </View>
 
-          <View style={styles.section}>
-        <Text style={styles.sectionTitle}>Our Collection</Text>
-        {loading ? (
-          <ActivityIndicator size="large" color="#0000ff" />
-        ) : (
-          <FlatList
-            data={categories}
-            renderItem={renderCategoryItem}
-            keyExtractor={item => (item.id ? item.id.toString() : Math.random().toString())}
-            numColumns={2}
-          />
-        )}
-      </View>
-
-          {/* Our Collections */}
-          {/* <View style={styles.shopContainer}>
-            <Text style={styles.sectionTitle}>Our Collection</Text>
-            <Text style={{ textAlign: 'center', marginBottom: 10 }}>Discover our latest jewellery collection!</Text>
-            <View style={styles.productContainer}>
-            
-              {[
-                { id: 1, name: 'Anklet', image: require('../../assets/images/Anklet.png') },
-                { id: 2, name: 'Bangels', image: require('../../assets/images/bangels.png') },
-                { id: 3, name: 'Earrings', image: require('../../assets/images/earring.png') },
-                { id: 4, name: 'Gold-Chain', image: require('../../assets/images/Gold-Chain.png') },
-                { id: 5, name: 'Gold-Pendant', image: require('../../assets/images/Gold-Pendant.png') },
-                { id: 6, name: 'Necklase', image: require('../../assets/images/Necklase.png') },
-                { id: 7, name: 'Gold-Ring', image: require('../../assets/images/ring.png') },
-                { id: 8, name: 'Mangalasutra', image: require('../../assets/images/mangalasutra.png') },
-                { id: 9, name: 'Nosepin', image: require('../../assets/images/Nosepin.png') },
-                { id: 10, name: 'Bracelet', image: require('../../assets/images/bracelet.png') },
-              ].map((product) => (
-                <View key={product.id} style={styles.product}>
-                  <Image source={product.image} style={styles.Collection} />
-                  <Text style={styles.productText}>{product.name}</Text>
-                </View>
-              ))}
-            </View>
-          </View> */}
-
-          {/* Invest in Silver */}
-          <View style={styles.investContainer}>
-            <Text style={styles.sectionTitle}>Invest in Silver</Text>
-            <Text style={styles.investDetails}>Explore the benefits of investing in silver.</Text>
-            <TouchableOpacity style={styles.investButton}>
-              <Text style={styles.investButtonText}>Invest Now</Text>
-            </TouchableOpacity>
+          <View style={styles.categoriesContainer}>
+            <Text style={styles.categoriesTitle}>Categories</Text>
+            {loading ? (
+              <ActivityIndicator size="large" color="#8d181a" />
+            ) : (
+              <FlatList
+                data={categories}
+                renderItem={renderCategoryItem}
+                keyExtractor={(item) => item.category}
+                numColumns={2}
+                contentContainerStyle={styles.categoriesList}
+              />
+            )}
           </View>
+
+          <View style={styles.barsContainer}>
+            <Text style={styles.barsTitle}>Bars</Text>
+            {loading ? (
+              <ActivityIndicator size="large" color="#8d181a" />
+            ) : (
+              <FlatList
+                data={bars}
+                renderItem={({ item }) => (
+                  <View style={styles.barItem}>
+                    <Image source={{ uri: item.image ? (item.image.startsWith('http') ? item.image : `${BASE_URL}/uploads/${item.image}`) : null }} style={styles.barImage} />
+                    <Text style={styles.barName}>{item.name}</Text>
+                    <Text style={styles.barPrice}>₹{item.price}</Text>
+                  </View>
+                )}
+                keyExtractor={(item) => item._id}
+                horizontal
+                showsHorizontalScrollIndicator={false}
+              />
+            )}
+          </View>
+
         </View>
       </ScrollView>
 
-      {/* Location Selection Modal */}
+      {/* Modals */}
       <Modal
         animationType="slide"
         transparent={true}
         visible={modalVisible}
         onRequestClose={() => setModalVisible(false)}
       >
-        <View style={styles.modalView}>
-          <Text style={styles.modalTitle}>Choose Location</Text>
-          <TouchableOpacity
-            style={styles.modalButton}
-            onPress={handleAutoDetectLocation}
-          >
-            <Text style={styles.modalButtonText}>Auto-detect Location</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={styles.modalButton}
-            onPress={handleManualLocation}
-          >
-            <Text style={styles.modalButtonText}>Select Location Manually</Text>
-          </TouchableOpacity>
-          <Pressable
-            style={[styles.modalButton, styles.closeButton]}
-            onPress={() => setModalVisible(false)}
-          >
-            <Text style={styles.modalButtonText}>Close</Text>
-          </Pressable>
+        <View style={styles.modalContainer}>
+          <View style={styles.modalContent}>
+            <Text style={styles.modalTitle}>Select Location</Text>
+            <TouchableOpacity style={styles.modalButton} onPress={handleAutoDetectLocation}>
+              <Text style={styles.modalButtonText}>Auto Detect Location</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.modalButton} onPress={handleManualLocation}>
+              <Text style={styles.modalButtonText}>Select Location Manually</Text>
+            </TouchableOpacity>
+            <Pressable onPress={() => setModalVisible(false)} style={styles.modalCloseButton}>
+              <Text style={styles.modalCloseButtonText}>Close</Text>
+            </Pressable>
+          </View>
         </View>
       </Modal>
 
-      {/* Auto-detect Location Modal */}
       <Modal
         animationType="slide"
         transparent={true}
         visible={autoDetectModalVisible}
         onRequestClose={() => setAutoDetectModalVisible(false)}
       >
-        <View style={styles.modalView}>
-          <Text style={styles.modalTitle}>Location Updated</Text>
-          <Text style={styles.modalMessage}>{currentLocation}</Text>
-          <Pressable
-            style={[styles.modalButton, styles.closeButton]}
-            onPress={() => setAutoDetectModalVisible(false)}
-          >
-            <Text style={styles.modalButtonText}>OK</Text>
-          </Pressable>
+        <View style={styles.modalContainer}>
+          <View style={styles.modalContent}>
+            <Text style={styles.modalTitle}>Location Detected</Text>
+            <Text style={styles.modalText}>Location changed successfully</Text>
+            <Pressable onPress={() => setAutoDetectModalVisible(false)} style={styles.modalCloseButton}>
+              <Text style={styles.modalCloseButtonText}>Close</Text>
+            </Pressable>
+          </View>
         </View>
       </Modal>
 
-      {/* Manual Location Modal */}
       <Modal
         animationType="slide"
         transparent={true}
         visible={manualLocationModalVisible}
         onRequestClose={() => setManualLocationModalVisible(false)}
       >
-        <View style={styles.modalView}>
-          <Text style={styles.modalTitle}>Enter Location</Text>
-          <TextInput
-            style={styles.textInput}
-            placeholder="Enter your location"
-            value={manualLocation}
-            onChangeText={setManualLocation}
-          />
-          <Pressable
-            style={[styles.modalButton, styles.confirmButton]}
-            onPress={handleConfirmManualLocation}
-          >
-            <Text style={styles.modalButtonText}>Confirm</Text>
-          </Pressable>
-          <Pressable
-            style={[styles.modalButton, styles.closeButton]}
-            onPress={() => setManualLocationModalVisible(false)}
-          >
-            <Text style={styles.modalButtonText}>Cancel</Text>
-          </Pressable>
+        <View style={styles.modalContainer}>
+          <View style={styles.modalContent}>
+            <Text style={styles.modalTitle}>Enter Location</Text>
+            <TextInput
+              style={styles.modalInput}
+              value={manualLocation}
+              onChangeText={setManualLocation}
+              placeholder="Enter your location"
+            />
+            <TouchableOpacity style={styles.modalButton} onPress={handleConfirmManualLocation}>
+              <Text style={styles.modalButtonText}>Confirm Location</Text>
+            </TouchableOpacity>
+            <Pressable onPress={() => setManualLocationModalVisible(false)} style={styles.modalCloseButton}>
+              <Text style={styles.modalCloseButtonText}>Close</Text>
+            </Pressable>
+          </View>
         </View>
       </Modal>
-    </View>
+    </SafeAreaView> // Close SafeAreaView
   );
 };
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: '#ffffff',
   },
   headerContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    backgroundColor: '#8d181a',
     padding: 10,
+    backgroundColor: '#8d181a',
   },
   logo: {
-    width: 100,
+    width: 120,
     height: 40,
+    resizeMode: 'contain',
   },
   scrollableContent: {
     flexGrow: 1,
@@ -381,8 +367,6 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     padding: 10,
     backgroundColor: '#f5f5f5',
-    borderBottomWidth: 1,
-    borderBottomColor: '#ddd',
   },
   rateSection: {
     flexDirection: 'row',
@@ -404,147 +388,151 @@ const styles = StyleSheet.create({
   },
   sliderContainer: {
     position: 'relative',
-    height: 200,
-  },
-  arrowLeft: {
-    position: 'absolute',
-    left: 10,
-    top: '50%',
-    transform: [{ translateY: -12 }],
-    zIndex: 1,
-  },
-  arrowRight: {
-    position: 'absolute',
-    right: 10,
-    top: '50%',
-    transform: [{ translateY: -12 }],
-    zIndex: 1,
   },
   scrollView: {
-    height: '100%',
+    height: 200,
   },
   image: {
     width: Dimensions.get('window').width,
     height: '100%',
   },
+  arrowLeft: {
+    position: 'absolute',
+    left: 10,
+    top: '50%',
+    transform: [{ translateY: -20 }],
+  },
+  arrowRight: {
+    position: 'absolute',
+    right: 10,
+    top: '50%',
+    transform: [{ translateY: -20 }],
+  },
   constantImage: {
     width: '100%',
     height: 150,
-    marginVertical: 10,
+    resizeMode: 'cover',
   },
   contentContainer: {
-    padding: 10,
+    flex: 1,
   },
   getStartedContainer: {
-    marginVertical: 10,
+    alignItems: 'center',
+    marginVertical: 20,
   },
   getStartedButton: {
     backgroundColor: '#8d181a',
     padding: 15,
     borderRadius: 5,
-    marginVertical: 5,
   },
-  buttonText: {
-    color: '#fff',
-    textAlign: 'center',
-  },
-  section: {
-    marginVertical: 10,
-  },
-  sectionTitle: {
+  getStartedButtonText: {
+    color: '#ffffff',
     fontSize: 18,
+  },
+  categoriesContainer: {
+    padding: 10,
+  },
+  categoriesTitle: {
+    fontSize: 20,
     fontWeight: 'bold',
-    marginBottom: 10,
+  },
+  categoriesList: {
+    marginTop: 10,
   },
   categoryContainer: {
-    borderWidth: 1,
-    borderColor: 'gray',
+    flex: 1,
     margin: 5,
-    borderRadius: 5,
-    overflow: 'hidden',
   },
   categoryItem: {
-    flex: 1,
+    backgroundColor: '#f5f5f5',
+    borderRadius: 10,
+    overflow: 'hidden',
     padding: 10,
-    alignItems: 'center',
   },
   categoryImage: {
-    width: 100,
+    width: '100%',
     height: 100,
+    resizeMode: 'cover',
   },
   categoryName: {
     fontSize: 16,
+    fontWeight: 'bold',
     marginVertical: 5,
   },
   categoryPrice: {
     fontSize: 14,
     color: '#8d181a',
   },
-  investContainer: {
-    marginVertical: 10,
+  barsContainer: {
+    padding: 10,
   },
-  investDetails: {
-    marginBottom: 10,
+  barsTitle: {
+    fontSize: 20,
+    fontWeight: 'bold',
+  },
+  barItem: {
+    marginRight: 10,
+  },
+  barImage: {
+    width: 100,
+    height: 100,
+    resizeMode: 'cover',
+  },
+  barName: {
     fontSize: 16,
+    fontWeight: 'bold',
   },
-  investButton: {
-    backgroundColor: '#8d181a',
-    padding: 15,
-    borderRadius: 5,
+  barPrice: {
+    fontSize: 14,
+    color: '#8d181a',
   },
-  investButtonText: {
-    color: '#fff',
-    textAlign: 'center',
-  },
-  modalView: {
-    margin: 20,
-    backgroundColor: 'white',
-    borderRadius: 10,
-    padding: 35,
+  modalContainer: {
+    flex: 1,
+    justifyContent: 'center',
     alignItems: 'center',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.25,
-    shadowRadius: 4,
-    elevation: 5,
+    backgroundColor: 'rgba(0,0,0,0.5)',
+  },
+  modalContent: {
+    backgroundColor: '#ffffff',
+    padding: 20,
+    borderRadius: 10,
+    width: '80%',
   },
   modalTitle: {
     fontSize: 18,
     fontWeight: 'bold',
-    marginBottom: 15,
+    marginBottom: 10,
   },
-  modalMessage: {
+  modalText: {
     fontSize: 16,
-    marginBottom: 15,
-    textAlign: 'center',
+    marginBottom: 10,
   },
   modalButton: {
     backgroundColor: '#8d181a',
     padding: 10,
     borderRadius: 5,
-    marginVertical: 5,
-    width: '100%',
-  },
-  confirmButton: {
-    backgroundColor: '#4CAF50',
-  },
-  closeButton: {
-    backgroundColor: '#f44336',
+    marginBottom: 10,
   },
   modalButtonText: {
-    color: '#fff',
+    color: '#ffffff',
     textAlign: 'center',
   },
-  textInput: {
-    height: 40,
-    borderColor: '#ddd',
+  modalInput: {
+    borderColor: '#8d181a',
     borderWidth: 1,
+    padding: 10,
     borderRadius: 5,
-    marginBottom: 15,
-    width: '100%',
-    paddingHorizontal: 10,
+    marginBottom: 10,
+  },
+  modalCloseButton: {
+    padding: 10,
+    backgroundColor: '#8d181a',
+    borderRadius: 5,
+  },
+  modalCloseButtonText: {
+    color: '#ffffff',
+    textAlign: 'center',
   },
 });
-
 
 export default Home;
