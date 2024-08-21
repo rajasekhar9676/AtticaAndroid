@@ -27,7 +27,7 @@ const Login = () => {
       await AsyncStorage.setItem('address', address);
 
       Alert.alert('Success', 'Login successful!');
-      router.push('/home'); // Navigate to home screen
+      router.push('/Home'); // Navigate to home screen
     } catch (error) {
       Alert.alert('Error', error.response?.data?.message || 'Login failed');
     }

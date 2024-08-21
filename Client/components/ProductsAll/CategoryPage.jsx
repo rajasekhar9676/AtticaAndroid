@@ -151,7 +151,7 @@ const styles = StyleSheet.create({
     borderColor: 'gray',
     padding: 10,
     borderRadius: 10,
-    maxWidth: '48%', // Each item takes 48% of the width
+    maxWidth: '100%', // Each item takes 48% of the width
   },
   itemImage: {
     width: 100,
@@ -168,4 +168,5 @@ const styles = StyleSheet.create({
     marginTop: 5,
   },
 });
+
 

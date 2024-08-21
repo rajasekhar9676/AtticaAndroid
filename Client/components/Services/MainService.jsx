@@ -1,11 +1,11 @@
 // src/components/Services/Services.js
 import React from 'react';
-import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity,SafeAreaView } from 'react-native';
 
 
 const MainService= ({ navigation }) => {
   return (
-    <View style={styles.container}>
+    <><SafeAreaView><View style={styles.container}>
       <TouchableOpacity onPress={() => navigation.navigate('DigiGold')}>
         <Text style={styles.service}>Digi Gold</Text>
       </TouchableOpacity>
@@ -16,8 +16,12 @@ const MainService= ({ navigation }) => {
         <Text style={styles.service}>Insurance</Text>
       </TouchableOpacity>
     </View>
+    </SafeAreaView>
+    </>
+    
   );
 };
+
 
 const styles = StyleSheet.create({
   container: {

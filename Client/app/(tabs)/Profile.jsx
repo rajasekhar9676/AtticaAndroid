@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { StyleSheet, Text, View, Image, ScrollView, TouchableOpacity, Dimensions, Alert } from 'react-native';
+import { StyleSheet, Text, View, Image, ScrollView, TouchableOpacity, Dimensions, Alert, Button } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient'; // For Expo gradient background
 import * as Animatable from 'react-native-animatable'; // For animations
 import { MaterialIcons } from '@expo/vector-icons'; // For icons
@@ -25,7 +25,7 @@ const Profile = () => {
         const mobile = await AsyncStorage.getItem('mobile');
         const address = await AsyncStorage.getItem('address');
 
-        if (email && mobile && address) {
+        if (username && email && mobile && address) {
           setUserData({
             username,
             email,
@@ -42,6 +42,21 @@ const Profile = () => {
     fetchUserData();
   }, []);
 
+  const handleLogout = async () => {
+    try {
+      // Remove the JWT token from AsyncStorage
+      await AsyncStorage.removeItem('token');
+
+      // Show a success message
+      Alert.alert('Success', 'You have been logged out.');
+
+      // Redirect to the login screen
+      router.push('/login');
+    } catch (error) {
+      Alert.alert('Error', 'Failed to log out. Please try again.');
+    }
+  };
+
   return (
     <LinearGradient colors={['#4c669f', '#3b5998', '#192f5d']} style={styles.container}>
       <ScrollView contentContainerStyle={styles.scrollContainer}>
@@ -53,7 +68,7 @@ const Profile = () => {
           <Animatable.Text animation="fadeInUp" duration={1700} style={styles.email}>{userData.email}</Animatable.Text>
           <Animatable.Text animation="fadeInUp" duration={1700} style={styles.mobile}>{userData.mobile}</Animatable.Text>
           <Animatable.Text animation="fadeInUp" duration={1900} style={styles.address}>{userData.address}</Animatable.Text>
-          
+
           {/* Additional Info Section */}
           <View style={styles.additionalInfoContainer}>
             <TouchableOpacity style={styles.button}>
@@ -72,11 +87,16 @@ const Profile = () => {
               <Text style={styles.buttonText}>User History</Text>
             </TouchableOpacity>
           </View>
+          <View>
+            <Button title="Logout" onPress={handleLogout} />
+          </View>
         </View>
       </ScrollView>
     </LinearGradient>
   );
 };
+
+export default Profile;
 
 const styles = StyleSheet.create({
   container: {
@@ -125,6 +145,11 @@ const styles = StyleSheet.create({
     color: '#555', // Slightly lighter text for email
     marginBottom: 5,
   },
+  mobile: {
+    fontSize: 18,
+    color: '#555', // Slightly lighter text for mobile
+    marginBottom: 5,
+  },
   address: {
     fontSize: 16,
     color: '#777', // Even lighter text for address
@@ -158,4 +183,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Profile;
+

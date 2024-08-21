@@ -2,12 +2,9 @@
 import { createStackNavigator } from '@react-navigation/stack';
 import MainService from '../../components/Services/MainService';
 import DigiGold from '../../components/Services/DigiGold ';
-import GoldLoan from '../../components/Services/GoldLoan '
-import Insurance from '../../components/Services/Insurance '
+import GoldLoan from '../../components/Services/GoldLoan';
+import Insurance from '../../components/Services/Insurance ';
 
-// import DigiGold from './screens/DigiGold';
-// import GoldLoan from './screens/GoldLoan';
-// import Insurance from './screens/Insurance';
 
 const Stack = createStackNavigator();
 
@@ -22,6 +19,4 @@ const Services = () => (
 
 export default Services;
 
-
-
-[]  
+[]
