@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { View, Text, TouchableOpacity, Image,StyleSheet, Dimensions, Alert, ImageBackground } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, Text, TouchableOpacity, Image, StyleSheet, Dimensions, Alert, ImageBackground } from 'react-native';
 import * as Animatable from 'react-native-animatable';
 import { useRouter } from 'expo-router';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -10,7 +10,24 @@ const { width } = Dimensions.get('window');
 
 const Profile = () => {
   const [showPopup, setShowPopup] = useState(false);
+  const [initial, setInitial] = useState('');
   const router = useRouter();
+
+  useEffect(() => {
+    // Fetch registered person's name and set the initial
+    const fetchUserData = async () => {
+      try {
+        const userName = await AsyncStorage.getItem('userName');
+        if (userName) {
+          setInitial(userName.charAt(0).toUpperCase()); // Set the first letter of the name
+        }
+      } catch (error) {
+        Alert.alert('Error', 'Failed to fetch user data');
+      }
+    };
+
+    fetchUserData();
+  }, []);
 
   // Function to check if the client is registered
   const checkRegistrationStatus = async () => {
@@ -38,6 +55,13 @@ const Profile = () => {
           <Image source={require('../../assets/images/logo.png')} style={styles.logo} />
           <AntDesign name="shoppingcart" size={24} color="white" />
         </View>
+
+        {/* Profile Info Button with Initial */}
+        <TouchableOpacity style={styles.profileInfoButton} onPress={() => Alert.alert('Profile Info', 'This is the profile info button')}>
+          <View style={styles.initialContainer}>
+            <Text style={styles.initialText}>{initial}</Text>
+          </View>
+        </TouchableOpacity>
 
         {/* Profile Box */}
         <Animatable.View animation="fadeIn" style={styles.profileBox}>
@@ -105,6 +129,37 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     zIndex: 1000,
   },
+  profileInfoButton: {
+    position: 'absolute',
+    top: 100, // Adjust this value based on the header height
+    left: 10,
+    backgroundColor: '#007BFF',
+    borderRadius: 25,
+    padding: 10,
+    elevation: 5,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 3 },
+    shadowOpacity: 0.3,
+    shadowRadius: 5,
+    zIndex: 1000,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  initialContainer: {
+    backgroundColor: '#fff',
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderWidth: 2,
+    borderColor: '#007BFF',
+  },
+  initialText: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: '#007BFF',
+  },
   profileBox: {
     backgroundColor: '#fff',
     padding: 30,
@@ -115,6 +170,7 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 5 },
     shadowOpacity: 0.2,
     shadowRadius: 10,
+    marginTop: 80, // Adjust this value to ensure it is below the profile info button
   },
   heading: {
     fontSize: 24,
@@ -176,5 +232,3 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
 });
-
-
