@@ -357,7 +357,6 @@ const Home = () => {
     </View>
   );
 };
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -449,7 +448,7 @@ const styles = StyleSheet.create({
     color: '#fff',
     textAlign: 'center',
   },
-  shopContainer: {
+  section: {
     marginVertical: 10,
   },
   sectionTitle: {
@@ -457,24 +456,29 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     marginBottom: 10,
   },
-  productContainer: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    justifyContent: 'space-between',
+  categoryContainer: {
+    borderWidth: 1,
+    borderColor: 'gray',
+    margin: 5,
+    borderRadius: 5,
+    overflow: 'hidden',
   },
-  product: {
-    width: '30%',
+  categoryItem: {
+    flex: 1,
+    padding: 10,
     alignItems: 'center',
-    marginBottom: 10,
   },
-  Collection: {
+  categoryImage: {
     width: 100,
     height: 100,
-    marginBottom: 5,
   },
-  productText: {
-    textAlign: 'center',
+  categoryName: {
+    fontSize: 16,
+    marginVertical: 5,
+  },
+  categoryPrice: {
     fontSize: 14,
+    color: '#8d181a',
   },
   investContainer: {
     marginVertical: 10,
@@ -491,13 +495,6 @@ const styles = StyleSheet.create({
   investButtonText: {
     color: '#fff',
     textAlign: 'center',
-  },
-  footerContainer: {
-    padding: 10,
-    alignItems: 'center',
-  },
-  footerText: {
-    color: '#8d181a',
   },
   modalView: {
     margin: 20,
@@ -547,34 +544,7 @@ const styles = StyleSheet.create({
     width: '100%',
     paddingHorizontal: 10,
   },
-
-  categoryContainer: {
-    borderWidth: 1,
-    borderColor: 'gray',
-    margin: 5,
-    borderRadius: 15,
-    display:'flex',
-  marginHorizontal:50,
-  marginVertical:20
-  },
-  categoryItem: {
-    margin: 10,
-    alignItems: 'center',
-  },
-  categoryImage: {
-    width: 100,
-    height: 100,
-    resizeMode: 'contain',
-  },
-  categoryName: {
-    marginTop: 5,
-    fontSize: 16,
-  },
-  categoryPrice: {
-    marginTop: 5,
-    fontSize: 14,
-    color: 'grey',
-  },
 });
+
 
 export default Home;
