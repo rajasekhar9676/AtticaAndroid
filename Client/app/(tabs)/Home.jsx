@@ -126,6 +126,8 @@ const Home = () => {
 
   return (
     <View style={styles.container}>
+      
+      {/* Header */}
       <View style={styles.headerContainer}>
         <FontAwesome6 name="bars" size={24} color="white" />
         <Image source={require('../../assets/images/logo.png')} style={styles.logo} />
