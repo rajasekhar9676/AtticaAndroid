@@ -1,5 +1,5 @@
-import { StyleSheet, Text, View, ScrollView, TouchableOpacity, Image, Dimensions, Modal, Pressable, TextInput, Alert } from 'react-native';
-import { StyleSheet, Text, View, ScrollView, TouchableOpacity, Image, Dimensions, FlatList,  ActivityIndicator, Alert} from 'react-native';
+import { StyleSheet, Text, View, ScrollView, TouchableOpacity, Image, Dimensions, Modal, Pressable, TextInput, Alert, FlatList,  ActivityIndicator } from 'react-native';
+// import { StyleSheet, Text, View, ScrollView, TouchableOpacity, Image, Dimensions, FlatList,  ActivityIndicator, Alert} from 'react-native';
 import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
 import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
@@ -22,14 +22,14 @@ const Home = () => {
   const [currentLocation, setCurrentLocation] = useState('You are in #Indian express, Bangalore, Karnataka, India');
   const [manualLocation, setManualLocation] = useState('');
   const scrollViewRef = useRef(null);
-  const screenWidth = Dimensions.get('window').width;
-  const images = [
-    require('../../assets/images/slider1.png'),
-    require('../../assets/images/slider2.png'),
-    require('../../assets/images/slider3.png'),
-    require('../../assets/images/slider4.png'),
-    require('../../assets/images/slider4.png'),
-  ];
+  // const screenWidth = Dimensions.get('window').width;
+  // const images = [
+  //   require('../../assets/images/slider1.png'),
+  //   require('../../assets/images/slider2.png'),
+  //   require('../../assets/images/slider3.png'),
+  //   require('../../assets/images/slider4.png'),
+  //   require('../../assets/images/slider4.png'),
+  // ];
   const [currentIndex, setCurrentIndex] = useState(0);
   const [productIndex, setProductIndex] = useState(0);
   const [categories, setCategories] = useState([]);

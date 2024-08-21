@@ -2,15 +2,19 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, Image, TouchableOpacity, ScrollView, ActivityIndicator } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import * as Animatable from 'react-native-animatable';
+import { useNavigation } from '@react-navigation/native';
 
-const ProductDetailsPage = ({ route, navigation }) => {
+const ProductDetailsPage = ({ route }) => {
+  const navigation = useNavigation();
   const [loading, setLoading] = useState(true);
   const [product, setProduct] = useState(null);
   const [selectedWeight, setSelectedWeight] = useState(null);
+  const [quantity, setQuantity] = useState(1); // Quantity state
 
   useEffect(() => {
     if (route.params && route.params.product) {
       setProduct(route.params.product);
+      console.log('Product data:', route.params.product);
       setLoading(false);
       if (Array.isArray(route.params.product.weights) && route.params.product.weights.length > 0) {
         setSelectedWeight(route.params.product.weights[0]);
@@ -21,6 +25,31 @@ const ProductDetailsPage = ({ route, navigation }) => {
     }
   }, [route.params]);
 
+  const getPriceForWeight = (weight) => {
+    if (!product || !product.weights || !product.pricePerWeight) {
+      console.error("Product data is incomplete.");
+      return 0; // Return a default value or handle it appropriately
+    }
+
+    const weightIndex = product.weights.indexOf(weight);
+    if (weightIndex === -1 || !product.pricePerWeight[weightIndex]) {
+      console.error("Weight or price for weight not found.");
+      return 0; // Return a default value or handle it appropriately
+    }
+
+    return product.pricePerWeight[weightIndex];
+  };
+
+  const increaseQuantity = () => {
+    setQuantity(prevQuantity => prevQuantity + 1);
+  };
+
+  const decreaseQuantity = () => {
+    if (quantity > 1) {
+      setQuantity(prevQuantity => prevQuantity - 1);
+    }
+  };
+
   if (loading) {
     return <ActivityIndicator size="large" color="#007bff" style={styles.loader} />;
   }
@@ -28,6 +57,9 @@ const ProductDetailsPage = ({ route, navigation }) => {
   if (!product || !Array.isArray(product.weights) || product.weights.length === 0) {
     return <Text style={styles.errorText}>Error: Product details are missing.</Text>;
   }
+
+  const price = getPriceForWeight(selectedWeight);
+  const totalAmount = price * quantity;
 
   return (
     <ScrollView style={styles.container}>
@@ -63,7 +95,7 @@ const ProductDetailsPage = ({ route, navigation }) => {
       <Animatable.View animation="fadeInUp" duration={1200} style={styles.productDetails}>
         <Text style={styles.productName}>{product.name}</Text>
         <Text style={styles.productPrice}>₹{product.price}</Text>
-        <Text style={styles.emiText}>EMI starts from just ₹{(product.price / 12).toFixed(2)}/month</Text>
+        <Text style={styles.emiText}>EMI starts from just ₹{(price / 12).toFixed(2)}/month</Text>
       </Animatable.View>
 
       {/* Weight Selection */}
@@ -86,12 +118,29 @@ const ProductDetailsPage = ({ route, navigation }) => {
         ))}
       </View>
 
+      {/* Quantity Selector */}
+      <View style={styles.quantityContainer}>
+        <Text style={styles.sectionTitle}>Quantity</Text>
+        <View style={styles.quantityControls}>
+          <TouchableOpacity onPress={decreaseQuantity} style={styles.quantityButton}>
+            <Text style={styles.quantityButtonText}>-</Text>
+          </TouchableOpacity>
+          <Text style={styles.quantityText}>{quantity}</Text>
+          <TouchableOpacity onPress={increaseQuantity} style={styles.quantityButton}>
+            <Text style={styles.quantityButtonText}>+</Text>
+          </TouchableOpacity>
+        </View>
+      </View>
+
       {/* Action Buttons */}
       <View style={styles.actionButtonsContainer}>
         <TouchableOpacity style={styles.emiButton}>
           <Text style={styles.buttonText}>Book On EMI</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.buyNowButton}>
+        <TouchableOpacity
+          onPress={() => navigation.navigate('BuyNow', { product, quantity, selectedWeight })}
+          style={styles.buyNowButton}
+        >
           <Text style={styles.buttonText}>Buy Now</Text>
         </TouchableOpacity>
       </View>
@@ -192,6 +241,27 @@ const styles = StyleSheet.create({
   selectedWeightText: {
     color: '#fff',
   },
+  quantityContainer: {
+    marginBottom: 20,
+  },
+  quantityControls: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  quantityButton: {
+    padding: 10,
+    backgroundColor: '#ddd',
+    borderRadius: 5,
+  },
+  quantityButtonText: {
+    fontSize: 20,
+    color: '#333',
+  },
+  quantityText: {
+    marginHorizontal: 20,
+    fontSize: 20,
+    color: '#333',
+  },
   actionButtonsContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -215,11 +285,13 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     color: '#fff',
-    fontSize: 16,
+    fontSize: 18,
+    fontWeight: 'bold',
   },
   errorText: {
-    color: 'red',
     textAlign: 'center',
+    fontSize: 18,
+    color: 'red',
     marginTop: 20,
   },
 });
