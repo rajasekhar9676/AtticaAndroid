@@ -59,6 +59,7 @@ const MainService = ({ navigation }) => {
   );
 };
 
+
 const styles = StyleSheet.create({
   backgroundImage: {
     flex: 1,

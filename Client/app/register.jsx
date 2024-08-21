@@ -26,9 +26,14 @@ const Register = () => {
       Alert.alert('Success', 'Registration successful!');
       router.push('/login'); // Navigate to login screen
     } catch (error) {
-      Alert.alert('Error', error.response?.data?.message || 'Registration failed');
+      if (error.response && error.response.status === 400) {
+        Alert.alert('Error', error.response.data.message || 'User already exists');
+      } else {
+        Alert.alert('Error', 'Registration failed. Please try again.');
+      }
     }
   };
+  
 
   return (
     <ImageBackground
@@ -153,3 +158,4 @@ const styles = StyleSheet.create({
 });
 
 export default Register;
+

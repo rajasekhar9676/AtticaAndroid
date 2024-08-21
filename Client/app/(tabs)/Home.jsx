@@ -1,4 +1,5 @@
 import { StyleSheet, Text, View, ScrollView, TouchableOpacity, Image, Dimensions, Modal, Pressable, TextInput, Alert } from 'react-native';
+import { StyleSheet, Text, View, ScrollView, TouchableOpacity, Image, Dimensions, FlatList,  ActivityIndicator, Alert} from 'react-native';
 import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
 import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
@@ -6,6 +7,11 @@ import AntDesign from '@expo/vector-icons/AntDesign';
 import EvilIcons from '@expo/vector-icons/EvilIcons';
 import SimpleLineIcons from '@expo/vector-icons/SimpleLineIcons';
 import Entypo from '@expo/vector-icons/Entypo';
+import { useNavigation } from '@react-navigation/native';
+import Link from '@react-navigation/native';
+import GoldLoan from '../../components/Services/GoldLoan';
+
+import { BASE_URL } from '../../constants';
 
 const Home = () => {
   const [goldPrice, setGoldPrice] = useState(null);
@@ -25,6 +31,13 @@ const Home = () => {
     require('../../assets/images/slider4.png'),
   ];
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [productIndex, setProductIndex] = useState(0);
+  const [categories, setCategories] = useState([]);
+  const [bars, setBars] = useState([]); // State for storing "Bars" category products
+  const [loading, setLoading] = useState(false);
+  const navigation = useNavigation();
+
+  const screenWidth = Dimensions.get('window').width;
 
   useEffect(() => {
     const fetchPrices = async () => {
@@ -44,6 +57,55 @@ const Home = () => {
 
     fetchPrices();
   }, []);
+
+  const images = [
+    require('../../assets/images/slider1.png'),
+    require('../../assets/images/slider2.png'),
+    require('../../assets/images/slider3.png'),
+    require('../../assets/images/slider4.png'),
+    require('../../assets/images/slider4.png'),
+  ];
+
+
+  useEffect(() => {
+    const fetchCategories = async () => {
+      setLoading(true);
+      try {
+        const response = await axios.get(`${BASE_URL}/api/products/getproducts`);
+        if (Array.isArray(response.data)) {
+          const uniqueCategories = {};
+          const barsCategory = [];
+  
+          response.data.forEach(item => {
+            if (item.category) {
+              if (!uniqueCategories[item.category]) {
+                uniqueCategories[item.category] = item;
+              }
+              if (item.category === 'Bars') {
+                barsCategory.push(item);
+              }
+            }
+          });
+  
+          setCategories(Object.values(uniqueCategories));
+          setBars(barsCategory);
+        } else {
+          Alert.alert('Error', 'Unexpected data format received.');
+        }
+      } catch (error) {
+        Alert.alert('Error', error.response?.data?.message || 'Failed to fetch categories');
+      } finally {
+        setLoading(false);
+      }
+    };
+  
+    fetchCategories();
+  }, []);
+  
+
+  const handleCategoryPress = (category) => {
+    navigation.navigate('CategoryPage', { category });
+  };
 
   const handleNext = () => {
     const nextIndex = currentIndex === images.length - 1 ? 0 : currentIndex + 1;
@@ -83,6 +145,15 @@ const Home = () => {
     setManualLocation('');
     setManualLocationModalVisible(false);
   };
+  const renderCategoryItem = ({ item }) => (
+    <View style={styles.categoryContainer}>
+      <TouchableOpacity style={styles.categoryItem} onPress={() => handleCategoryPress(item.category)}>
+        <Image source={{ uri: item.image ? (item.image.startsWith('http') ? item.image : `${BASE_URL}/uploads/${item.image}`) : null }} style={styles.categoryImage} />
+        <Text style={styles.categoryName}>{item.category}</Text>
+        <Text style={styles.categoryPrice}>Starts at ₹{item.price}</Text>
+      </TouchableOpacity>
+    </View>
+  );
 
   return (
     <View style={styles.container}>
@@ -139,13 +210,33 @@ const Home = () => {
 
         <View style={styles.contentContainer}>
           <View style={styles.getStartedContainer}>
-            <TouchableOpacity style={styles.getStartedButton}>
-              <Text style={styles.buttonText}>Get gold loan at lowest interest rates</Text>
-            </TouchableOpacity>
+           
+          <TouchableOpacity
+  style={styles.getStartedButton}
+  onPress={() => navigation.navigate('GoldLoan')}>
+  <Text style={styles.buttonText}>Get gold loan at lowest interest rates</Text>
+</TouchableOpacity>
+
+            
+             
             <TouchableOpacity style={styles.getStartedButton}>
               <Text style={styles.buttonText}>Sell your gold at the best possible price</Text>
             </TouchableOpacity>
           </View>
+
+          <View style={styles.section}>
+        <Text style={styles.sectionTitle}>Product Categories</Text>
+        {loading ? (
+          <ActivityIndicator size="large" color="#0000ff" />
+        ) : (
+          <FlatList
+            data={categories}
+            renderItem={renderCategoryItem}
+            keyExtractor={item => (item.id ? item.id.toString() : Math.random().toString())}
+            numColumns={2}
+          />
+        )}
+      </View>
 
           {/* Our Collections */}
           <View style={styles.shopContainer}>
@@ -454,6 +545,34 @@ const styles = StyleSheet.create({
     marginBottom: 15,
     width: '100%',
     paddingHorizontal: 10,
+  },
+
+  categoryContainer: {
+    borderWidth: 1,
+    borderColor: 'gray',
+    margin: 5,
+    borderRadius: 15,
+    display:'flex',
+  marginHorizontal:50,
+  marginVertical:20
+  },
+  categoryItem: {
+    margin: 10,
+    alignItems: 'center',
+  },
+  categoryImage: {
+    width: 100,
+    height: 100,
+    resizeMode: 'contain',
+  },
+  categoryName: {
+    marginTop: 5,
+    fontSize: 16,
+  },
+  categoryPrice: {
+    marginTop: 5,
+    fontSize: 14,
+    color: 'grey',
   },
 });
 

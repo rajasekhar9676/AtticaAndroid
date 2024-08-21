@@ -73,6 +73,8 @@ const Profile = () => {
   );
 };
 
+export default Profile;
+
 const styles = StyleSheet.create({
   backgroundImage: {
     flex: 1,
@@ -175,4 +177,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Profile;
+
