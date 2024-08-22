@@ -174,7 +174,7 @@ const styles = StyleSheet.create({
     borderColor: 'gray',
     margin: 5,
     borderRadius: 15,
-    backgroundColor: '#e6747d', // Dark background for category items
+    backgroundColor: '#faebd7', // Dark background for category items
   },
   categoryItem: {
     margin: 10,
@@ -190,11 +190,11 @@ const styles = StyleSheet.create({
   categoryName: {
     marginTop: 5,
     fontSize: 16,
-    color: 'white',
+    color: 'black',
   },
   categoryPrice: {
     marginTop: 5,
     fontSize: 14,
-    color: 'white',
+    color: 'black',
   },
 });

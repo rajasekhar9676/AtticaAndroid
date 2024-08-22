@@ -1,28 +1,24 @@
 import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, ScrollView, Alert } from 'react-native';
-import { useRoute } from '@react-navigation/native';
-import Icon from 'react-native-vector-icons/Ionicons';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Alert } from 'react-native';
 
-const BuyNow = () => {
-  const route = useRoute();
-  const { product, quantity, selectedWeight } = route.params || {}; // Extract product, quantity, and selectedWeight from route params
-
-  if (!product || !quantity || !selectedWeight) {
-    return <Text style={styles.errorText}>Error: Missing product, quantity, or weight data.</Text>;
-  }
-
-  // Calculate total amount
-  const totalAmount = product.price * quantity;
-  const emiAmount = totalAmount / 12; // Assuming EMI is divided into 12 months
+const BookOnEmi = () => {
+  // Example data
+  const product = {
+    name: 'Gold Necklace',
+    pricePerGram: 5000, // Price per gram
+    weight: 10, // Weight in grams
+  };
+  const quantity = 1; // Number of items
+  const totalAmount = product.pricePerGram * product.weight * quantity;
+  const emiScheme = 12; // Number of EMI months
+  const emiAmount = totalAmount / emiScheme;
 
   // Function to handle order placement
   const handlePlaceOrder = () => {
     Alert.alert(
       'Order Placed',
-      'Your order is placed successfully.',
-      [
-        { text: 'OK', onPress: () => console.log('Order placed successfully') }
-      ],
+      'Your order has been placed successfully.',
+      [{ text: 'OK', onPress: () => console.log('Order placed successfully') }],
       { cancelable: false }
     );
   };
@@ -37,37 +33,24 @@ const BuyNow = () => {
           <Text style={styles.billValue}>{product.name}</Text>
         </View>
         <View style={styles.billItem}>
-          <Text style={styles.billLabel}>Weight:</Text>
-          <Text style={styles.billValue}>{selectedWeight}</Text>
+          <Text style={styles.billLabel}>Weight (grams):</Text>
+          <Text style={styles.billValue}>{product.weight}</Text>
         </View>
         <View style={styles.billItem}>
-          <Text style={styles.billLabel}>Quantity:</Text>
-          <Text style={styles.billValue}>{quantity}</Text>
+          <Text style={styles.billLabel}>Price per Gram:</Text>
+          <Text style={styles.billValue}>₹{product.pricePerGram}</Text>
         </View>
         <View style={styles.billItem}>
-          <Text style={styles.billLabel}>Price per Item:</Text>
-          <Text style={styles.billValue}>₹{product.price}</Text>
-        </View>
-        <View style={styles.billItem}>
-          <Text style={styles.billLabel}>Payable Amount:</Text>
-          <Text style={styles.billValue}>₹{totalAmount.toFixed(2)}</Text>
-        </View>
-        {/* Commented out other fields */}
-        {/* <View style={styles.billItem}>
-          <Text style={styles.billLabel}>Initial Payment:</Text>
+          <Text style={styles.billLabel}>Total Amount:</Text>
           <Text style={styles.billValue}>₹{totalAmount.toFixed(2)}</Text>
         </View>
         <View style={styles.billItem}>
           <Text style={styles.billLabel}>EMI Scheme:</Text>
-          <Text style={styles.billValue}>₹{emiAmount.toFixed(2)}/month for 12 months</Text>
+          <Text style={styles.billValue}>{emiScheme} months</Text>
         </View>
         <View style={styles.billItem}>
           <Text style={styles.billLabel}>EMI Amount (per month):</Text>
           <Text style={styles.billValue}>₹{emiAmount.toFixed(2)}</Text>
-        </View> */}
-        <View style={styles.billItem}>
-          <Text style={styles.billLabel}>Grand Total:</Text>
-          <Text style={styles.billValue}>₹{totalAmount.toFixed(2)}</Text>
         </View>
       </View>
 
@@ -84,7 +67,6 @@ const BuyNow = () => {
 
 const styles = StyleSheet.create({
   container: {
-    marginTop:40,
     flex: 1,
     backgroundColor: '#f8f8f8',
     padding: 20,
@@ -157,12 +139,6 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: 'bold',
   },
-  errorText: {
-    color: 'red',
-    textAlign: 'center',
-    marginTop: 20,
-    fontSize: 18,
-  },
 });
 
-export default BuyNow;
+export default BookOnEmi;

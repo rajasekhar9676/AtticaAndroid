@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, Button, StyleSheet, Alert, Image, FlatList, ImageBackground, Linking } from 'react-native';
+import { View, Text, Button, StyleSheet, Alert, Image, FlatList, ImageBackground, Linking, TouchableOpacity } from 'react-native';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as Location from 'expo-location';
@@ -28,7 +28,6 @@ const FindBranch = () => {
     }
   };
 
-
   // Function to fetch nearest branches
   const findNearestBranch = async () => {
     try {
@@ -50,8 +49,6 @@ const FindBranch = () => {
       // Make the API request to find nearest branches
       const response = await axios.get(apiUrl);
 
-      console.log(response.data, "response");
-
       // Check if the response data is an array
       if (Array.isArray(response.data)) {
         setBranches(response.data);
@@ -63,7 +60,6 @@ const FindBranch = () => {
       Alert.alert('Error', 'Failed to fetch nearest branches');
     }
   };
-
 
   // Function to open a map with the branch's location
   const openMap = (latitude, longitude) => {
@@ -86,16 +82,20 @@ const FindBranch = () => {
 
       {/* Main Container */}
       <View style={styles.container}>
-        <Button title="Find Nearest Branch" onPress={findNearestBranch} />
+        <TouchableOpacity style={styles.findButton} onPress={findNearestBranch}>
+          <Text style={styles.findButtonText}>Find Nearest Branch</Text>
+        </TouchableOpacity>
         <FlatList
           data={branches}
           keyExtractor={(item) => item._id}
           renderItem={({ item }) => (
             <View style={styles.branch}>
               <Text style={styles.branchName}>{item.name}</Text>
-              <Text>Distance: {item.distance.toFixed(2)} meters</Text>
-              <Text>{item.state}</Text>
-              <Button title="Open in Maps" onPress={() => openMap(item.latitude, item.longitude)} />
+              <Text style={styles.branchDistance}>Distance: {item.distance.toFixed(2)} meters</Text>
+              <Text style={styles.branchState}>{item.state}</Text>
+              <TouchableOpacity style={styles.mapButton} onPress={() => openMap(item.latitude, item.longitude)}>
+                <Text style={styles.mapButtonText}>Open in Maps</Text>
+              </TouchableOpacity>
             </View>
           )}
         />
@@ -122,8 +122,13 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     paddingVertical: 15,
-    paddingHorizontal: 10,
+    paddingHorizontal: 20,
     zIndex: 1000, // Ensures the header stays on top
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 4,
+    elevation: 4,
   },
   logo: {
     width: 150,
@@ -132,20 +137,53 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 20,
-    marginTop: 100,
+    marginTop: 80, // Adjust to avoid overlap with the header
+  },
+  findButton: {
+    backgroundColor: '#28a745',
+    paddingVertical: 15,
+    borderRadius: 8,
+    alignItems: 'center',
+    marginBottom: 20,
+    elevation: 3,
+  },
+  findButtonText: {
+    color: '#fff',
+    fontSize: 18,
+    fontWeight: 'bold',
   },
   branch: {
-    padding: 10,
-    marginVertical: 5,
+    padding: 15,
+    marginVertical: 8,
     backgroundColor: '#fff',
-    borderRadius: 5,
+    borderRadius: 10,
     elevation: 2,
   },
   branchName: {
     fontSize: 18,
     fontWeight: 'bold',
+    color: '#333',
+  },
+  branchDistance: {
+    fontSize: 16,
+    color: '#666',
+  },
+  branchState: {
+    fontSize: 16,
+    color: '#666',
+    marginBottom: 10,
+  },
+  mapButton: {
+    backgroundColor: '#007bff',
+    paddingVertical: 10,
+    borderRadius: 8,
+    alignItems: 'center',
+  },
+  mapButtonText: {
+    color: '#fff',
+    fontSize: 16,
+    fontWeight: 'bold',
   },
 });
 
 export default FindBranch;
-

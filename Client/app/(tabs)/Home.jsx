@@ -235,6 +235,7 @@ const Home = () => {
             renderItem={renderCategoryItem}
             keyExtractor={item => (item.id ? item.id.toString() : Math.random().toString())}
             numColumns={2}
+            style={styles.collection}
           />
         )}
       </View>
@@ -388,6 +389,7 @@ const styles = StyleSheet.create({
   rateSection: {
     flexDirection: 'row',
     alignItems: 'center',
+    flex:1, 
   },
   rateText: {
     fontSize: 16,
@@ -398,6 +400,7 @@ const styles = StyleSheet.create({
   locationSection: {
     flexDirection: 'row',
     alignItems: 'center',
+    flex:1,
   },
   locationText: {
     fontSize: 16,
@@ -453,6 +456,9 @@ const styles = StyleSheet.create({
   },
   section: {
     marginVertical: 10,
+    justifyContent: 'center',
+    alignItems: 'center',
+    flex:1,
   },
   sectionTitle: {
     fontSize: 18,
@@ -485,6 +491,9 @@ const styles = StyleSheet.create({
   },
   investContainer: {
     marginVertical: 10,
+    justifyContent:'center', 
+    alignItems:'center',
+    marginTop: 20,
   },
   investDetails: {
     marginBottom: 10,
