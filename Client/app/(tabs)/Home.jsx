@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, ScrollView, TouchableOpacity, Image, Dimensions, Modal, Pressable, TextInput, Alert, FlatList,  ActivityIndicator } from 'react-native';
+import { StyleSheet, Text, View, SafeAreaView, ScrollView, TouchableOpacity, Image, Dimensions, Modal, Pressable, TextInput, Alert, FlatList, ActivityIndicator } from 'react-native';
 // import { StyleSheet, Text, View, ScrollView, TouchableOpacity, Image, Dimensions, FlatList,  ActivityIndicator, Alert} from 'react-native';
 import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
@@ -75,7 +75,7 @@ const Home = () => {
         if (Array.isArray(response.data)) {
           const uniqueCategories = {};
           const barsCategory = [];
-  
+
           response.data.forEach(item => {
             if (item.category) {
               if (!uniqueCategories[item.category]) {
@@ -86,7 +86,7 @@ const Home = () => {
               }
             }
           });
-  
+
           setCategories(Object.values(uniqueCategories));
           setBars(barsCategory);
         } else {
@@ -98,10 +98,10 @@ const Home = () => {
         setLoading(false);
       }
     };
-  
+
     fetchCategories();
   }, []);
-  
+
 
   const handleCategoryPress = (category) => {
     navigation.navigate('CategoryPage', { category });
@@ -157,7 +157,8 @@ const Home = () => {
 
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
+      <ScrollView>
       {/* Header */}
       <View style={styles.headerContainer}>
         <FontAwesome6 name="bars" size={24} color="white" />
@@ -211,33 +212,33 @@ const Home = () => {
 
         <View style={styles.contentContainer}>
           <View style={styles.getStartedContainer}>
-           
-          <TouchableOpacity
-  style={styles.getStartedButton}
-  onPress={() => navigation.navigate('GoldLoan')}>
-  <Text style={styles.buttonText}>Get gold loan at lowest interest rates</Text>
-</TouchableOpacity>
 
-            
-             
-            <TouchableOpacity style={styles.getStartedButton}   onPress={()=>navigation.navigate('GoldLoan')}>
+            <TouchableOpacity
+              style={styles.getStartedButton}
+              onPress={() => navigation.navigate('GoldLoan')}>
+              <Text style={styles.buttonText}>Get gold loan at lowest interest rates</Text>
+            </TouchableOpacity>
+
+
+
+            <TouchableOpacity style={styles.getStartedButton} onPress={() => navigation.navigate('GoldLoan')}>
               <Text style={styles.buttonText}>Sell your gold at the best possible price</Text>
             </TouchableOpacity>
           </View>
 
           <View style={styles.section}>
-        <Text style={styles.sectionTitle}>Our Collection</Text>
-        {loading ? (
-          <ActivityIndicator size="large" color="#0000ff" />
-        ) : (
-          <FlatList
-            data={categories}
-            renderItem={renderCategoryItem}
-            keyExtractor={item => (item.id ? item.id.toString() : Math.random().toString())}
-            numColumns={2}
-          />
-        )}
-      </View>
+            <Text style={styles.sectionTitle}>Our Collection</Text>
+            {loading ? (
+              <ActivityIndicator size="large" color="#0000ff" />
+            ) : (
+              <FlatList
+                data={categories}
+                renderItem={renderCategoryItem}
+                keyExtractor={item => (item.id ? item.id.toString() : Math.random().toString())}
+                numColumns={2}
+              />
+            )}
+          </View>
 
           {/* Our Collections */}
           {/* <View style={styles.shopContainer}>
@@ -354,7 +355,8 @@ const Home = () => {
           </Pressable>
         </View>
       </Modal>
-    </View>
+      </ScrollView>
+    </SafeAreaView>
   );
 };
 const styles = StyleSheet.create({
