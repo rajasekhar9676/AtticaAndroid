@@ -55,19 +55,25 @@ const createProduct = async (req, res) => {
 // Get all products, with optional filtering by category
 const getAllProducts = async (req, res) => {
     try {
-        const { category } = req.query;
+        const { category, sortOrder } = req.query;
         let filter = {};
+        let sort = {};
 
         if (category) {
             filter.category = category;
         }
 
-        const products = await Product.find(filter);
+        if (sortOrder) {
+            sort.price = sortOrder === 'asc' ? 1 : -1;
+        }
+
+        const products = await Product.find(filter).sort(sort);
         res.status(200).json(products);
     } catch (error) {
         res.status(500).json({ message: error.message });
     }
 };
+
 
 
 // Get a product by ID

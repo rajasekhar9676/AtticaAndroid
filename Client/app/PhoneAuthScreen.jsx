@@ -6,6 +6,7 @@ import { Input, Button } from 'react-native-elements';
 import { Entypo } from '@expo/vector-icons';
 import { auth } from '../firebaseConfig'; // Import auth from firebaseConfig
 import {firebaseConfig} from '../firebaseConfig'
+import { useNavigation } from '@react-navigation/native';
 
 const SignInScreen = () => {
   const recaptchaVerifier = useRef(null);
@@ -14,7 +15,8 @@ const SignInScreen = () => {
   const [OTP, setOTP] = useState("");
   const [verificationId, setVerificationId] = useState("");
   const [activityIndicator, setActivityIndicator] = useState(false);
-
+  const navigation = useNavigation();
+  
   // Function to validate phone number
   const validatePhoneNumber = () => {
     let argPhone = phone.trim(); // Remove any leading/trailing spaces
@@ -64,6 +66,7 @@ const SignInScreen = () => {
       await signInWithCredential(auth, credentials);
       setActivityIndicator(false);
       setScreenState("Authenticated");
+      
     } catch (error) {
       console.log(error);
       setActivityIndicator(false);

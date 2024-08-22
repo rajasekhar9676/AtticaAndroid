@@ -29,7 +29,7 @@ const InsurancePage = () => {
     };
 
     return (
-        <View style={{ padding: 20 }}>
+        <View style={{ padding: 20 , marginTop:40,}}>
             <Text style={{ fontSize: 24, fontWeight: 'bold' }}>Available Insurance Schemes</Text>
             <FlatList
                 data={insuranceOptions}

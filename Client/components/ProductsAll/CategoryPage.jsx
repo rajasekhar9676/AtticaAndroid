@@ -19,22 +19,31 @@ const CategoryPage = ({ route }) => {
     const fetchProducts = async () => {
       setLoading(true);
       try {
-          const response = await axios.get(`${BASE_URL}/api/products/getproducts`, {
-              params: {
-                  category: category !== 'All' ? category : undefined,
-                  sortOrder
-              }
-          });
-          setProducts(response.data);
+        const response = await axios.get(`${BASE_URL}/api/products/getproducts`, {
+          params: {
+            category: category !== 'All' ? category : undefined,
+          }
+        });
+        let fetchedProducts = response.data;
+  
+        // Frontend sorting based on sortOrder
+        if (sortOrder === 'asc') {
+          fetchedProducts.sort((a, b) => a.price - b.price);
+        } else {
+          fetchedProducts.sort((a, b) => b.price - a.price);
+        }
+  
+        setProducts(fetchedProducts);
       } catch (error) {
-          Alert.alert('Error', error.response?.data?.message || 'Failed to fetch products');
-      } finally {
-          setLoading(false);
+        Alert.alert('Error', error.response?.data?.message || 'Failed to fetch products');
+  } finally {
+        setLoading(false);
       }
-  };
-
+    };
+  
     fetchProducts();
   }, [category, sortOrder]);
+  
 
   const handleSortChange = () => {
     setSortOrder(prevOrder => (prevOrder === 'asc' ? 'desc' : 'asc'));
@@ -95,6 +104,7 @@ export default CategoryPage;
 
 const styles = StyleSheet.create({
   container: {
+    marginTop:40,
     flex: 1,
     padding: 10,
     backgroundColor: '#f5f5f5', // Light gray background

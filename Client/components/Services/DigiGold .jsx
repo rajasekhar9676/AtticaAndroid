@@ -55,6 +55,7 @@ export default DigiGold;
 
 const styles = StyleSheet.create({
   container: {
+    marginTop:40,
     flex: 1,
     padding: 16,
     backgroundColor: '#fff',

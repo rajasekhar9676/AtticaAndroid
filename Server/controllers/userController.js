@@ -7,6 +7,7 @@ const generateToken = (id) => {
   return jwt.sign({ id }, process.env.JWT_SECRET, { expiresIn: '1h' });
 };
 
+
 // Register new user
 const registerUser = async (req, res) => {
   try {
@@ -54,5 +55,6 @@ const loginUser = async (req, res) => {
     res.status(400).json({ message: error.message });
   }
 };
+
 
 module.exports = { registerUser, loginUser };

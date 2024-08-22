@@ -63,7 +63,8 @@ const ProductCategory = () => {
   );
 
   return (
-    <View style={styles.container}>
+    <><ScrollView>
+      <View style={styles.container}>
       {/* Header */}
       <Animatable.View animation="fadeInDown" duration={800} style={styles.headerContainer}>
         <FontAwesome6 name="bars" size={24} color="white" />
@@ -86,8 +87,7 @@ const ProductCategory = () => {
               data={categories}
               renderItem={renderCategoryItem}
               keyExtractor={item => (item.id ? item.id.toString() : Math.random().toString())}
-              horizontal
-            />
+              horizontal />
           )}
         </Animatable.View>
 
@@ -100,8 +100,7 @@ const ProductCategory = () => {
               data={bars} // Use bars state for displaying "Bars" category products
               renderItem={renderCategoryItem}
               keyExtractor={item => (item.id ? item.id.toString() : Math.random().toString())}
-              horizontal
-            />
+              horizontal />
           )}
         </Animatable.View>
 
@@ -111,11 +110,12 @@ const ProductCategory = () => {
             data={categories.slice(0, 4)}
             renderItem={renderCategoryItem}
             keyExtractor={item => (item.id ? item.id.toString() : Math.random().toString())}
-            horizontal
-          />
+            horizontal />
         </Animatable.View>
       </ScrollView>
     </View>
+    </ScrollView>
+    </>
   );
 };
 
@@ -123,8 +123,9 @@ export default ProductCategory;
 
 const styles = StyleSheet.create({
   container: {
+    marginTop: 40,
     flex: 1,
-    backgroundColor: 'black', // Black background for the entire screen
+    // backgroundColor: 'black', // Black background for the entire screen
   },
   scrollContainer: {
     padding: 20,

@@ -76,6 +76,7 @@ export default GoldLoan;
 
 const styles = StyleSheet.create({
   backgroundImage: {
+    marginTop:40,
     flex: 1,
     width: '100%',
     height: '100%',

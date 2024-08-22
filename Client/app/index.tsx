@@ -1,6 +1,7 @@
 import 'react-native-gesture-handler';
 import { Redirect } from "expo-router";
 import {StyleSheet, Text, View } from "react-native";
+import PhoneAuthScreen from './PhoneAuthScreen'
 // import firebase from '../firebaseConfig';
 
 // Ensure Firebase is initialized before using any Firebase service
@@ -8,7 +9,7 @@ import {StyleSheet, Text, View } from "react-native";
 
 export default function Index() {
   return (
-  <Redirect href={'/login'} />
+  <Redirect href={'/Home'} />
   );
 }
 

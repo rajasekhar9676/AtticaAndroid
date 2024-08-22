@@ -101,6 +101,7 @@ export default Profile;
 
 const styles = StyleSheet.create({
   backgroundImage: {
+    marginTop:40,
     flex: 1,
     width: '100%', // Full width of the screen
     height: '100%', // Full height of the screen

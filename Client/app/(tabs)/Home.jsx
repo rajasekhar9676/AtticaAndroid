@@ -361,6 +361,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff',
+    marginTop:40,
   },
   headerContainer: {
     flexDirection: 'row',
@@ -370,8 +371,8 @@ const styles = StyleSheet.create({
     padding: 10,
   },
   logo: {
-    width: 100,
-    height: 40,
+    width: 150,
+    height: 50,
   },
   scrollableContent: {
     flexGrow: 1,
@@ -392,6 +393,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: '#8d181a',
     marginLeft: 5,
+    flex:1
   },
   locationSection: {
     flexDirection: 'row',
@@ -401,6 +403,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: '#8d181a',
     marginLeft: 5,
+    flex:1
   },
   sliderContainer: {
     position: 'relative',
