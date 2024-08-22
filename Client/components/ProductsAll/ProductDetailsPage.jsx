@@ -9,12 +9,11 @@ const ProductDetailsPage = ({ route }) => {
   const [loading, setLoading] = useState(true);
   const [product, setProduct] = useState(null);
   const [selectedWeight, setSelectedWeight] = useState(null);
-  const [quantity, setQuantity] = useState(1); // Quantity state
+  const [quantity, setQuantity] = useState(1);
 
   useEffect(() => {
     if (route.params && route.params.product) {
       setProduct(route.params.product);
-      console.log('Product data:', route.params.product);
       setLoading(false);
       if (Array.isArray(route.params.product.weights) && route.params.product.weights.length > 0) {
         setSelectedWeight(route.params.product.weights[0]);
@@ -28,13 +27,13 @@ const ProductDetailsPage = ({ route }) => {
   const getPriceForWeight = (weight) => {
     if (!product || !product.weights || !product.pricePerWeight) {
       console.error("Product data is incomplete.");
-      return 0; // Return a default value or handle it appropriately
+      return 0;
     }
 
     const weightIndex = product.weights.indexOf(weight);
     if (weightIndex === -1 || !product.pricePerWeight[weightIndex]) {
       console.error("Weight or price for weight not found.");
-      return 0; // Return a default value or handle it appropriately
+      return 0;
     }
 
     return product.pricePerWeight[weightIndex];
@@ -65,17 +64,17 @@ const ProductDetailsPage = ({ route }) => {
     <ScrollView style={styles.container}>
       {/* Header */}
       <View style={styles.header}>
-        <TouchableOpacity onPress={() => navigation.goBack()}>
+        <TouchableOpacity onPress={() => navigation.goBack()} style={styles.headerIcon}>
           <Icon name="arrow-back" size={24} color="#fff" />
         </TouchableOpacity>
         <View style={styles.headerIcons}>
-          <TouchableOpacity>
+          <TouchableOpacity style={styles.headerIcon}>
             <Icon name="share-outline" size={24} color="#fff" />
           </TouchableOpacity>
-          <TouchableOpacity>
+          <TouchableOpacity style={styles.headerIcon}>
             <Icon name="heart-outline" size={24} color="#fff" />
           </TouchableOpacity>
-          <TouchableOpacity>
+          <TouchableOpacity style={styles.headerIcon}>
             <Icon name="cart-outline" size={24} color="#fff" />
           </TouchableOpacity>
         </View>
@@ -94,8 +93,8 @@ const ProductDetailsPage = ({ route }) => {
       {/* Product Name and Price */}
       <Animatable.View animation="fadeInUp" duration={1200} style={styles.productDetails}>
         <Text style={styles.productName}>{product.name}</Text>
-        <Text style={styles.productPrice}>₹{product.price}</Text>
-        <Text style={styles.emiText}>EMI starts from just ₹{(price / 12).toFixed(2)}/month</Text>
+        <Text style={styles.productPrice}>₹{totalAmount.toFixed(2)}</Text>
+        <Text style={styles.emiText}>EMI starts from ₹{(price / 12).toFixed(2)}/month</Text>
       </Animatable.View>
 
       {/* Weight Selection */}
@@ -134,7 +133,8 @@ const ProductDetailsPage = ({ route }) => {
 
       {/* Action Buttons */}
       <View style={styles.actionButtonsContainer}>
-        <TouchableOpacity style={styles.emiButton}>
+        <TouchableOpacity  onPress={() => navigation.navigate('BookOnEmi', { product, quantity, selectedWeight })}
+        style={styles.emiButton}>
           <Text style={styles.buttonText}>Book On EMI</Text>
         </TouchableOpacity>
         <TouchableOpacity
@@ -151,7 +151,7 @@ const ProductDetailsPage = ({ route }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: '#f4f4f4',
     padding: 15,
   },
   loader: {
@@ -165,28 +165,33 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginBottom: 15,
   },
+  headerIcon: {
+    marginHorizontal: 10,
+  },
   headerIcons: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
-    width: 100,
+    alignItems: 'center',
   },
   imageContainer: {
     alignItems: 'center',
+    marginBottom: 15,
   },
   productImage: {
     width: '100%',
     height: 250,
     resizeMode: 'contain',
-    marginBottom: 15,
-    borderRadius: 10,
+    borderRadius: 15,
+    borderWidth: 1,
+    borderColor: '#ddd',
   },
   imageThumbnails: {
     flexDirection: 'row',
     justifyContent: 'center',
+    marginTop: 10,
   },
   thumbnail: {
-    width: 50,
-    height: 50,
+    width: 60,
+    height: 60,
     resizeMode: 'contain',
     marginHorizontal: 5,
     borderRadius: 5,
@@ -197,25 +202,26 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   productName: {
-    fontSize: 26,
+    fontSize: 28,
     fontWeight: 'bold',
     color: '#333',
     marginBottom: 10,
   },
   productPrice: {
-    fontSize: 22,
-    color: '#555',
+    fontSize: 24,
+    color: '#007bff',
     marginBottom: 10,
   },
   emiText: {
     fontSize: 16,
-    color: '#888',
+    color: '#666',
     marginBottom: 20,
   },
   sectionTitle: {
-    fontSize: 20,
+    fontSize: 22,
     fontWeight: 'bold',
     marginBottom: 10,
+    color: '#333',
   },
   weightsContainer: {
     flexDirection: 'row',
@@ -226,7 +232,7 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     paddingHorizontal: 20,
     borderRadius: 20,
-    backgroundColor: '#f0f0f0',
+    backgroundColor: '#e0e0e0',
     margin: 5,
     alignItems: 'center',
     justifyContent: 'center',
@@ -235,7 +241,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#007bff',
   },
   weightText: {
-    fontSize: 16,
+    fontSize: 18,
     color: '#333',
   },
   selectedWeightText: {
@@ -252,14 +258,14 @@ const styles = StyleSheet.create({
     padding: 10,
     backgroundColor: '#ddd',
     borderRadius: 5,
+    marginHorizontal: 10,
   },
   quantityButtonText: {
-    fontSize: 20,
+    fontSize: 22,
     color: '#333',
   },
   quantityText: {
-    marginHorizontal: 20,
-    fontSize: 20,
+    fontSize: 22,
     color: '#333',
   },
   actionButtonsContainer: {
@@ -282,6 +288,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     alignItems: 'center',
     flex: 1,
+    marginLeft: 10,
   },
   buttonText: {
     color: '#fff',
@@ -289,9 +296,9 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   errorText: {
-    textAlign: 'center',
     fontSize: 18,
-    color: 'red',
+    color: '#ff0000',
+    textAlign: 'center',
     marginTop: 20,
   },
 });

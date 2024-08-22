@@ -7,6 +7,7 @@ import CategoryPage from '../../components/ProductsAll/CategoryPage';
 import AllProducts from '../../components/ProductsAll/AllProducts';
 import ProductDetailsPage from '../../components/ProductsAll/ProductDetailsPage';
 import BuyNow from '../../components/ProductsAll/BuyNow';
+import BookOnEmi from '../../components/ProductsAll/BookOnEmi';
 
 const Stack = createStackNavigator();
 
@@ -21,6 +22,7 @@ const Products = () => {
       <Stack.Screen name='CategoryPage' component={CategoryPage}/>
       <Stack.Screen name="ProductDetails" component={ProductDetailsPage}/>
       <Stack.Screen name="BuyNow" component={BuyNow}/>
+      <Stack.Screen name="BookOnEmi" component={BookOnEmi}/>
      </Stack.Navigator>
   )
 }

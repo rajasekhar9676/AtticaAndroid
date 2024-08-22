@@ -19,25 +19,25 @@ const CategoryPage = ({ route }) => {
     const fetchProducts = async () => {
       setLoading(true);
       try {
-          const response = await axios.get(`${BASE_URL}/api/products/getproducts`, {
-              params: {
-                  category: category !== 'All' ? category : undefined,
-                  sortOrder
-              }
-          });
-          setProducts(response.data);
+        const response = await axios.get(`${BASE_URL}/api/products/getproducts`, {
+          params: {
+            category: category !== 'All' ? category : undefined,
+            sortOrder // Pass sortOrder as query parameter
+          }
+        });
+        setProducts(response.data);
       } catch (error) {
-          Alert.alert('Error', error.response?.data?.message || 'Failed to fetch products');
+        Alert.alert('Error', error.response?.data?.message || 'Failed to fetch products');
       } finally {
-          setLoading(false);
+        setLoading(false);
       }
-  };
+    };
 
     fetchProducts();
   }, [category, sortOrder]);
 
   const handleSortChange = () => {
-    setSortOrder(prevOrder => (prevOrder === 'asc' ? 'desc' : 'asc'));
+    setSortOrder(prevOrder => prevOrder === 'asc' ? 'desc' : 'asc');
   };
 
   const renderItem = ({ item }) => (
@@ -77,7 +77,7 @@ const CategoryPage = ({ route }) => {
 
       {/* Products List */}
       {loading ? (
-        <ActivityIndicator size="large" color="#ffd700" style={styles.loader} />
+        <ActivityIndicator size="large" color="#FFD700" style={styles.loader} />
       ) : (
         <FlatList
           data={products}
@@ -103,17 +103,17 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    backgroundColor: '#000', // Dark background for header
-    padding: 10,
-    borderRadius: 10,
+    backgroundColor: '#8d181a', // Darker red for header
+    padding: 15,
+    borderRadius: 15,
     marginBottom: 10,
     shadowColor: '#000',
     shadowOpacity: 0.3,
-    shadowRadius: 10,
+    shadowRadius: 15,
     elevation: 5,
   },
   title: {
-    fontSize: 24,
+    fontSize: 28,
     fontWeight: 'bold',
     color: '#fff',
   },
@@ -124,36 +124,38 @@ const styles = StyleSheet.create({
   sortButton: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginRight: 10,
+    marginRight: 15,
   },
   sortText: {
     marginRight: 5,
-    fontSize: 16,
+    fontSize: 18,
     color: '#fff',
   },
   filterButton: {
-    padding: 5,
+    padding: 10,
+    borderRadius: 10,
+    backgroundColor: '#d9534f', // Red color for filter button
   },
   categoryTabs: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginVertical: 10,
+    marginVertical: 15,
   },
   categoryTab: {
-    paddingVertical: 5,
-    paddingHorizontal: 15,
+    paddingVertical: 8,
+    paddingHorizontal: 20,
     borderRadius: 20,
-    backgroundColor: '#dcdcdc', // Light gray for inactive tabs
+    backgroundColor: '#e0e0e0', // Light gray for inactive tabs
   },
   activeTab: {
     backgroundColor: '#FFD700', // Gold color for active tab
   },
   categoryText: {
-    fontSize: 16,
+    fontSize: 18,
+    fontWeight: 'bold',
   },
   activeText: {
     color: '#fff',
-    fontWeight: 'bold',
   },
   productList: {
     paddingBottom: 20,
@@ -168,14 +170,15 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     backgroundColor: '#fff',
     shadowColor: '#000',
-    shadowOpacity: 0.1,
-    shadowRadius: 10,
+    shadowOpacity: 0.2,
+    shadowRadius: 8,
     elevation: 4,
   },
   itemImage: {
     width: 100,
     height: 100,
-    resizeMode: 'contain',
+    resizeMode: 'cover',
+    borderRadius: 10,
   },
   itemName: {
     fontSize: 18,
