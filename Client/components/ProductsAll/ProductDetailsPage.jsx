@@ -93,7 +93,7 @@ const ProductDetailsPage = ({ route }) => {
       {/* Product Name and Price */}
       <Animatable.View animation="fadeInUp" duration={1200} style={styles.productDetails}>
         <Text style={styles.productName}>{product.name}</Text>
-        <Text style={styles.productPrice}>₹{totalAmount.toFixed(2)}</Text>
+        <Text style={styles.productPrice}>₹{product.price}</Text>
         <Text style={styles.emiText}>EMI starts from ₹{(price / 12).toFixed(2)}/month</Text>
       </Animatable.View>
 
