@@ -19,13 +19,10 @@ const registerUser = async (req, res) => {
       return res.status(400).json({ message: 'User with this email or mobile number already exists' });
     }
 
-    // Hash the password
-    const hashedPassword = await bcrypt.hash(password, 10);
-
     const user = new User({
       username,
       email,
-      password: hashedPassword, // Save the hashed password
+      password, // Save the plain password, it will be hashed in the pre-save hook
       mobile,
       address
     });
@@ -39,22 +36,36 @@ const registerUser = async (req, res) => {
 };
 
 
-
 // Login user
+
 const loginUser = async (req, res) => {
   try {
     const { email, password } = req.body;
     const user = await User.findOne({ email });
-    if (!user || !(await user.matchPassword(password))) {
+
+    if (!user) {
+      console.log('User not found');
+      return res.status(401).json({ message: 'Invalid email or password' });
+    }
+
+    console.log('Password entered:', password);
+    console.log('Stored password (hashed):', user.password);
+
+    const isMatch = await bcrypt.compare(password, user.password);
+    console.log('Password match result:', isMatch);
+
+    if (!isMatch) {
+      console.log('Password does not match');
       return res.status(401).json({ message: 'Invalid email or password' });
     }
 
     const token = generateToken(user._id);
     res.json({ token, username: user.username, email: user.email, mobile: user.mobile, address: user.address });
   } catch (error) {
+    console.log('Error:', error.message);
     res.status(400).json({ message: error.message });
   }
 };
 
-
 module.exports = { registerUser, loginUser };
+

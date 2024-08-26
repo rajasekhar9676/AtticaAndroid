@@ -24,7 +24,9 @@ const Register = () => {
         address
       });
       Alert.alert('Success', 'Registration successful!');
-      router.push('/login'); // Navigate to login screen
+      router.push('/login'); 
+      console.log({ username, email, password, mobile, address });
+      // Navigate to login screen
     } catch (error) {
       if (error.response && error.response.status === 400) {
         Alert.alert('Error', error.response.data.message || 'User already exists');

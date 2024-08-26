@@ -8,6 +8,7 @@ import { auth } from '../firebaseConfig'; // Import auth from firebaseConfig
 import {firebaseConfig} from '../firebaseConfig'
 import { useNavigation } from '@react-navigation/native';
 
+
 const SignInScreen = () => {
   const recaptchaVerifier = useRef(null);
   const [screenState, setScreenState] = useState("phone");
@@ -66,7 +67,7 @@ const SignInScreen = () => {
       await signInWithCredential(auth, credentials);
       setActivityIndicator(false);
       setScreenState("Authenticated");
-      
+      navigation.navigate('(tabs)'); // Navigate to Home after successful authentication
     } catch (error) {
       console.log(error);
       setActivityIndicator(false);
@@ -198,4 +199,3 @@ const styles = StyleSheet.create({
 });
 
 export default SignInScreen;
-

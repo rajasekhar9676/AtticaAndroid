@@ -17,6 +17,7 @@ const Login = () => {
       const response = await axios.post(`${BASE_URL}/api/users/login`, {
         email,
         password,
+        
       });
 
       const { token, username, email: userEmail, mobile, address } = response.data;
@@ -29,6 +30,7 @@ const Login = () => {
       await AsyncStorage.setItem('address', address);
 
       Alert.alert('Success', 'Login successful!');
+      console.log('Response:', response.data);
       router.push('/Home'); // Navigate to home screen
     } catch (error) {
       Alert.alert('Error', error.response?.data?.message || 'Login failed');
@@ -142,3 +144,6 @@ const styles = StyleSheet.create({
 });
 
 export default Login;
+
+
+
