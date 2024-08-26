@@ -164,8 +164,7 @@ const Home = ({navigation}) => {
         <View style={styles.locationRateContainer}>
 
           <TouchableOpacity style={styles.rateSection} onPress={() => navigation.navigate('GoldLive')}>
-            {/* <SimpleLineIcons name="options-vertical" size={24} color="#8d181a" /> */}
-            <Text style={styles.rateText}>22KT Gold Rate 6,425.00/gm INR</Text>
+            <Text style={styles.rateText}>See Live Gold Rate</Text>
           </TouchableOpacity>
 
           <TouchableOpacity
@@ -383,8 +382,8 @@ const styles = StyleSheet.create({
     borderBottomColor: '#ddd',
   },
   rateSection: {
-    backgroundColor: '#8d181a',
-    color: 'white',
+    textDecorationLine: 'underline',
+    color: '#8d181a',
     padding: 15,
     borderRadius: 5,
     flexDirection: 'row',
@@ -392,7 +391,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   rateText: {
-    color: '#fff',
+    color: '#8d181a',
     textAlign: 'center',
     fontSize: 16,
     marginLeft: 5,

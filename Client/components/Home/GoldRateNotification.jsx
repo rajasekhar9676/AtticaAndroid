@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
-import { StyleSheet, Text, View, ImageBackground, Pressable, FlatList, Picker } from 'react-native';
+import { StyleSheet, Text, View, ImageBackground, Pressable, Picker } from 'react-native';
 import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
 import * as Animatable from 'react-native-animatable';
 import AntDesign from '@expo/vector-icons/AntDesign';
 
-const GoldRateNotification = () => {
+const GoldRateNotification = ({ navigation }) => {
     const [selectedCountry, setSelectedCountry] = useState('US');
     const [alertFrequency, setAlertFrequency] = useState('daily');
 
@@ -20,13 +20,11 @@ const GoldRateNotification = () => {
         >
             {/* MainHeader */}
             <Animatable.View animation="fadeInDown" duration={1000} style={styles.headerContainer}>
-                <AntDesign name="arrowleft" size={24} color="white" />
-                <Text style={styles.heading}>Gold Rate Notification Configuration</Text>
-                <Pressable style={styles.settingsButton}>
-                    <FontAwesome5 name="cog" size={20} color="white" />
+                <Pressable onPress={() => navigation.navigate('GoldLive')}>
+                    <AntDesign name="arrowleft" size={24} color="white" />
                 </Pressable>
+                <Text style={styles.heading}>Gold Rate Notification Configuration</Text>
             </Animatable.View>
-
 
             {/* Country Selector */}
             <Animatable.View animation="fadeInUp" duration={1200} style={styles.selectorContainer}>
@@ -70,13 +68,7 @@ const GoldRateNotification = () => {
                         <Text style={styles.settingButtonText}>Set Alert</Text>
                     </Pressable>
                 </View>
-
             </Animatable.View>
-
-            {/* Footer */}
-            <View style={styles.footer}>
-                <Text style={styles.footerText}>Powered by Malabar Gold & Diamonds</Text>
-            </View>
         </ImageBackground>
     );
 }
@@ -106,35 +98,6 @@ const styles = StyleSheet.create({
     heading: {
         color: 'white',
         fontSize: 20,
-        fontWeight: 'bold',
-    },
-    settingsButton: {
-        padding: 10,
-    },
-    contentContainer: {
-        marginTop: 60,
-        padding: 20,
-        backgroundColor: 'rgba(255, 255, 255, 0.8)',
-        borderRadius: 10,
-        marginHorizontal: 15,
-    },
-    sectionHeading: {
-        fontSize: 18,
-        fontWeight: 'bold',
-        marginBottom: 10,
-    },
-    goldRateItem: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        paddingVertical: 10,
-        borderBottomWidth: 1,
-        borderBottomColor: '#ddd',
-    },
-    goldType: {
-        fontSize: 16,
-    },
-    goldRate: {
-        fontSize: 16,
         fontWeight: 'bold',
     },
     selectorContainer: {
@@ -179,18 +142,5 @@ const styles = StyleSheet.create({
     },
     alertFrequencyContainer: {
         marginTop: 20,
-    },
-    footer: {
-        position: 'absolute',
-        bottom: 0,
-        left: 0,
-        right: 0,
-        backgroundColor: '#8d181a',
-        padding: 15,
-        alignItems: 'center',
-    },
-    footerText: {
-        color: 'white',
-        fontSize: 14,
     },
 });
