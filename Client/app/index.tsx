@@ -9,7 +9,7 @@ import PhoneAuthScreen from './PhoneAuthScreen'
 
 export default function Index() {
   return (
-  <Redirect href={'/Home'} />
+  <Redirect href={'/StartingPage'} />
   );
 }
 
