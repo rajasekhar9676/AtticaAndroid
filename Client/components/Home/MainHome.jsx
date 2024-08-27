@@ -15,7 +15,7 @@ const Home = ({ navigation }) => {
   const [modalVisible, setModalVisible] = useState(false);
   const [autoDetectModalVisible, setAutoDetectModalVisible] = useState(false);
   const [manualLocationModalVisible, setManualLocationModalVisible] = useState(false);
-  const [currentLocation, setCurrentLocation] = useState('You are in #Indian express, Bangalore, Karnataka, India');
+  const [currentLocation, setCurrentLocation] = useState('Your location');
   const [manualLocation, setManualLocation] = useState('');
   const scrollViewRef = useRef(null);
   const [currentIndex, setCurrentIndex] = useState(0);

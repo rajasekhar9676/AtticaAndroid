@@ -39,7 +39,7 @@ const findNearestBranches = async (req, res) => {
 
     // Sort by distance and limit to top 5
     branchesWithDistance.sort((a, b) => a.distance - b.distance);
-    const top5Branches = branchesWithDistance.slice(0, 5);
+    const top5Branches = branchesWithDistance;
 
     res.json(top5Branches);
   } catch (error) {
@@ -48,5 +48,8 @@ const findNearestBranches = async (req, res) => {
 };
 
 module.exports = { findNearestBranches };
+
+
+
 
 
