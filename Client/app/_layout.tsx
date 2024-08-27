@@ -20,6 +20,7 @@ export default function RootLayout() {
         <Stack.Screen name="(tabs)" />
         <Stack.Screen name="Home"/>
         <Stack.Screen name="PhoneAuthScreen" />
+        {/* <Stack.Screen name="StartingPage"/> */}
       </Stack>
     </GestureHandlerRootView>
   );

@@ -14,8 +14,8 @@ import GoldLive from '../../components/Home/GoldLive';
 
 import { BASE_URL } from '../../constants';
 
-const Home = ({navigation}) => {
- 
+const Home = ({ navigation }) => {
+
   const [goldPrice, setGoldPrice] = useState(null);
   const [error, setError] = useState(null);
   const [modalVisible, setModalVisible] = useState(false);
@@ -164,8 +164,7 @@ const Home = ({navigation}) => {
         <View style={styles.locationRateContainer}>
 
           <TouchableOpacity style={styles.rateSection} onPress={() => navigation.navigate('GoldLive')}>
-            {/* <SimpleLineIcons name="options-vertical" size={24} color="#8d181a" /> */}
-            <Text style={styles.rateText}>22KT Gold Rate 6,425.00/gm INR</Text>
+            <Text style={styles.rateText}>See Live Gold Rate</Text>
           </TouchableOpacity>
 
           <TouchableOpacity
@@ -177,8 +176,10 @@ const Home = ({navigation}) => {
           </TouchableOpacity>
         </View>
 
+
         {/* Sliding Content */}
         <View style={styles.sliderContainer}>
+          <Text style={{ fontSize: 20, color: "#8d181a", marginVertical: 5, marginHorizontal: 10, }}>TRENDING <strong>NOW</strong></Text>
           <TouchableOpacity style={styles.arrowLeft} onPress={handlePrev}>
             <Entypo name="chevron-thin-left" size={24} color="white" />
           </TouchableOpacity>
@@ -202,9 +203,83 @@ const Home = ({navigation}) => {
           </TouchableOpacity>
         </View>
 
+
         {/* Content Below Sliding */}
         <Image source={require('../../assets/images/constants.png')} style={styles.constantImage} />
 
+
+
+        {/* About Company */}
+        <View>
+          <View>
+            <Text style={styles.About}>Attica Gold Company</Text>
+          </View>
+          <View style={styles.content}>
+            The Attica gold company is the pioneer and the No.1 Gold Buying Company. We buy all types of gold coins, jewellery, and biscuits and lend money to release pledged gold from financial institutes/pawns and brokers/NBFCs. We offer instant spot cash for gold and silver. Selling gold at Attica gold company is fast, simple and easy.
+          </View>
+        </View>
+
+
+        {/* ATTICA ASSURE */}
+        <View style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', backgroundColor: '#fcecd4', }}>
+          <View>
+            <Text style={{ fontSize: 15, color: "#8d181a",marginVertical:5, marginTop:10, }}>ATTICA</Text>
+          </View>
+          <View>
+            <Text style={{ fontSize: 25, color: "black", marginBottom:20,}}>
+              ASSURE
+            </Text>
+          </View>
+
+          <View style={styles.assureContainer}>
+            <TouchableOpacity
+              style={styles.assureButton}
+              onPress={() => navigation.navigate('GoldLoan')}>
+              <Image source={require('../../assets/images/guaranteed.png')} style={styles.getloan} />
+              <Text style={styles.buttonText}>Guaranteed</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              style={styles.assureButton}
+              onPress={() => navigation.navigate('GoldLoan')}>
+              <Image source={require('../../assets/images/anyaliticaltesting.png')} style={styles.getloan} />
+              <Text style={styles.buttonText}>Best Analytical Testing</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              style={styles.assureButton}
+              onPress={() => navigation.navigate('GoldLoan')}>
+              <Image source={require('../../assets/images/transparancy&trust.png')} style={styles.getloan} />
+              <Text style={styles.buttonText}>Transparency and Trust</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              style={styles.assureButton}
+              onPress={() => navigation.navigate('GoldLoan')}>
+              <Image source={require('../../assets/images/banktransfer.png')} style={styles.getloan} />
+              <Text style={styles.buttonText}>Instant Bank Transfer</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              style={styles.assureButton}
+              onPress={() => navigation.navigate('GoldLoan')}>
+              <Image source={require('../../assets/images/softwareverification.png')} style={styles.getloan} />
+              <Text style={styles.buttonText}>Software Verification</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              style={styles.assureButton}
+              onPress={() => navigation.navigate('GoldLoan')}>
+              <Image source={require('../../assets/images/tested&certified.png')} style={styles.getloan} />
+              <Text style={styles.buttonText}>Tested and Certified</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+
+
+
+
+        {/* Loan Services */}
         <View style={styles.contentContainer}>
           <View style={styles.getStartedContainer}>
 
@@ -212,12 +287,14 @@ const Home = ({navigation}) => {
               style={styles.getStartedButton}
               onPress={() => navigation.navigate('GoldLoan')}>
               <Text style={styles.buttonText}>Get gold loan at lowest interest rates</Text>
+              <Text style={styles.getstarted}>Get Started</Text>
+              <Image source={require('../../assets/images/getloan.png')} style={styles.getloan} />
             </TouchableOpacity>
-
-
 
             <TouchableOpacity style={styles.getStartedButton} onPress={() => navigation.navigate('GoldLoan')}>
               <Text style={styles.buttonText}>Sell your gold at the best possible price</Text>
+              <Text style={styles.getstarted}>Get Started</Text>
+              <Image source={require('../../assets/images/sellgold.png')} style={styles.getloan} />
             </TouchableOpacity>
           </View>
 
@@ -378,13 +455,10 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     padding: 10,
-    backgroundColor: '#f5f5f5',
-    borderBottomWidth: 1,
-    borderBottomColor: '#ddd',
   },
   rateSection: {
-    backgroundColor: '#8d181a',
-    color: 'white',
+    textDecorationLine: 'underline',
+    color: '#8d181a',
     padding: 15,
     borderRadius: 5,
     flexDirection: 'row',
@@ -392,7 +466,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   rateText: {
-    color: '#fff',
+    color: '#8d181a',
     textAlign: 'center',
     fontSize: 16,
     marginLeft: 5,
@@ -444,16 +518,49 @@ const styles = StyleSheet.create({
   },
   getStartedContainer: {
     marginVertical: 10,
+    flexDirection: 'row',
+    marginHorizontal: 5,
+  },
+  assureContainer: {
+    marginVertical: 10,
+    flexDirection: 'row',
+    marginHorizontal: 5,
   },
   getStartedButton: {
-    backgroundColor: '#8d181a',
     padding: 15,
     borderRadius: 5,
     marginVertical: 5,
+    flex: 1,
+    marginHorizontal: 5,
+    borderColor: '#8d181a',
+    opacity: 1,
+    borderWidth: 1,
+  },
+  assureButton: {
+    padding: 15,
+    borderRadius: 5,
+    marginVertical: 5,
+    flexDirection: 'row',
+    flex: 1,
+    marginHorizontal: 5,
+    borderColor: '#8d181a',
+    opacity: 1,
+    borderWidth: 1,
   },
   buttonText: {
-    color: '#fff',
-    textAlign: 'center',
+    color: '#8d181a',
+    textAlign: 'left',
+  },
+  getstarted: {
+    color: '#8d181a',
+    textAlign: 'left',
+    textDecorationLine: 'underline',
+    marginVertical: 10,
+  },
+  getloan: {
+    width: 100,
+    height: 100,
+    marginVertical: 10,
   },
   section: {
     marginVertical: 10,
@@ -557,6 +664,26 @@ const styles = StyleSheet.create({
     width: '100%',
     paddingHorizontal: 10,
   },
+  About: {
+    fontSize: 25,
+    color: '#8d181a',
+    fontFamily: 'bold',
+    textAlign: 'justify',
+    padding: 10,
+    Lineheight: 20,
+
+  },
+  content: {
+    fontSize: 20,
+    color: '#8d181a',
+    fontFamily: 'normal',
+    padding: 10,
+    marginBottom: 10,
+    lineheight: 20,
+    textAlign: 'justify',
+    borderRadius: 10,
+  },
+
 });
 
 
