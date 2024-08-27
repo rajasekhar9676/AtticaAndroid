@@ -10,12 +10,13 @@ import { useNavigation } from '@react-navigation/native';
 import Link from '@react-navigation/native';
 import GoldLoan from '../../components/Services/GoldLoan';
 import GoldLive from '../../components/Home/GoldLive';
-
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import * as Location from 'expo-location';
 
 import { BASE_URL } from '../../constants';
 
-const Home = ({ navigation }) => {
-
+const Home = ({navigation}) => {
+ 
   const [goldPrice, setGoldPrice] = useState(null);
   const [error, setError] = useState(null);
   const [modalVisible, setModalVisible] = useState(false);
@@ -29,9 +30,98 @@ const Home = ({ navigation }) => {
   const [categories, setCategories] = useState([]);
   const [bars, setBars] = useState([]); // State for storing "Bars" category products
   const [loading, setLoading] = useState(false);
+  const [location, setLocation] = useState({});
+
   // const navigation = useNavigation();
 
   const screenWidth = Dimensions.get('window').width;
+
+  const storeLocation = async () => {
+    try {
+      const { status } = await Location.requestForegroundPermissionsAsync();
+
+      if (status !== 'granted') {
+        Alert.alert('Permission denied', 'Location permission is required');
+        return;
+      }
+
+      const location = await Location.getCurrentPositionAsync({});
+      await AsyncStorage.setItem('latitude', location.coords.latitude.toString());
+      await AsyncStorage.setItem('longitude', location.coords.longitude.toString());
+    } catch (error) {
+      Alert.alert('Error', 'Failed to store location');
+    }
+  };
+
+    const updateLocation = (location) => {
+    setLocation(location);
+    // Optionally, perform additional actions with the location data
+  };
+
+  // Function to get the user's current location
+
+  
+  const autoDetectLocation = async () => {
+    try {
+      // Request permission to access location
+      const { status } = await Location.requestForegroundPermissionsAsync();
+      if (status !== 'granted') {
+        Alert.alert('Permission denied', 'Location permission is required');
+        return;
+      }
+      
+      // Get the current location
+      const location = await Location.getCurrentPositionAsync({});
+      const { latitude, longitude } = location.coords;
+  
+      // Perform reverse geocoding to get the address
+      const reverseGeocode = await Location.reverseGeocodeAsync({
+        latitude,
+        longitude,
+      });
+  
+      if (reverseGeocode.length > 0) {
+        const address = reverseGeocode[0]; // Get the first result
+        const formattedAddress = `${address.name}, ${address.street}, ${address.city}, ${address.region}, ${address.postalCode}, ${address.country}`;
+  
+        // Update location with latitude and longitude
+        updateLocation({ latitude, longitude });
+  
+        // Update the state with the formatted address
+        setCurrentLocation(formattedAddress);
+      } else {
+        Alert.alert('No address found', 'Unable to detect your location address.');
+      }
+    } catch (error) {
+      console.error("Error detecting location: ", error.message);
+      Alert.alert("Unable to detect your location. Please try again.");
+    }
+  };
+  
+  
+// Call this function when the "Auto-Detect Location" button is clicked
+
+
+
+
+const handleConfirmManualLocation = () => {
+  if (manualLocation.trim() === '') {
+    Alert.alert('Error', 'Location cannot be empty');
+    return;
+  }
+  setCurrentLocation(manualLocation);
+  setManualLocation('');
+  setManualLocationModalVisible(false);
+};
+
+
+const handleManualLocation = () => {
+  setModalVisible(false);
+  setManualLocationModalVisible(true);
+};
+
+
+
 
   useEffect(() => {
     const fetchPrices = async () => {
@@ -129,16 +219,7 @@ const Home = ({ navigation }) => {
     setCurrentLocation('Location changed successfully');
   };
 
-  const handleManualLocation = () => {
-    setModalVisible(false);
-    setManualLocationModalVisible(true);
-  };
-
-  const handleConfirmManualLocation = () => {
-    setCurrentLocation(manualLocation);
-    setManualLocation('');
-    setManualLocationModalVisible(false);
-  };
+ 
   const renderCategoryItem = ({ item }) => (
     <View style={styles.categoryContainer}>
       <TouchableOpacity style={styles.categoryItem} onPress={() => handleCategoryPress(item.category)}>
@@ -164,7 +245,8 @@ const Home = ({ navigation }) => {
         <View style={styles.locationRateContainer}>
 
           <TouchableOpacity style={styles.rateSection} onPress={() => navigation.navigate('GoldLive')}>
-            <Text style={styles.rateText}>See Live Gold Rate</Text>
+            {/* <SimpleLineIcons name="options-vertical" size={24} color="#8d181a" /> */}
+            <Text style={styles.rateText}>22KT Gold Rate 6,425.00/gm INR</Text>
           </TouchableOpacity>
 
           <TouchableOpacity
@@ -176,10 +258,8 @@ const Home = ({ navigation }) => {
           </TouchableOpacity>
         </View>
 
-
         {/* Sliding Content */}
         <View style={styles.sliderContainer}>
-          <Text style={{ fontSize: 20, color: "#8d181a", marginVertical: 5, marginHorizontal: 10, }}>TRENDING <strong>NOW</strong></Text>
           <TouchableOpacity style={styles.arrowLeft} onPress={handlePrev}>
             <Entypo name="chevron-thin-left" size={24} color="white" />
           </TouchableOpacity>
@@ -203,83 +283,9 @@ const Home = ({ navigation }) => {
           </TouchableOpacity>
         </View>
 
-
         {/* Content Below Sliding */}
         <Image source={require('../../assets/images/constants.png')} style={styles.constantImage} />
 
-
-
-        {/* About Company */}
-        <View>
-          <View>
-            <Text style={styles.About}>Attica Gold Company</Text>
-          </View>
-          <View style={styles.content}>
-            The Attica gold company is the pioneer and the No.1 Gold Buying Company. We buy all types of gold coins, jewellery, and biscuits and lend money to release pledged gold from financial institutes/pawns and brokers/NBFCs. We offer instant spot cash for gold and silver. Selling gold at Attica gold company is fast, simple and easy.
-          </View>
-        </View>
-
-
-        {/* ATTICA ASSURE */}
-        <View style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', backgroundColor: '#fcecd4', }}>
-          <View>
-            <Text style={{ fontSize: 15, color: "#8d181a",marginVertical:5, marginTop:10, }}>ATTICA</Text>
-          </View>
-          <View>
-            <Text style={{ fontSize: 25, color: "black", marginBottom:20,}}>
-              ASSURE
-            </Text>
-          </View>
-
-          <View style={styles.assureContainer}>
-            <TouchableOpacity
-              style={styles.assureButton}
-              onPress={() => navigation.navigate('GoldLoan')}>
-              <Image source={require('../../assets/images/guaranteed.png')} style={styles.getloan} />
-              <Text style={styles.buttonText}>Guaranteed</Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity
-              style={styles.assureButton}
-              onPress={() => navigation.navigate('GoldLoan')}>
-              <Image source={require('../../assets/images/anyaliticaltesting.png')} style={styles.getloan} />
-              <Text style={styles.buttonText}>Best Analytical Testing</Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity
-              style={styles.assureButton}
-              onPress={() => navigation.navigate('GoldLoan')}>
-              <Image source={require('../../assets/images/transparancy&trust.png')} style={styles.getloan} />
-              <Text style={styles.buttonText}>Transparency and Trust</Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity
-              style={styles.assureButton}
-              onPress={() => navigation.navigate('GoldLoan')}>
-              <Image source={require('../../assets/images/banktransfer.png')} style={styles.getloan} />
-              <Text style={styles.buttonText}>Instant Bank Transfer</Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity
-              style={styles.assureButton}
-              onPress={() => navigation.navigate('GoldLoan')}>
-              <Image source={require('../../assets/images/softwareverification.png')} style={styles.getloan} />
-              <Text style={styles.buttonText}>Software Verification</Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity
-              style={styles.assureButton}
-              onPress={() => navigation.navigate('GoldLoan')}>
-              <Image source={require('../../assets/images/tested&certified.png')} style={styles.getloan} />
-              <Text style={styles.buttonText}>Tested and Certified</Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-
-
-
-
-        {/* Loan Services */}
         <View style={styles.contentContainer}>
           <View style={styles.getStartedContainer}>
 
@@ -287,14 +293,12 @@ const Home = ({ navigation }) => {
               style={styles.getStartedButton}
               onPress={() => navigation.navigate('GoldLoan')}>
               <Text style={styles.buttonText}>Get gold loan at lowest interest rates</Text>
-              <Text style={styles.getstarted}>Get Started</Text>
-              <Image source={require('../../assets/images/getloan.png')} style={styles.getloan} />
             </TouchableOpacity>
+
+
 
             <TouchableOpacity style={styles.getStartedButton} onPress={() => navigation.navigate('GoldLoan')}>
               <Text style={styles.buttonText}>Sell your gold at the best possible price</Text>
-              <Text style={styles.getstarted}>Get Started</Text>
-              <Image source={require('../../assets/images/sellgold.png')} style={styles.getloan} />
             </TouchableOpacity>
           </View>
 
@@ -361,13 +365,14 @@ const Home = ({ navigation }) => {
           <Text style={styles.modalTitle}>Choose Location</Text>
           <TouchableOpacity
             style={styles.modalButton}
-            onPress={handleAutoDetectLocation}
+            onPress={autoDetectLocation}
           >
             <Text style={styles.modalButtonText}>Auto-detect Location</Text>
           </TouchableOpacity>
           <TouchableOpacity
             style={styles.modalButton}
-            onPress={handleManualLocation}
+            onPress={autoDetectLocation}
+        
           >
             <Text style={styles.modalButtonText}>Select Location Manually</Text>
           </TouchableOpacity>
@@ -455,10 +460,13 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     padding: 10,
+    backgroundColor: '#f5f5f5',
+    borderBottomWidth: 1,
+    borderBottomColor: '#ddd',
   },
   rateSection: {
-    textDecorationLine: 'underline',
-    color: '#8d181a',
+    backgroundColor: '#8d181a',
+    color: 'white',
     padding: 15,
     borderRadius: 5,
     flexDirection: 'row',
@@ -466,7 +474,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   rateText: {
-    color: '#8d181a',
+    color: '#fff',
     textAlign: 'center',
     fontSize: 16,
     marginLeft: 5,
@@ -518,49 +526,16 @@ const styles = StyleSheet.create({
   },
   getStartedContainer: {
     marginVertical: 10,
-    flexDirection: 'row',
-    marginHorizontal: 5,
-  },
-  assureContainer: {
-    marginVertical: 10,
-    flexDirection: 'row',
-    marginHorizontal: 5,
   },
   getStartedButton: {
+    backgroundColor: '#8d181a',
     padding: 15,
     borderRadius: 5,
     marginVertical: 5,
-    flex: 1,
-    marginHorizontal: 5,
-    borderColor: '#8d181a',
-    opacity: 1,
-    borderWidth: 1,
-  },
-  assureButton: {
-    padding: 15,
-    borderRadius: 5,
-    marginVertical: 5,
-    flexDirection: 'row',
-    flex: 1,
-    marginHorizontal: 5,
-    borderColor: '#8d181a',
-    opacity: 1,
-    borderWidth: 1,
   },
   buttonText: {
-    color: '#8d181a',
-    textAlign: 'left',
-  },
-  getstarted: {
-    color: '#8d181a',
-    textAlign: 'left',
-    textDecorationLine: 'underline',
-    marginVertical: 10,
-  },
-  getloan: {
-    width: 100,
-    height: 100,
-    marginVertical: 10,
+    color: '#fff',
+    textAlign: 'center',
   },
   section: {
     marginVertical: 10,
@@ -664,26 +639,6 @@ const styles = StyleSheet.create({
     width: '100%',
     paddingHorizontal: 10,
   },
-  About: {
-    fontSize: 25,
-    color: '#8d181a',
-    fontFamily: 'bold',
-    textAlign: 'justify',
-    padding: 10,
-    Lineheight: 20,
-
-  },
-  content: {
-    fontSize: 20,
-    color: '#8d181a',
-    fontFamily: 'normal',
-    padding: 10,
-    marginBottom: 10,
-    lineheight: 20,
-    textAlign: 'justify',
-    borderRadius: 10,
-  },
-
 });
 
 
