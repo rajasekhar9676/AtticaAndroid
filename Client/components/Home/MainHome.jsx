@@ -7,16 +7,10 @@ import EvilIcons from '@expo/vector-icons/EvilIcons';
 import SimpleLineIcons from '@expo/vector-icons/SimpleLineIcons';
 import Entypo from '@expo/vector-icons/Entypo';
 import { useNavigation } from '@react-navigation/native';
-import Link from '@react-navigation/native';
-import GoldLoan from '../../components/Services/GoldLoan';
-import GoldLive from '../../components/Home/GoldLive';
+import { BASE_URL } from '../../constants';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as Location from 'expo-location';
 
-import { BASE_URL } from '../../constants';
-
-const Home = ({navigation}) => {
- 
 const Home = ({ navigation }) => {
   const [goldPrice, setGoldPrice] = useState(null);
   const [error, setError] = useState(null);
@@ -29,11 +23,9 @@ const Home = ({ navigation }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [location, setLocation] = useState({});
-
-  // const navigation = useNavigation();
-
+  const [location, setLocation] = useState({})
   const screenWidth = Dimensions.get('window').width;
+
 
   const storeLocation = async () => {
     try {
@@ -52,14 +44,10 @@ const Home = ({ navigation }) => {
     }
   };
 
-    const updateLocation = (location) => {
+  const updateLocation = (location) => {
     setLocation(location);
     // Optionally, perform additional actions with the location data
   };
-
-  // Function to get the user's current location
-
-  
   const autoDetectLocation = async () => {
     try {
       // Request permission to access location
@@ -96,31 +84,6 @@ const Home = ({ navigation }) => {
       Alert.alert("Unable to detect your location. Please try again.");
     }
   };
-  
-  
-// Call this function when the "Auto-Detect Location" button is clicked
-
-
-
-
-const handleConfirmManualLocation = () => {
-  if (manualLocation.trim() === '') {
-    Alert.alert('Error', 'Location cannot be empty');
-    return;
-  }
-  setCurrentLocation(manualLocation);
-  setManualLocation('');
-  setManualLocationModalVisible(false);
-};
-
-
-const handleManualLocation = () => {
-  setModalVisible(false);
-  setManualLocationModalVisible(true);
-};
-
-
-
 
   useEffect(() => {
     const fetchPrices = async () => {
@@ -209,7 +172,6 @@ const handleManualLocation = () => {
     setCurrentLocation('Location changed successfully');
   };
 
- 
   const handleManualLocation = () => {
     setModalVisible(false);
     setManualLocationModalVisible(true);
@@ -244,8 +206,7 @@ const handleManualLocation = () => {
         {/* Fixed Location and Rate */}
         <View style={styles.locationRateContainer}>
           <TouchableOpacity style={styles.rateSection} onPress={() => navigation.navigate('GoldLive')}>
-            {/* <SimpleLineIcons name="options-vertical" size={24} color="#8d181a" /> */}
-            <Text style={styles.rateText}>22KT Gold Rate 6,425.00/gm INR</Text>
+            <Text style={styles.rateText}>See Live Gold Rate</Text>
           </TouchableOpacity>
           <TouchableOpacity style={styles.locationSection} onPress={() => setModalVisible(true)}>
             <EvilIcons name="location" size={24} color="#8d181a" />
@@ -282,21 +243,16 @@ const handleManualLocation = () => {
         {/* Content Below Sliding */}
         <Image source={require('../../assets/images/constants.png')} style={styles.constantImage} />
 
-        <View style={styles.contentContainer}>
-          <View style={styles.getStartedContainer}>
-
-            <TouchableOpacity
-              style={styles.getStartedButton}
-              onPress={() => navigation.navigate('GoldLoan')}>
-              <Text style={styles.buttonText}>Get gold loan at lowest interest rates</Text>
-
         {/* About Company */}
         <View>
           <View>
             <Text style={styles.About}>Attica Gold Company</Text>
           </View>
           <View style={styles.content}>
+            <Text>
             The Attica gold company is the pioneer and the No.1 Gold Buying Company. We buy all types of gold coins, jewellery, and biscuits and lend money to release pledged gold from financial institutes/pawns and brokers/NBFCs. We offer instant spot cash for gold and silver. Selling gold at Attica gold company is fast, simple and easy.
+            </Text>
+            
           </View>
         </View>
 
@@ -314,52 +270,74 @@ const handleManualLocation = () => {
               <Text style={styles.buttonText}>Guaranteed</Text>
             </TouchableOpacity>
             <TouchableOpacity style={styles.assureButton} onPress={() => navigation.navigate('GoldLoan')}>
+              <Image source={require('../../assets/images/softwareverification.png')} style={styles.getloan} />
+              <Text style={styles.buttonText}>Software Verification</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.assureButton} onPress={() => navigation.navigate('GoldLoan')}>
               <Image source={require('../../assets/images/anyaliticaltesting.png')} style={styles.getloan} />
-              <Text style={styles.buttonText}>Best Price</Text>
+              <Text style={styles.buttonText}>Best Analytical Testing</Text>
             </TouchableOpacity>
             <TouchableOpacity style={styles.assureButton} onPress={() => navigation.navigate('GoldLoan')}>
-              <Image source={require('../../assets/images/getloan.png')} style={styles.getloan} />
-              <Text style={styles.buttonText}>Transparency</Text>
+              <Image source={require('../../assets/images/banktransfer.png')} style={styles.getloan} />
+              <Text style={styles.buttonText}>Instant Bank Transfer</Text>
             </TouchableOpacity>
             <TouchableOpacity style={styles.assureButton} onPress={() => navigation.navigate('GoldLoan')}>
-              <Image source={require('../../assets/images/getloan.png')} style={styles.getloan} />
-              <Text style={styles.buttonText}>Transparency</Text>
+              <Image source={require('../../assets/images/certified.png')} style={styles.getloan} />
+              <Text style={styles.buttonText}>Tested & Certified</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.assureButton} onPress={() => navigation.navigate('GoldLoan')}>
-              <Image source={require('../../assets/images/getloan.png')} style={styles.getloan} />
-              <Text style={styles.buttonText}>Transparency</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.assureButton} onPress={() => navigation.navigate('GoldLoan')}>
-              <Image source={require('../../assets/images/getloan.png')} style={styles.getloan} />
-              <Text style={styles.buttonText}>Transparency</Text>
-            </TouchableOpacity>
+          </View>
+        </View>
 
 
+
+
+        {/* Loan Services */}
+        <View style={styles.contentContainer}>
+          <View style={styles.getStartedContainer}>
+
+            <TouchableOpacity
+              style={styles.getStartedButton}
+              onPress={() => navigation.navigate('GoldLoan')}>
+              <Text style={styles.buttonText}>Get gold loan at lowest interest rates</Text>
+              <Text style={styles.getstarted}>Get Started</Text>
+              <Image source={require('../../assets/images/getloan.png')} style={styles.loan} />
+            </TouchableOpacity>
 
             <TouchableOpacity style={styles.getStartedButton} onPress={() => navigation.navigate('GoldLoan')}>
               <Text style={styles.buttonText}>Sell your gold at the best possible price</Text>
+              <Text style={styles.getstarted}>Get Started</Text>
+              <Image source={require('../../assets/images/sellgold.png')} style={styles.loan} />
             </TouchableOpacity>
           </View>
-            
+
+          <View style={styles.section}>
+            <Text style={styles.sectionTitle}>Our Collection</Text>
+            {loading ? (
+              <ActivityIndicator size="large" color="#0000ff" />
+            ) : (
+              <FlatList
+                data={categories}
+                renderItem={renderCategoryItem}
+                keyExtractor={item => (item.id ? item.id.toString() : Math.random().toString())}
+                numColumns={2}
+                style={styles.collection}
+              />
+            )}
           </View>
-        </View>
 
-        {/* Categories */}
-        <View style={styles.categorySection}>
-          <Text style={styles.categoryHeading}>Gold Products</Text>
-          {loading ? (
-            <ActivityIndicator size="large" color="#8d181a" />
-          ) : (
-            <FlatList
-              data={categories}
-              renderItem={renderCategoryItem}
-              keyExtractor={(item) => item.category}
-              horizontal
-              showsHorizontalScrollIndicator={false}
-            />
-          )}
-        </View>
 
+          {/* Invest in Silver */}
+          <View style={styles.investContainer}>
+            <Text style={styles.sectionTitle}>Invest in Silver</Text>
+            <Text style={styles.investDetails}>Explore the benefits of investing in silver.</Text>
+            <TouchableOpacity style={styles.investButton}>
+              <Text style={styles.investButtonText}>Invest Now</Text>
+            </TouchableOpacity>
+          </View>
+
+
+
+        </View>
       </ScrollView>
 
       {/* Modals */}
@@ -369,31 +347,10 @@ const handleManualLocation = () => {
         visible={modalVisible}
         onRequestClose={() => setModalVisible(!modalVisible)}
       >
-        <View style={styles.modalView}>
-          <Text style={styles.modalTitle}>Choose Location</Text>
-          <TouchableOpacity
-            style={styles.modalButton}
-            onPress={autoDetectLocation}
-          >
-            <Text style={styles.modalButtonText}>Auto-detect Location</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={styles.modalButton}
-            onPress={autoDetectLocation}
-        
-          >
-            <Text style={styles.modalButtonText}>Select Location Manually</Text>
-          </TouchableOpacity>
-          <Pressable
-            style={[styles.modalButton, styles.closeButton]}
-            onPress={() => setModalVisible(false)}
-          >
-            <Text style={styles.modalButtonText}>Close</Text>
-          </Pressable>
         <View style={styles.modalContainer}>
           <View style={styles.modalContent}>
             <Text style={styles.modalTitle}>Location</Text>
-            <TouchableOpacity onPress={handleAutoDetectLocation} style={styles.modalButton}>
+            <TouchableOpacity onPress={autoDetectLocation} style={styles.modalButton}>
               <Text style={styles.modalButtonText}>Auto-detect Location</Text>
             </TouchableOpacity>
             <TouchableOpacity onPress={handleManualLocation} style={styles.modalButton}>
@@ -423,6 +380,8 @@ const handleManualLocation = () => {
         </View>
       </Modal>
 
+
+      {/* Location Selection Modal */}
       <Modal
         animationType="slide"
         transparent={true}
@@ -456,6 +415,7 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#fff',
   },
+  // Header
   headerContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -471,31 +431,76 @@ const styles = StyleSheet.create({
   scrollableContent: {
     flexGrow: 1,
   },
+  contentContainer: {
+    padding: 10,
+  },
+  getStartedContainer: {
+    marginVertical: 10,
+    flexDirection: 'row',
+    marginHorizontal: 5,
+  },
+  investContainer: {
+    marginVertical: 10,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 20,
+  },
+  section: {
+    marginVertical: 10,
+    justifyContent: 'center',
+    alignItems: 'center',
+    flex: 1,
+  },
+  sectionTitle: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    marginBottom: 10,
+  },
+  investDetails: {
+    marginBottom: 10,
+    fontSize: 16,
+  },
+  investButtonText: {
+    color: '#fff',
+    textAlign: 'center',
+  },
+  investButton: {
+    backgroundColor: '#8d181a',
+    padding: 15,
+    borderRadius: 5,
+  },
+  getStartedButton: {
+    padding: 15,
+    borderRadius: 5,
+    marginVertical: 5,
+    flex: 1,
+    marginHorizontal: 5,
+    borderColor: '#8d181a',
+    opacity: 1,
+    borderWidth: 1,
+    marginVertical:10,
+  },
+  buttonText: {
+    color: '#8d181a',
+    justifyContent:'center',
+    textAlign: 'center',
+    flexWrap: 'wrap',
+    paddingHorizontal:5,
+  },
+    //  {/* Fixed Location and Rate */}
   locationRateContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    padding: 10,
-    backgroundColor: '#f5f5f5',
-    borderBottomWidth: 1,
-    borderBottomColor: '#ddd',
     alignItems: 'center',
     paddingHorizontal: 15,
     paddingVertical: 10,
   },
   rateSection: {
     backgroundColor: '#8d181a',
-    color: 'white',
-    padding: 15,
-    backgroundColor: '#8d181a',
     borderRadius: 5,
     padding: 10,
   },
   rateText: {
-    color: '#fff',
-    textAlign: 'center',
-    fontSize: 16,
-    marginLeft: 5,
-    flex: 1
     color: '#fff',
     fontWeight: 'bold',
   },
@@ -507,15 +512,10 @@ const styles = StyleSheet.create({
     marginLeft: 5,
     color: '#8d181a',
   },
+
+  // {/* Sliding Content */}
   sliderContainer: {
     position: 'relative',
-  },
-  scrollView: {
-    flex: 1,
-  },
-  image: {
-    width: Dimensions.get('window').width,
-    height: 200,
   },
   arrowLeft: {
     position: 'absolute',
@@ -529,42 +529,68 @@ const styles = StyleSheet.create({
     right: 10,
     zIndex: 1,
   },
-  scrollView: {
-    height: '100%',
+      //  {/* Content Below Sliding */}
+  constantImage: {
+    width: '100%',
+    height: 200,
+    marginTop: 10,
+  },
+  // {/* About Company */}
+  About: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: '#8d181a',
+    marginVertical: 10,
+    textAlign: 'center',
+  },
+  content: {
+    fontSize: 16,
+    color: 'black',
+    marginVertical: 10,
+    marginHorizontal: 10,
+    textAlign: 'center',
+  },
+  //  {/* ATTICA ASSURE */}
+  assureContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    paddingVertical: 20,
+  },
+  assureButton: {
+    width: 80,
+    alignItems: 'center',
+    borderRadius: 10,
+    borderWidth:1,
+    borderColor: '#8d181a',
+    marginHorizontal:10,
+ 
+  },
+  getloan: {
+    width: 50,
+    height: 50,
+    marginVertical: 10, 
+  },
+loan: {
+    width: 150,
+    height: 150,
+    marginVertical: 10, 
+  },
+  buttonText: {
+    marginTop: 5,
+    color: '#8d181a',
+    marginBottom:5,
+    marginHorizontal:10,
+    justifyContent:'center',
+    alignItems:'center',
+  },
+
+scrollView: {
+    flex: 1,
   },
   image: {
     width: Dimensions.get('window').width,
-    height: '100%',
+    height: 200,
   },
-  constantImage: {
-    width: '100%',
-    height: 150,
-    marginVertical: 10,
-  },
-  contentContainer: {
-    padding: 10,
-  },
-  getStartedContainer: {
-    marginVertical: 10,
-  },
-  getStartedButton: {
-    backgroundColor: '#8d181a',
-    padding: 15,
-    borderRadius: 5,
-    marginVertical: 5,
-  },
-  buttonText: {
-    color: '#fff',
-    textAlign: 'center',
-  },
-  section: {
-    marginVertical: 10,
-    justifyContent: 'center',
-    alignItems: 'center',
-    flex: 1,
-  },
-  sectionTitle: {
-    fontSize: 18,
   categorySection: {
     padding: 15,
   },
@@ -598,36 +624,8 @@ const styles = StyleSheet.create({
   categoryPrice: {
     color: '#8d181a',
   },
-  About: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    color: '#8d181a',
-    marginVertical: 10,
-    textAlign: 'center',
-  },
-  content: {
-    fontSize: 16,
-    color: 'black',
-    marginVertical: 10,
-    marginHorizontal: 10,
-    textAlign: 'center',
-  },
-  assureContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    paddingVertical: 20,
-  },
-  assureButton: {
-    alignItems: 'center',
-  },
-  getloan: {
-    width: 50,
-    height: 50,
-  },
-  buttonText: {
-    marginTop: 5,
-    color: '#8d181a',
-  },
+ 
+  
   constantImage: {
     width: '100%',
     height: 200,
@@ -671,27 +669,9 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderBottomColor: '#ddd',
     width: '100%',
-    paddingHorizontal: 10,
-  },
     padding: 10,
     marginVertical: 10,
   },
 });
 
 export default Home;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
