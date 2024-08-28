@@ -210,7 +210,7 @@ const Home = ({ navigation }) => {
           </TouchableOpacity>
           <TouchableOpacity style={styles.locationSection} onPress={() => setModalVisible(true)}>
             <EvilIcons name="location" size={24} color="#8d181a" />
-            <Text style={styles.locationText}>{currentLocation}</Text>
+            <Text style={styles.locationText}><strong>You are in </strong> <br></br>{currentLocation}</Text>
           </TouchableOpacity>
         </View>
 
@@ -259,10 +259,10 @@ const Home = ({ navigation }) => {
         {/* ATTICA ASSURE */}
         <View style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', backgroundColor: '#fcecd4' }}>
           <View>
-            <Text style={{ fontSize: 15, color: "#8d181a", marginVertical: 5, marginTop: 10 }}>ATTICA</Text>
+            <Text style={{ fontSize: 15, color: "#8d181a", marginVertical: 5, marginTop: 10,}}>ATTICA</Text>
           </View>
           <View>
-            <Text style={{ fontSize: 25, color: "black", marginBottom: 20 }}>ASSURE</Text>
+            <Text style={{ fontSize: 25, color: "black", marginBottom: 20, letterSpacing:5, }}>ASSURE</Text>
           </View>
           <View style={styles.assureContainer}>
             <TouchableOpacity style={styles.assureButton} onPress={() => navigation.navigate('GoldLoan')}>
@@ -289,8 +289,6 @@ const Home = ({ navigation }) => {
         </View>
 
 
-
-
         {/* Loan Services */}
         <View style={styles.contentContainer}>
           <View style={styles.getStartedContainer}>
@@ -299,13 +297,13 @@ const Home = ({ navigation }) => {
               style={styles.getStartedButton}
               onPress={() => navigation.navigate('GoldLoan')}>
               <Text style={styles.buttonText}>Get gold loan at lowest interest rates</Text>
-              <Text style={styles.getstarted}>Get Started</Text>
+              <Text style={{textDecorationLine:'underline', color:'#8d181a', marginHorizontal:8, marginVertical:10,}}>Get Started</Text>
               <Image source={require('../../assets/images/getloan.png')} style={styles.loan} />
             </TouchableOpacity>
 
             <TouchableOpacity style={styles.getStartedButton} onPress={() => navigation.navigate('GoldLoan')}>
               <Text style={styles.buttonText}>Sell your gold at the best possible price</Text>
-              <Text style={styles.getstarted}>Get Started</Text>
+              <Text style={{textDecorationLine:'underline', color:'#8d181a', marginHorizontal:8, marginVertical:10,}}>Get Started</Text>
               <Image source={require('../../assets/images/sellgold.png')} style={styles.loan} />
             </TouchableOpacity>
           </View>
@@ -522,12 +520,20 @@ const styles = StyleSheet.create({
     top: '50%',
     left: 10,
     zIndex: 1,
+    backgroundColor:'#8d181a', 
+    borderRadius:'100%', 
+    borderWidth:1, 
+    padding:5,
   },
   arrowRight: {
     position: 'absolute',
     top: '50%',
     right: 10,
     zIndex: 1,
+    backgroundColor:'#8d181a', 
+    borderRadius:'100%', 
+    borderWidth:1, 
+    padding:5,
   },
       //  {/* Content Below Sliding */}
   constantImage: {
