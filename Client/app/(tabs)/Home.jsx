@@ -6,7 +6,7 @@ import GoldRateNotification from '../../components/Home/GoldRateNotification';
 
 const Stack = createStackNavigator();
 
-const Services = () => (
+const Home = () => (
   <Stack.Navigator screenOptions={{headerShown:false}}>
     <Stack.Screen name="MainHome" component={MainHome} />
     <Stack.Screen name="GoldLive" component={GoldLive} />
@@ -14,6 +14,6 @@ const Services = () => (
   </Stack.Navigator>
 );
 
-export default Services;
+export default Home;
 
 []
