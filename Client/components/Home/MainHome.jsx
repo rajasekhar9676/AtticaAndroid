@@ -1,83 +1,94 @@
-import { StyleSheet, Text, View, ScrollView, TouchableOpacity, Image, Dimensions, Modal, Pressable, TextInput, Alert, FlatList, ActivityIndicator } from 'react-native';
-import React, { useState, useEffect, useRef } from 'react';
-import axios from 'axios';
-import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
-import AntDesign from '@expo/vector-icons/AntDesign';
-import EvilIcons from '@expo/vector-icons/EvilIcons';
-import SimpleLineIcons from '@expo/vector-icons/SimpleLineIcons';
-import Entypo from '@expo/vector-icons/Entypo';
-import { useNavigation } from '@react-navigation/native';
-import { BASE_URL } from '../../constants';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import * as Location from 'expo-location';
+import {
+  StyleSheet,
+  Text,
+  View,
+  ScrollView,
+  TouchableOpacity,
+  Image,
+  Dimensions,
+  Modal,
+  Pressable,
+  TextInput,
+  Alert,
+  FlatList,
+  ActivityIndicator,
+} from "react-native";
+import React, { useState, useEffect, useRef } from "react";
+import axios from "axios";
+import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
+import AntDesign from "@expo/vector-icons/AntDesign";
+import EvilIcons from "@expo/vector-icons/EvilIcons";
+import Entypo from "@expo/vector-icons/Entypo";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import * as Location from "expo-location";
+import { BASE_URL } from "../../constants";
 
 const Home = ({ navigation }) => {
   const [goldPrice, setGoldPrice] = useState(null);
   const [error, setError] = useState(null);
   const [modalVisible, setModalVisible] = useState(false);
   const [autoDetectModalVisible, setAutoDetectModalVisible] = useState(false);
-  const [manualLocationModalVisible, setManualLocationModalVisible] = useState(false);
-  const [currentLocation, setCurrentLocation] = useState('Your location');
-  const [manualLocation, setManualLocation] = useState('');
+  const [manualLocationModalVisible, setManualLocationModalVisible] =
+    useState(false);
+  const [currentLocation, setCurrentLocation] = useState("Your location");
+  const [manualLocation, setManualLocation] = useState("");
   const scrollViewRef = useRef(null);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [location, setLocation] = useState({})
-  const screenWidth = Dimensions.get('window').width;
-
+  const [location, setLocation] = useState({});
+  const screenWidth = Dimensions.get("window").width;
 
   const storeLocation = async () => {
     try {
       const { status } = await Location.requestForegroundPermissionsAsync();
 
-      if (status !== 'granted') {
-        Alert.alert('Permission denied', 'Location permission is required');
+      if (status !== "granted") {
+        Alert.alert("Permission denied", "Location permission is required");
         return;
       }
 
       const location = await Location.getCurrentPositionAsync({});
-      await AsyncStorage.setItem('latitude', location.coords.latitude.toString());
-      await AsyncStorage.setItem('longitude', location.coords.longitude.toString());
+      await AsyncStorage.setItem(
+        "latitude",
+        location.coords.latitude.toString()
+      );
+      await AsyncStorage.setItem(
+        "longitude",
+        location.coords.longitude.toString()
+      );
     } catch (error) {
-      Alert.alert('Error', 'Failed to store location');
+      Alert.alert("Error", "Failed to store location");
     }
   };
 
   const updateLocation = (location) => {
     setLocation(location);
-    // Optionally, perform additional actions with the location data
   };
+
   const autoDetectLocation = async () => {
     try {
-      // Request permission to access location
       const { status } = await Location.requestForegroundPermissionsAsync();
-      if (status !== 'granted') {
-        Alert.alert('Permission denied', 'Location permission is required');
+      if (status !== "granted") {
+        Alert.alert("Permission denied", "Location permission is required");
         return;
       }
-      
-      // Get the current location
+
       const location = await Location.getCurrentPositionAsync({});
       const { latitude, longitude } = location.coords;
-  
-      // Perform reverse geocoding to get the address
+
       const reverseGeocode = await Location.reverseGeocodeAsync({
         latitude,
         longitude,
       });
-  
+
       if (reverseGeocode.length > 0) {
-        const address = reverseGeocode[0]; // Get the first result
+        const address = reverseGeocode[0];
         const formattedAddress = `${address.name}, ${address.street}, ${address.city}, ${address.region}, ${address.postalCode}, ${address.country}`;
-  
-        // Update location with latitude and longitude
         updateLocation({ latitude, longitude });
-  
-        // Update the state with the formatted address
         setCurrentLocation(formattedAddress);
       } else {
-        Alert.alert('No address found', 'Unable to detect your location address.');
+        Alert.alert("No address found", "Unable to detect your location address.");
       }
     } catch (error) {
       console.error("Error detecting location: ", error.message);
@@ -87,17 +98,17 @@ const Home = ({ navigation }) => {
 
   useEffect(() => {
     const fetchPrices = async () => {
-      const API_KEY = 'RLHKKFP2EG5HR2J0';
+      const API_KEY = "RLHKKFP2EG5HR2J0";
       const goldUrl = `https://www.alphavantage.co/query?function=TIME_SERIES_INTRADAY&symbol=GCUSD&interval=1min&apikey=${API_KEY}`;
 
       try {
         const goldResponse = await axios.get(goldUrl);
-        const goldData = goldResponse.data['Time Series (1min)'];
+        const goldData = goldResponse.data["Time Series (1min)"];
         const latestGoldKey = Object.keys(goldData)[0];
-        setGoldPrice(goldData[latestGoldKey]['1. open']);
+        setGoldPrice(goldData[latestGoldKey]["1. open"]);
       } catch (error) {
-        setError('Error fetching data');
-        console.error('Error fetching data:', error);
+        setError("Error fetching data");
+        console.error("Error fetching data:", error);
       }
     };
 
@@ -105,11 +116,11 @@ const Home = ({ navigation }) => {
   }, []);
 
   const images = [
-    require('../../assets/images/slider1.png'),
-    require('../../assets/images/slider2.png'),
-    require('../../assets/images/slider3.png'),
-    require('../../assets/images/slider4.png'),
-    require('../../assets/images/slider4.png'),
+    require("../../assets/images/slider1.png"),
+    require("../../assets/images/slider2.png"),
+    require("../../assets/images/slider3.png"),
+    require("../../assets/images/slider4.png"),
+    require("../../assets/images/slider4.png"),
   ];
 
   useEffect(() => {
@@ -119,7 +130,7 @@ const Home = ({ navigation }) => {
         const response = await axios.get(`${BASE_URL}/api/products/getproducts`);
         if (Array.isArray(response.data)) {
           const uniqueCategories = {};
-          response.data.forEach(item => {
+          response.data.forEach((item) => {
             if (item.category) {
               if (!uniqueCategories[item.category]) {
                 uniqueCategories[item.category] = item;
@@ -128,10 +139,13 @@ const Home = ({ navigation }) => {
           });
           setCategories(Object.values(uniqueCategories));
         } else {
-          Alert.alert('Error', 'Unexpected data format received.');
+          Alert.alert("Error", "Unexpected data format received.");
         }
       } catch (error) {
-        Alert.alert('Error', error.response?.data?.message || 'Failed to fetch categories');
+        Alert.alert(
+          "Error",
+          error.response?.data?.message || "Failed to fetch categories"
+        );
       } finally {
         setLoading(false);
       }
@@ -141,7 +155,7 @@ const Home = ({ navigation }) => {
   }, []);
 
   const handleCategoryPress = (category) => {
-    navigation.navigate('CategoryPage', { category });
+    navigation.navigate("CategoryPage", { category });
   };
 
   const handleNext = () => {
@@ -167,9 +181,7 @@ const Home = ({ navigation }) => {
   const handleAutoDetectLocation = () => {
     setModalVisible(false);
     setAutoDetectModalVisible(true);
-    // Add functionality for auto-detect location here
-    // For demonstration, we'll just simulate a location change
-    setCurrentLocation('Location changed successfully');
+    setCurrentLocation("Location changed successfully");
   };
 
   const handleManualLocation = () => {
@@ -179,14 +191,26 @@ const Home = ({ navigation }) => {
 
   const handleConfirmManualLocation = () => {
     setCurrentLocation(manualLocation);
-    setManualLocation('');
+    setManualLocation("");
     setManualLocationModalVisible(false);
   };
 
   const renderCategoryItem = ({ item }) => (
     <View style={styles.categoryContainer}>
-      <TouchableOpacity style={styles.categoryItem} onPress={() => handleCategoryPress(item.category)}>
-        <Image source={{ uri: item.image ? (item.image.startsWith('http') ? item.image : `${BASE_URL}/uploads/${item.image}`) : null }} style={styles.categoryImage} />
+      <TouchableOpacity
+        style={styles.categoryItem}
+        onPress={() => handleCategoryPress(item.category)}
+      >
+        <Image
+          source={{
+            uri: item.image
+              ? item.image.startsWith("http")
+                ? item.image
+                : `${BASE_URL}/uploads/${item.image}`
+              : null,
+          }}
+          style={styles.categoryImage}
+        />
         <Text style={styles.categoryName}>{item.category}</Text>
         <Text style={styles.categoryPrice}>Starts at ₹{item.price}</Text>
       </TouchableOpacity>
@@ -198,62 +222,66 @@ const Home = ({ navigation }) => {
       {/* Header */}
       <View style={styles.headerContainer}>
         <FontAwesome6 name="bars" size={24} color="white" />
-        <Image source={require('../../assets/images/logo.png')} style={styles.logo} />
+        <Image
+          source={require("../../assets/images/logo.png")}
+          style={styles.logo}
+        />
         <AntDesign name="shoppingcart" size={24} color="white" />
       </View>
 
       <ScrollView contentContainerStyle={styles.scrollableContent}>
         {/* Fixed Location and Rate */}
         <View style={styles.locationRateContainer}>
-          <TouchableOpacity style={styles.rateSection} onPress={() => navigation.navigate('GoldLive')}>
+          <TouchableOpacity
+            style={styles.rateSection}
+            onPress={() => navigation.navigate("GoldLive")}
+          >
             <Text style={styles.rateText}>See Live Gold Rate</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.locationSection} onPress={() => setModalVisible(true)}>
+          <TouchableOpacity
+            style={styles.locationSection}
+            onPress={() => setModalVisible(true)}
+          >
             <EvilIcons name="location" size={24} color="#8d181a" />
             <Text style={styles.locationText}><strong>You are in </strong> <br></br>{currentLocation}</Text>
           </TouchableOpacity>
         </View>
 
         {/* Sliding Content */}
-        <View style={styles.sliderContainer}>
-          <Text style={{ fontSize: 20, color: "#8d181a", marginVertical: 5, marginHorizontal: 10 }}>TRENDING <strong>NOW</strong></Text>
-          <TouchableOpacity style={styles.arrowLeft} onPress={handlePrev}>
-            <Entypo name="chevron-thin-left" size={24} color="white" />
+        <ScrollView
+          ref={scrollViewRef}
+          horizontal
+          pagingEnabled
+          showsHorizontalScrollIndicator={false}
+          onScroll={(e) => {
+            const contentOffsetX = e.nativeEvent.contentOffset.x;
+            const index = Math.round(contentOffsetX / screenWidth);
+            setCurrentIndex(index);
+          }}
+          scrollEventThrottle={16}
+        >
+          {images.map((image, index) => (
+            <Image key={index} source={image} style={styles.sliderImage} />
+          ))}
+        </ScrollView>
+
+        {/* Arrows for slider */}
+        <View style={styles.arrowContainer}>
+          <TouchableOpacity onPress={handlePrev} style={styles.arrowButton}>
+            <AntDesign name="leftcircleo" size={30} color="black" />
           </TouchableOpacity>
-          <ScrollView
-            ref={scrollViewRef}
-            horizontal
-            pagingEnabled
-            showsHorizontalScrollIndicator={false}
-            style={styles.scrollView}
-            onScroll={(event) => {
-              const index = Math.round(event.nativeEvent.contentOffset.x / screenWidth);
-              setCurrentIndex(index);
-            }}
-          >
-            {images.map((image, index) => (
-              <Image key={index} source={image} style={styles.image} resizeMode="cover" />
-            ))}
-          </ScrollView>
-          <TouchableOpacity style={styles.arrowRight} onPress={handleNext}>
-            <Entypo name="chevron-thin-right" size={24} color="white" />
+          <TouchableOpacity onPress={handleNext} style={styles.arrowButton}>
+            <AntDesign name="rightcircleo" size={30} color="black" />
           </TouchableOpacity>
         </View>
 
-        {/* Content Below Sliding */}
-        <Image source={require('../../assets/images/constants.png')} style={styles.constantImage} />
-
-        {/* About Company */}
-        <View>
-          <View>
-            <Text style={styles.About}>Attica Gold Company</Text>
-          </View>
-          <View style={styles.content}>
-            <Text>
-            The Attica gold company is the pioneer and the No.1 Gold Buying Company. We buy all types of gold coins, jewellery, and biscuits and lend money to release pledged gold from financial institutes/pawns and brokers/NBFCs. We offer instant spot cash for gold and silver. Selling gold at Attica gold company is fast, simple and easy.
-            </Text>
-            
-          </View>
+        {/* About the Company */}
+        <View style={styles.aboutContainer}>
+          <Text style={styles.aboutTitle}>About Attica Gold Company</Text>
+          <Text style={styles.aboutText}>
+            Attica Gold Company is the pioneer and the 1st to introduce the concept of gold
+            buying across the country.
+          </Text>
         </View>
 
         {/* ATTICA ASSURE */}
@@ -290,9 +318,9 @@ const Home = ({ navigation }) => {
 
 
         {/* Loan Services */}
-        <View style={styles.contentContainer}>
-          <View style={styles.getStartedContainer}>
-
+        <View style={styles.loanServicesContainer}>
+          <Text style={styles.loanTitle}>Loan Services</Text>
+          <View style={styles.loanButtonsContainer}>
             <TouchableOpacity
               style={styles.getStartedButton}
               onPress={() => navigation.navigate('GoldLoan')}>
@@ -307,100 +335,111 @@ const Home = ({ navigation }) => {
               <Image source={require('../../assets/images/sellgold.png')} style={styles.loan} />
             </TouchableOpacity>
           </View>
+        </View>
 
-          <View style={styles.section}>
-            <Text style={styles.sectionTitle}>Our Collection</Text>
-            {loading ? (
-              <ActivityIndicator size="large" color="#0000ff" />
-            ) : (
-              <FlatList
-                data={categories}
-                renderItem={renderCategoryItem}
-                keyExtractor={item => (item.id ? item.id.toString() : Math.random().toString())}
-                numColumns={2}
-                style={styles.collection}
-              />
-            )}
-          </View>
-
-
-          {/* Invest in Silver */}
-          <View style={styles.investContainer}>
-            <Text style={styles.sectionTitle}>Invest in Silver</Text>
-            <Text style={styles.investDetails}>Explore the benefits of investing in silver.</Text>
-            <TouchableOpacity style={styles.investButton}>
-              <Text style={styles.investButtonText}>Invest Now</Text>
-            </TouchableOpacity>
-          </View>
-
-
-
+        {/* Products List */}
+        <View style={styles.productsContainer}>
+          <Text style={styles.productsTitle}>Our Products</Text>
+          {loading ? (
+            <ActivityIndicator size="large" color="#8d181a" />
+          ) : (
+            <FlatList
+              data={categories}
+              renderItem={renderCategoryItem}
+              keyExtractor={(item) => item._id.toString()}
+              horizontal
+              showsHorizontalScrollIndicator={false}
+            />
+          )}
         </View>
       </ScrollView>
 
-      {/* Modals */}
+      {/* Modal for Location Selection */}
       <Modal
-        animationType="slide"
-        transparent={true}
         visible={modalVisible}
-        onRequestClose={() => setModalVisible(!modalVisible)}
+        animationType="slide"
+        transparent={true}
+        onRequestClose={() => setModalVisible(false)}
       >
         <View style={styles.modalContainer}>
           <View style={styles.modalContent}>
-            <Text style={styles.modalTitle}>Location</Text>
-            <TouchableOpacity onPress={autoDetectLocation} style={styles.modalButton}>
-              <Text style={styles.modalButtonText}>Auto-detect Location</Text>
-            </TouchableOpacity>
-            <TouchableOpacity onPress={handleManualLocation} style={styles.modalButton}>
-              <Text style={styles.modalButtonText}>Select Location Manually</Text>
-            </TouchableOpacity>
-            <Pressable onPress={() => setModalVisible(false)} style={styles.modalCloseButton}>
-              <AntDesign name="closecircleo" size={24} color="black" />
+            <Pressable
+              style={styles.modalCloseButton}
+              onPress={() => setModalVisible(false)}
+            >
+              <Text style={styles.modalCloseText}>X</Text>
             </Pressable>
+            <Text style={styles.modalTitle}>Choose Location</Text>
+            <TouchableOpacity
+              style={styles.modalOptionButton}
+              onPress={handleAutoDetectLocation}
+            >
+              <Text style={styles.modalOptionText}>Auto Detect Location</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.modalOptionButton}
+              onPress={autoDetectLocation}
+            >
+              <Text style={styles.modalOptionText}>Enter Manually</Text>
+            </TouchableOpacity>
           </View>
         </View>
       </Modal>
 
+      {/* Auto Detect Modal */}
       <Modal
-        animationType="slide"
-        transparent={true}
         visible={autoDetectModalVisible}
-        onRequestClose={() => setAutoDetectModalVisible(!autoDetectModalVisible)}
+        animationType="slide"
+        transparent={true}
+        onRequestClose={() => setAutoDetectModalVisible(false)}
       >
         <View style={styles.modalContainer}>
           <View style={styles.modalContent}>
-            <Text style={styles.modalTitle}>Auto-detect Location</Text>
-            <Text style={styles.modalText}>{currentLocation}</Text>
-            <Pressable onPress={() => setAutoDetectModalVisible(false)} style={styles.modalCloseButton}>
-              <AntDesign name="closecircleo" size={24} color="black" />
+            <Pressable
+              style={styles.modalCloseButton}
+              onPress={() => setAutoDetectModalVisible(false)}
+            >
+              <Text style={styles.modalCloseText}>X</Text>
             </Pressable>
+            <Text style={styles.modalTitle}>Auto Detect Location</Text>
+            <TouchableOpacity
+              style={styles.modalOptionButton}
+              onPress={autoDetectLocation}
+            >
+              <Text style={styles.modalOptionText}>Detect Location</Text>
+            </TouchableOpacity>
           </View>
         </View>
       </Modal>
 
-
-      {/* Location Selection Modal */}
+      {/* Manual Location Modal */}
       <Modal
+        visible={manualLocationModalVisible}
         animationType="slide"
         transparent={true}
-        visible={manualLocationModalVisible}
-        onRequestClose={() => setManualLocationModalVisible(!manualLocationModalVisible)}
+        onRequestClose={() => setManualLocationModalVisible(false)}
       >
         <View style={styles.modalContainer}>
           <View style={styles.modalContent}>
-            <Text style={styles.modalTitle}>Enter Location</Text>
+            <Pressable
+              style={styles.modalCloseButton}
+              onPress={() => setManualLocationModalVisible(false)}
+            >
+              <Text style={styles.modalCloseText}>X</Text>
+            </Pressable>
+            <Text style={styles.modalTitle}>Enter Your Location</Text>
             <TextInput
+              style={styles.modalInput}
               value={manualLocation}
               onChangeText={setManualLocation}
-              style={styles.input}
               placeholder="Enter location"
             />
-            <TouchableOpacity onPress={handleConfirmManualLocation} style={styles.modalButton}>
-              <Text style={styles.modalButtonText}>Confirm</Text>
+            <TouchableOpacity
+              style={styles.modalOptionButton}
+              onPress={handleConfirmManualLocation}
+            >
+              <Text style={styles.modalOptionText}>Confirm Location</Text>
             </TouchableOpacity>
-            <Pressable onPress={() => setManualLocationModalVisible(false)} style={styles.modalCloseButton}>
-              <AntDesign name="closecircleo" size={24} color="black" />
-            </Pressable>
           </View>
         </View>
       </Modal>
@@ -408,112 +447,55 @@ const Home = ({ navigation }) => {
   );
 };
 
+export default Home;
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: "#ffffff",
   },
-  // Header
   headerContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
     padding: 10,
-    backgroundColor: '#8d181a',
-    alignItems: 'center',
+    backgroundColor: "#8d181a",
   },
   logo: {
     width: 100,
-    height: 50,
-    resizeMode: 'contain',
+    height: 30,
   },
   scrollableContent: {
-    flexGrow: 1,
+    paddingBottom: 20,
   },
-  contentContainer: {
-    padding: 10,
-  },
-  getStartedContainer: {
-    marginVertical: 10,
-    flexDirection: 'row',
-    marginHorizontal: 5,
-  },
-  investContainer: {
-    marginVertical: 10,
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginTop: 20,
-  },
-  section: {
-    marginVertical: 10,
-    justifyContent: 'center',
-    alignItems: 'center',
-    flex: 1,
-  },
-  sectionTitle: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    marginBottom: 10,
-  },
-  investDetails: {
-    marginBottom: 10,
-    fontSize: 16,
-  },
-  investButtonText: {
-    color: '#fff',
-    textAlign: 'center',
-  },
-  investButton: {
-    backgroundColor: '#8d181a',
-    padding: 15,
-    borderRadius: 5,
-  },
-  getStartedButton: {
-    padding: 15,
-    borderRadius: 5,
-    marginVertical: 5,
-    flex: 1,
-    marginHorizontal: 5,
-    borderColor: '#8d181a',
-    opacity: 1,
-    borderWidth: 1,
-    marginVertical:10,
-  },
-  buttonText: {
-    color: '#8d181a',
-    justifyContent:'center',
-    textAlign: 'center',
-    flexWrap: 'wrap',
-    paddingHorizontal:5,
-  },
-    //  {/* Fixed Location and Rate */}
   locationRateContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    paddingHorizontal: 15,
+    flexDirection: "row",
+    justifyContent: "space-around",
     paddingVertical: 10,
+    backgroundColor: "#f3f3f3",
   },
   rateSection: {
-    backgroundColor: '#8d181a',
-    borderRadius: 5,
-    padding: 10,
-  },
-  rateText: {
-    color: '#fff',
-    fontWeight: 'bold',
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
   },
   locationSection: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flex: 1,
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  rateText: {
+    color: "#8d181a",
+    fontWeight: "bold",
   },
   locationText: {
     marginLeft: 5,
-    color: '#8d181a',
+    color: "#8d181a",
   },
-
-  // {/* Sliding Content */}
-  sliderContainer: {
-    position: 'relative',
+  sliderImage: {
+    width: Dimensions.get("window").width,
+    height: 200,
   },
   arrowLeft: {
     position: 'absolute',
@@ -535,179 +517,135 @@ const styles = StyleSheet.create({
     borderWidth:1, 
     padding:5,
   },
-      //  {/* Content Below Sliding */}
-  constantImage: {
-    width: '100%',
-    height: 200,
-    marginTop: 10,
+  aboutContainer: {
+    padding: 20,
   },
-  // {/* About Company */}
-  About: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    color: '#8d181a',
-    marginVertical: 10,
-    textAlign: 'center',
+  aboutTitle: {
+    fontSize: 18,
+    fontWeight: "bold",
+    marginBottom: 10,
   },
-  content: {
-    fontSize: 16,
-    color: 'black',
-    marginVertical: 10,
-    marginHorizontal: 10,
-    textAlign: 'center',
+  aboutText: {
+    fontSize: 14,
+    color: "#555",
   },
-  //  {/* ATTICA ASSURE */}
-  assureContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    paddingVertical: 20,
+  atticaAssureContainer: {
+    backgroundColor: "#f3f3f3",
+    padding: 20,
   },
-  assureButton: {
-    width: 80,
-    alignItems: 'center',
-    borderRadius: 10,
-    borderWidth:1,
-    borderColor: '#8d181a',
-    marginHorizontal:10,
- 
+  assureTitle: {
+    fontSize: 18,
+    fontWeight: "bold",
+    marginBottom: 10,
   },
-  getloan: {
-    width: 50,
-    height: 50,
-    marginVertical: 10, 
+  assureFeatures: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    flexWrap: "wrap",
   },
-loan: {
-    width: 150,
-    height: 150,
-    marginVertical: 10, 
+  feature: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginBottom: 10,
   },
-  buttonText: {
-    marginTop: 5,
-    color: '#8d181a',
-    marginBottom:5,
-    marginHorizontal:10,
-    justifyContent:'center',
-    alignItems:'center',
+  featureText: {
+    marginLeft: 5,
+    color: "#8d181a",
   },
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-  scrollView: {
-    flex: 1,
+  loanServicesContainer: {
+    padding: 20,
+    backgroundColor: "#ffffff",
   },
-  image: {
-    width: Dimensions.get('window').width,
-    height: 200,
+  loanTitle: {
+    fontSize: 18,
+    fontWeight: "bold",
+    marginBottom: 10,
   },
-  categorySection: {
-    padding: 15,
+  loanButtonsContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
   },
-  categoryHeading: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    color: '#8d181a',
+  loanButton: {
+    padding: 10,
+    backgroundColor: "#8d181a",
+    borderRadius: 5,
+  },
+  loanButtonText: {
+    color: "#ffffff",
+    textAlign: "center",
+  },
+  productsContainer: {
+    padding: 20,
+  },
+  productsTitle: {
+    fontSize: 18,
+    fontWeight: "bold",
     marginBottom: 10,
   },
   categoryContainer: {
     marginRight: 10,
   },
   categoryItem: {
-    backgroundColor: '#f5f5f5',
-    borderRadius: 10,
-    overflow: 'hidden',
-    width: 150,
-    alignItems: 'center',
-    padding: 10,
+    backgroundColor: "#ffffff",
+    borderRadius: 5,
+    overflow: "hidden",
+    alignItems: "center",
   },
   categoryImage: {
-    width: 130,
+    width: 100,
     height: 100,
-    borderRadius: 5,
   },
   categoryName: {
-    fontSize: 16,
-    fontWeight: 'bold',
-    marginVertical: 5,
+    marginTop: 5,
+    fontWeight: "bold",
   },
   categoryPrice: {
-    color: '#8d181a',
-  },
- 
-  
-  constantImage: {
-    width: '100%',
-    height: 200,
-    marginTop: 10,
+    color: "#8d181a",
   },
   modalContainer: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "rgba(0,0,0,0.5)",
   },
   modalContent: {
-    backgroundColor: 'white',
-    borderRadius: 10,
-    padding: 20,
-    width: '80%',
-    alignItems: 'center',
-  },
-  modalTitle: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    marginBottom: 10,
-  },
-  modalButton: {
-    backgroundColor: '#8d181a',
-    padding: 10,
+    width: "80%",
+    backgroundColor: "white",
     borderRadius: 5,
-    marginVertical: 5,
-    width: '100%',
-    alignItems: 'center',
-  },
-  modalButtonText: {
-    color: 'white',
-    fontWeight: 'bold',
+    padding: 20,
+    alignItems: "center",
   },
   modalCloseButton: {
-    position: 'absolute',
+    position: "absolute",
     top: 10,
     right: 10,
   },
-  input: {
-    borderBottomWidth: 1,
-    borderBottomColor: '#ddd',
-    width: '100%',
+  modalCloseText: {
+    fontSize: 18,
+    color: "black",
+  },
+  modalTitle: {
+    fontSize: 18,
+    fontWeight: "bold",
+    marginBottom: 20,
+  },
+  modalOptionButton: {
+    padding: 10,
+    marginVertical: 5,
+    backgroundColor: "#8d181a",
+    borderRadius: 5,
+    width: "100%",
+  },
+  modalOptionText: {
+    color: "#ffffff",
+    textAlign: "center",
+  },
+  modalInput: {
+    width: "100%",
     padding: 10,
     marginVertical: 10,
+    borderWidth: 1,
+    borderColor: "#ccc",
+    borderRadius: 5,
   },
 });
-
-export default Home;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
