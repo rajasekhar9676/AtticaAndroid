@@ -27,11 +27,29 @@ const MainService = ({ navigation }) => {
 
       {/* Main Container */}
       <Animatable.View animation="fadeInUp" duration={1000} style={styles.mainContainer}>
-        <Pressable onPress={() => navigation.navigate('DigiGold')} style={styles.pressable}>
+      <Pressable onPress={() => navigation.navigate('SellGold')} style={styles.pressable}>
           <View style={styles.iconContainer}>
-            <FontAwesome5 name="digital-tachograph" size={24} color="black" />
+            <MaterialCommunityIcons name="security" size={24} color="black" />
           </View>
-          <Text style={styles.pressableText}>Digi Gold</Text>
+          <Text style={styles.pressableText}>Sell Gold</Text>
+          <View style={styles.chevronContainer}>
+            <Entypo name="chevron-right" size={24} color="black" />
+          </View>
+        </Pressable>
+        <Pressable onPress={() => navigation.navigate('PludgedGold')} style={styles.pressable}>
+          <View style={styles.iconContainer}>
+            <MaterialCommunityIcons name="security" size={24} color="black" />
+          </View>
+          <Text style={styles.pressableText}>Release Pludged Gold</Text>
+          <View style={styles.chevronContainer}>
+            <Entypo name="chevron-right" size={24} color="black" />
+          </View>
+        </Pressable>
+        <Pressable onPress={() => navigation.navigate('Insurance')} style={styles.pressable}>
+          <View style={styles.iconContainer}>
+            <MaterialCommunityIcons name="security" size={24} color="black" />
+          </View>
+          <Text style={styles.pressableText}>Jewellary----coming soon</Text>
           <View style={styles.chevronContainer}>
             <Entypo name="chevron-right" size={24} color="black" />
           </View>
@@ -45,6 +63,16 @@ const MainService = ({ navigation }) => {
             <Entypo name="chevron-right" size={24} color="black" />
           </View>
         </Pressable>
+        <Pressable onPress={() => navigation.navigate('DigiGold')} style={styles.pressable}>
+          <View style={styles.iconContainer}>
+            <FontAwesome5 name="digital-tachograph" size={24} color="black" />
+          </View>
+          <Text style={styles.pressableText}>Digi Gold</Text>
+          <View style={styles.chevronContainer}>
+            <Entypo name="chevron-right" size={24} color="black" />
+          </View>
+        </Pressable>
+      
         <Pressable onPress={() => navigation.navigate('Insurance')} style={styles.pressable}>
           <View style={styles.iconContainer}>
             <MaterialCommunityIcons name="security" size={24} color="black" />
@@ -54,6 +82,7 @@ const MainService = ({ navigation }) => {
             <Entypo name="chevron-right" size={24} color="black" />
           </View>
         </Pressable>
+      
       </Animatable.View>
     </ImageBackground>
   );
