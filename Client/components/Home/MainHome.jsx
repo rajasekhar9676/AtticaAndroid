@@ -25,7 +25,7 @@ const Home = ({ navigation }) => {
   const [loading, setLoading] = useState(false);
   const [location, setLocation] = useState({})
   const screenWidth = Dimensions.get('window').width;
-
+  const [isLoading,setIsLoading]=useState('')
 
   const storeLocation = async () => {
     try {
@@ -69,7 +69,7 @@ const Home = ({ navigation }) => {
   
       if (reverseGeocode.length > 0) {
         const address = reverseGeocode[0]; // Get the first result
-        const formattedAddress =` ${address.name}, ${address.street}, ${address.city}, ${address.region}, ${address.postalCode}, ${address.country}`;
+        const formattedAddress = `${address.name}, ${address.street}, ${address.city}, ${address.region}, ${address.postalCode}, ${address.country}`;
   
         // Update location with latitude and longitude
         updateLocation({ latitude, longitude });
@@ -85,24 +85,7 @@ const Home = ({ navigation }) => {
     }
   };
 
-  useEffect(() => {
-    const fetchPrices = async () => {
-      const API_KEY = 'RLHKKFP2EG5HR2J0';
-      const goldUrl =` https://www.alphavantage.co/query?function=TIME_SERIES_INTRADAY&symbol=GCUSD&interval=1min&apikey=${API_KEY}`;
-
-      try {
-        const goldResponse = await axios.get(goldUrl);
-        const goldData = goldResponse.data['Time Series (1min)'];
-        const latestGoldKey = Object.keys(goldData)[0];
-        setGoldPrice(goldData[latestGoldKey]['1. open']);
-      } catch (error) {
-        setError('Error fetching data');
-        console.error('Error fetching data:', error);
-      }
-    };
-
-    fetchPrices();
-  }, []);
+  
 
   const images = [
     require('../../assets/images/slider1.png'),
@@ -183,10 +166,22 @@ const Home = ({ navigation }) => {
     setManualLocationModalVisible(false);
   };
 
+
+  const handleSeeLiveGoldRate = () => {
+    // Debounce or throttle the button click to prevent multiple clicks.
+    if (!isLoading) {
+      setIsLoading(true);
+      // Your navigation or API call here
+      navigation.navigate('GoldLive');
+      setIsLoading(false);
+    }
+  };
+  
+
   const renderCategoryItem = ({ item }) => (
     <View style={styles.categoryContainer}>
       <TouchableOpacity style={styles.categoryItem} onPress={() => handleCategoryPress(item.category)}>
-        <Image source={{ uri: item.image ? `(item.image.startsWith('http') ? item.image : ${BASE_URL}/uploads/${item.image})` : null }} style={styles.categoryImage} />
+        <Image source={{ uri: item.image ? (item.image.startsWith('http') ? item.image : `${BASE_URL}/uploads/${item.image}`) : null }} style={styles.categoryImage} />
         <Text style={styles.categoryName}>{item.category}</Text>
         <Text style={styles.categoryPrice}>Starts at ₹{item.price}</Text>
       </TouchableOpacity>
@@ -205,7 +200,7 @@ const Home = ({ navigation }) => {
       <ScrollView contentContainerStyle={styles.scrollableContent}>
         {/* Fixed Location and Rate */}
         <View style={styles.locationRateContainer}>
-          <TouchableOpacity style={styles.rateSection} onPress={() => navigation.navigate('GoldLive')}>
+          <TouchableOpacity style={styles.rateSection} onPress={handleSeeLiveGoldRate }>
             <Text style={styles.rateText}>See Live Gold Rate</Text>
           </TouchableOpacity>
           <TouchableOpacity style={styles.locationSection} onPress={() => setModalVisible(true)}>
@@ -216,7 +211,10 @@ const Home = ({ navigation }) => {
 
         {/* Sliding Content */}
         <View style={styles.sliderContainer}>
-          <Text style={{ fontSize: 20, color: "#8d181a", marginVertical: 5, marginHorizontal: 10 }}>TRENDING <strong>NOW</strong></Text>
+          {/* <Text style={{ fontSize: 20, color: "#8d181a", marginVertical: 5, marginHorizontal: 10 }}>TRENDING <strong>NOW</strong></Text> */}
+          <Text style={{ fontSize: 20, color: "#8d181a", marginVertical: 5, marginHorizontal: 10 }}>TRENDING <Text style={{ fontWeight: 'bold' }}>NOW</Text>
+       </Text>
+
           <TouchableOpacity style={styles.arrowLeft} onPress={handlePrev}>
             <Entypo name="chevron-thin-left" size={24} color="white" />
           </TouchableOpacity>
@@ -584,21 +582,7 @@ loan: {
     alignItems:'center',
   },
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-  scrollView: {
+scrollView: {
     flex: 1,
   },
   image: {
