@@ -205,7 +205,7 @@ const Home = ({ navigation }) => {
           </TouchableOpacity>
           <TouchableOpacity style={styles.locationSection} onPress={() => setModalVisible(true)}>
             <EvilIcons name="location" size={24} color="#8d181a" />
-            <Text style={styles.locationText}>{currentLocation}</Text>
+            <Text style={styles.locationText}><strong>You are in </strong> <br></br>{currentLocation}</Text>
           </TouchableOpacity>
         </View>
 
