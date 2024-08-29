@@ -4,7 +4,6 @@ import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
 import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
 import * as Animatable from 'react-native-animatable';
 
-
 const MainService = ({ navigation }) => {
   return (
     <ImageBackground
@@ -25,19 +24,19 @@ const MainService = ({ navigation }) => {
 
       <Animatable.View animation="fadeIn" duration={1000} style={styles.OurServices1}>
         <Text style={styles.Heading1}>Current Gold Rate</Text>
-        <Text style={styles.Heading2} > 'Rate is from our store in Bengaluru, Karnataka, India </Text>
+        <Text style={styles.Heading2}>Rate is from our store in Bengaluru, Karnataka, India</Text>
       </Animatable.View>
 
       {/* Main Container */}
       <Animatable.View animation="fadeInUp" duration={1000} style={styles.mainContainer}>
         <View style={styles.pressable}>
-          <Text style={styles.Gram}>22KT PER GRAM </Text>
+          <Text style={styles.Gram}>22KT PER GRAM</Text>
           <View style={styles.rate}>
             <Text style={styles.pressableText}>INR: </Text>
           </View>
         </View>
         <View style={styles.pressable}>
-          <Text style={styles.Gram}>24KT PER GRAM </Text>
+          <Text style={styles.Gram}>24KT PER GRAM</Text>
           <View style={styles.rate}>
             <Text style={styles.pressableText}>INR: </Text>
           </View>
@@ -45,20 +44,18 @@ const MainService = ({ navigation }) => {
         </View>
       </Animatable.View>
 
-
       {/* Button Container */}
       <View style={styles.Alertbutton}>
-        <Pressable style={styles.alert} onPress={() => navigation.navigate('GoldRateNotification')}>SET ALERT</Pressable>
+        <Pressable style={styles.alert} onPress={() => navigation.navigate('GoldRateNotification')}>
+          <Text style={styles.alertText}>SET ALERT</Text>
+        </Pressable>
       </View>
-
     </ImageBackground>
   );
 };
 
-
 const styles = StyleSheet.create({
   backgroundImage: {
-    marginTop: 40,
     flex: 1,
     width: '100%',
     height: '100%',
@@ -79,7 +76,7 @@ const styles = StyleSheet.create({
   },
   Heading: {
     color: 'white',
-    fontSize: '25px',
+    fontSize: 25,
   },
   OurServices: {
     position: 'relative',
@@ -116,12 +113,12 @@ const styles = StyleSheet.create({
   },
   Heading1: {
     color: 'white',
-    fontSize: '25px',
-    fontFamily: 'bold',
+    fontSize: 25,
+    fontWeight: 'bold',
   },
   Heading2: {
     color: 'white',
-    fontSize: '15px',
+    fontSize: 15,
   },
   mainContainer: {
     margin: 40,
@@ -141,7 +138,7 @@ const styles = StyleSheet.create({
   },
   Gram: {
     color: '#8d181a',
-    fontSize: '15px',
+    fontSize: 15,
     backgroundColor: 'gold',
     paddingVertical: 5,
     paddingHorizontal: 10,
@@ -149,10 +146,9 @@ const styles = StyleSheet.create({
     borderTopRightRadius: 10,
   },
   rate: {
-    width: 400,
+    width: '100%',
     borderColor: 'gold',
     borderWidth: 2,
-    flex: 1,
     padding: 10,
     borderBottomLeftRadius: 15,
     borderBottomRightRadius: 15,
@@ -161,32 +157,25 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: '600',
     color: "white",
-    flex: 1,
-    width: 200,
-    flexDirection: 'column',
-    justifyContent: 'center',
-    alignItems: 'center',
   },
   Updated: {
     color: 'white',
-    fontSize: '15px',
+    fontSize: 15,
   },
-  Alertbutton:{
+  Alertbutton: {
     justifyContent: 'center',
     alignItems: 'center',
   },
   alert: {
-    color: '#8d181a',
-    fontSize: '15px',
     backgroundColor: 'gold',
     paddingVertical: 5,
     paddingHorizontal: 10,
     borderRadius: 6,
-  
-
-
   },
- 
+  alertText: {
+    color: '#8d181a',
+    fontSize: 15,
+  },
 });
 
 export default MainService;
