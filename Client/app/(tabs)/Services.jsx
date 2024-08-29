@@ -6,6 +6,8 @@ import GoldLoan from '../../components/Services/GoldLoan';
 import Insurance from '../../components/Services/Insurance ';
 import SellGold from '../../components/Services/SellGold';
 import PludgedGold from '../../components/Services/PludgedGold';
+import ViewAllBranches from '../../components/Services/ViewAllBranches';
+import ClickHere from '../../components/Services/ClickHere';
 
 const Stack = createStackNavigator();
 
@@ -17,6 +19,8 @@ const Services = () => (
     <Stack.Screen name="Insurance" component={Insurance} />
     <Stack.Screen name="SellGold" component={SellGold} />
     <Stack.Screen name="PludgedGold" component={PludgedGold} />
+    <Stack.Screen name="ViewAllBranches" component={ViewAllBranches}/>
+    <Stack.Screen name="ClickHere" component={ClickHere}/>
   </Stack.Navigator>
 );
 

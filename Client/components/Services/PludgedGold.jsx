@@ -1,41 +1,50 @@
 import { StyleSheet, Text, View, ScrollView, ImageBackground } from 'react-native';
 import React from 'react';
 
-const SellGold = () => {
+const SellGold = ({ navigation }) => {
     return (
         <ScrollView contentContainerStyle={styles.container}>
-            <View>
+            <View style={styles.imageContainer}>
                 <ImageBackground source={require('../../assets/images/pludgedland.png')}
                     style={styles.backgroundImage}>
                     <Text style={styles.heading}>Pledged Gold Jewellery</Text>
                 </ImageBackground>
             </View>
-            <Text style={styles.subHeading}>Can Help You Release pledged gold</Text>
-            <Text style={styles.content}>
-                Release pledged gold @ Today’s Online price
-                Attica will give cash to pre-close your pledged gold loan
-                We visit the location with customers, pay the required amount to release pledged gold
-                After checking the purity of pledged gold at our office, Attica will buy back the gold jewellery and pay you the balance amount after deducting the amount paid for releasing gold.
-                Releasing pledged gold from Banks, Financiers, and Pawn brokers, The benefit of releasing pledged gold and selling to receive enough cash amount before it gets delayed and your interest rates start to touch the skies. Customers can visit any of our below-listed branches.
 
-                release-pledged-gold
-                Attica will provide cash to advance your secured gold loan. We go to the place with our customers and pay the required amount to get the pledged gold released. We confirm the purity of the gold once it has been released and pay the release fee.
-                The benefit of releasing pledged gold and selling it is that you can collect enough cash before it is delayed and the interest rate rises. Customers can claim their promised gold by visiting Attica Gold Company branches.
+            <View style={styles.section}>
+                <Text style={styles.subHeading}>Can Help You Release Pledged Gold</Text>
+                <Text style={styles.content}>
+                    Release pledged gold @ Today’s Online price. Attica will give cash to pre-close your pledged gold loan. 
+                    We visit the location with customers, pay the required amount to release pledged gold. After checking the 
+                    purity of pledged gold at our office, Attica will buy back the gold jewellery and pay you the balance 
+                    amount after deducting the amount paid for releasing gold. Releasing pledged gold from Banks, Financiers, 
+                    and Pawn brokers offers the benefit of obtaining enough cash amount before it gets delayed and your interest 
+                    rates start to rise. Customers can visit any of our listed branches to take advantage of this service.
+                </Text>
+                <Text style={styles.importantNote}>
+                    At Attica Gold, we provide cash to release your pledged gold loan. Our team visits the location with customers 
+                    and pays the required amount to release the pledged gold. We confirm the purity of the gold once released and 
+                    pay the release fee. This service allows you to collect enough cash before the delay causes your interest rates to rise.
+                </Text>
+            </View>
 
+            <View style={[styles.section, styles.lightSection]}>
+                <Text style={styles.subHeading}>Your Pledged Gold Jewellery</Text>
+                <Text style={styles.content}>
+                    It’s common in India for people to pledge gold and silver jewellery to banks, pawn shops, or financiers to secure 
+                    funds for various needs, such as setting up a new business or urgent medical expenses. However, taking a large loan 
+                    against jewellery may not be wise due to high-interest rates, which can often double the original gold price.
+                </Text>
+                <Text style={styles.content}>
+                    Attica Gold helps customers release their gold loans from banks, pawn shops, and financiers and buys back the gold 
+                    at the best price. At Attica Gold Company, we release and buy gold jewellery to provide immediate monetary value 
+                    for unused or damaged gold jewellery by selling it at the best market price. We accept any amount of old, used, or 
+                    damaged gold, silver, or other jewellery. If you have any silver or gold jewellery for sale, visit our nearest branches 
+                    in Karnataka, Tamil Nadu, Andhra Pradesh, Telangana & Pondicherry.
+                </Text>
+            </View>
 
-            </Text>
-
-            <Text style={styles.subHeading}>Your Pledged Gold Jewellery</Text>
-            <Text style={styles.content}>
-                It’s a common practice in India where people pledge gold and silver jewellery to the banks, pawn shops, or financiers to arrange the funds for setting up a new business, a fund for arranging urgent medical bills because its a simple and fast process to get the loan on gold without much documentation. It may be a good idea to pledge the gold and take a small loan against jewellery but not a wise deal to take a big loan against gold.
-
-                Maximum times people failed to release their pledged gold because of high-interest rates and are bound to pay unnecessary interest rates which sometimes cross the double gold price.
-
-                Attica Gold helps the customer to release their gold loan and other jewellery from banks, pawn shops, and financiers and buy back the gold at the best price than anyone else.
-
-                At  Attica Gold Company, we release and buy gold jewellery so that our valued customers can offset the immediate monetary value of unused/worn/damaged gold jewellery by selling them at the greatest market price. Customers may sell any amount of old, used, or damaged gold, silver, or other jewellery to us. If you have any kind of silver or gold jewelry for sale, you can visit one of our nearest branches throughout Karnataka, Tamil Nadu, Andhra Pradesh, Telangana & Pondicherry.
-            </Text>
-
+          
         </ScrollView>
     );
 };
@@ -47,19 +56,42 @@ const styles = StyleSheet.create({
         padding: 20,
         backgroundColor: '#f5f5f5',
     },
+    imageContainer: {
+        height: 250,
+        overflow: 'hidden',
+        marginBottom: 20,
+    },
     backgroundImage: {
-        marginTop: 40,
         flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
         width: '100%',
         height: '100%',
         resizeMode: 'cover',
     },
     heading: {
-        fontSize: 24,
+        fontSize: 28,
         fontWeight: 'bold',
         color: '#d4af37',
         textAlign: 'center',
-        marginVertical: 20,
+        backgroundColor: 'rgba(0, 0, 0, 0.5)',
+        padding: 10,
+        borderRadius: 5,
+    },
+    section: {
+        padding: 15,
+        borderRadius: 10,
+        marginBottom: 15,
+        backgroundColor: '#ffffff',
+    },
+    lightSection: {
+        backgroundColor: '#f0e7d8',
+    },
+    darkSection: {
+        backgroundColor: '#d4af37',
+        padding: 15,
+        borderRadius: 10,
+        marginTop: 15,
     },
     subHeading: {
         fontSize: 18,
@@ -72,5 +104,24 @@ const styles = StyleSheet.create({
         color: '#555',
         lineHeight: 24,
         marginBottom: 15,
+    },
+    importantNote: {
+        fontSize: 16,
+        color: '#000',
+        fontWeight: 'bold',
+        marginVertical: 10,
+        padding: 10,
+        backgroundColor: '#fff3cd',
+        borderRadius: 8,
+    },
+    listItem: {
+        fontSize: 16,
+        color: '#555',
+        lineHeight: 24,
+        paddingVertical: 5,
+        marginBottom: 10,
+        backgroundColor: '#f7f2e7',
+        padding: 10,
+        borderRadius: 5,
     },
 });
