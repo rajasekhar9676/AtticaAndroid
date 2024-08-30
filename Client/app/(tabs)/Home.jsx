@@ -3,6 +3,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 import MainHome from '../../components/Home/MainHome';
 import GoldLive from '../../components/Home/GoldLive';
 import GoldRateNotification from '../../components/Home/GoldRateNotification';
+import UserLocation from '../../components/Home/UserLocation';
 
 const Stack = createStackNavigator();
 
@@ -11,6 +12,7 @@ const Home = () => (
     <Stack.Screen name="MainHome" component={MainHome} />
     <Stack.Screen name="GoldLive" component={GoldLive} />
     <Stack.Screen name="GoldRateNotification" component={GoldRateNotification} />
+    <Stack.Screen name="UserLocation" component={UserLocation}/>
   </Stack.Navigator>
 );
 

@@ -1,6 +1,7 @@
 import { useFonts } from 'expo-font';
 import { Stack } from 'expo-router';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import { AuthProvider } from '../components/contexts/AuthContext'
 
 export default function RootLayout() {
   const [fontsLoaded] = useFonts({
@@ -12,17 +13,20 @@ export default function RootLayout() {
   }
 
   return (
-    <GestureHandlerRootView style={{ flex: 1 }}>
+    <><AuthProvider>
+      <GestureHandlerRootView style={{ flex: 1 }}>
       <Stack screenOptions={{ headerShown: false }}>
         <Stack.Screen name="index" />
         <Stack.Screen name="login" />
         <Stack.Screen name="register" />
         <Stack.Screen name="(tabs)" />
-        <Stack.Screen name="Home"/>
+        <Stack.Screen name="Home" />
         <Stack.Screen name="PhoneAuthScreen" />
         {/* <Stack.Screen name="StartingPage"/> */}
       </Stack>
     </GestureHandlerRootView>
+    </AuthProvider>
+    </>
   );
 }
 

@@ -14,6 +14,7 @@ import { InteractionManager } from 'react-native';
 import { throttle } from 'lodash';
 import GoldLive from './GoldLive'
 import GoldRateNotification from './GoldRateNotification';
+import { useAuth } from '../contexts/AuthContext';
 
 const Home = ({ navigation }) => {
   const [goldPrice, setGoldPrice] = useState(null);
@@ -30,6 +31,7 @@ const Home = ({ navigation }) => {
   const [location, setLocation] = useState({})
   const screenWidth = Dimensions.get('window').width;
   const [isLoading,setIsLoading]=useState('')
+  const { isAuthenticated } = useAuth();
 
   const storeLocation = async () => {
     try {
@@ -172,10 +174,16 @@ const Home = ({ navigation }) => {
 
 
   const handleSeeLiveGoldRate = () => {
-    if (!isLoading) {
+    if (!isAuthenticated) {
+      navigation.navigate('UserLocation')
+    }
+    else{
       InteractionManager.runAfterInteractions(() => {
-        setIsLoading(true);
+        // setIsLoading(true);
         navigation.navigate('GoldLive');
+    
+     
+
       });
     }
   }; 
@@ -433,6 +441,9 @@ const Home = ({ navigation }) => {
           </View>
         </View>
       </Modal>
+
+
+      
     </View>
   );
 };
