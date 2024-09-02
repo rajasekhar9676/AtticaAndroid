@@ -36,7 +36,7 @@ const Profile = () => {
       if (isRegistered) {
         router.push('/login');
       } else {
-        router.push('/register');
+        router.push('/PhoneAuthScreen');
       }
     } catch (error) {
       Alert.alert('Error', 'Failed to check registration status');

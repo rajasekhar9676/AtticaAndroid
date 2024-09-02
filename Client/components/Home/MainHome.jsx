@@ -164,7 +164,7 @@ const Home = ({ navigation }) => {
   const handleManualLocation = () => {
     setModalVisible(false);
     setManualLocationModalVisible(true);
-  };
+  }
 
   const handleConfirmManualLocation = () => {
     setCurrentLocation(manualLocation);
@@ -175,7 +175,7 @@ const Home = ({ navigation }) => {
 
   const handleSeeLiveGoldRate = () => {
     if (!isAuthenticated) {
-      navigation.navigate('UserLocation')
+      navigation.navigate('PhoneAuthScreen')
     }
     else{
       InteractionManager.runAfterInteractions(() => {

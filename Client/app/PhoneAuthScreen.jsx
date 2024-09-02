@@ -1,13 +1,12 @@
 import { PhoneAuthProvider, signInWithCredential } from 'firebase/auth';
 import { FirebaseRecaptchaVerifierModal } from 'expo-firebase-recaptcha';
-import { useState, useRef } from 'react';
-import { View, StyleSheet, Text, ActivityIndicator } from 'react-native';
+import { useState, useRef, useEffect } from 'react';
+import { View, StyleSheet, Text, ActivityIndicator, Animated, Easing, Image } from 'react-native';
 import { Input, Button } from 'react-native-elements';
 import { Entypo } from '@expo/vector-icons';
-import { auth } from '../firebaseConfig'; // Import auth from firebaseConfig
-import {firebaseConfig} from '../firebaseConfig'
+import { auth } from '../firebaseConfig';
+import { firebaseConfig } from '../firebaseConfig';
 import { useNavigation } from '@react-navigation/native';
-
 
 const SignInScreen = () => {
   const recaptchaVerifier = useRef(null);
@@ -17,29 +16,33 @@ const SignInScreen = () => {
   const [verificationId, setVerificationId] = useState("");
   const [activityIndicator, setActivityIndicator] = useState(false);
   const navigation = useNavigation();
-  
-  // Function to validate phone number
+
+  const fadeAnim = useRef(new Animated.Value(0)).current;
+
+  useEffect(() => {
+    Animated.timing(fadeAnim, {
+      toValue: 1,
+      duration: 1000,
+      easing: Easing.ease,
+      useNativeDriver: true,
+    }).start();
+  }, [fadeAnim]);
+
   const validatePhoneNumber = () => {
-    let argPhone = phone.trim(); // Remove any leading/trailing spaces
-    
-    // Check if the phone number starts with +91 or not
+    let argPhone = phone.trim();
     if (!argPhone.startsWith("+91")) {
       if (argPhone.length === 10) {
-        argPhone = "+91" + argPhone; // Automatically add +91 if 10 digits are provided
+        argPhone = "+91" + argPhone;
       } else {
         throw new Error("Please enter a valid 10-digit phone number.");
       }
     }
-    
-    // Check if the formatted phone number is valid
     if (argPhone.length !== 13) {
       throw new Error("Please enter a valid phone number with country code.");
     }
-    
     return argPhone;
   };
 
-  // Function to Sign user in
   const signInUser = async () => {
     try {
       setActivityIndicator(true);
@@ -59,7 +62,6 @@ const SignInScreen = () => {
     }
   };
 
-  // Function to verify the user via OTP
   const verifyOTP = async () => {
     try {
       setActivityIndicator(true);
@@ -67,7 +69,7 @@ const SignInScreen = () => {
       await signInWithCredential(auth, credentials);
       setActivityIndicator(false);
       setScreenState("Authenticated");
-      navigation.navigate('(tabs)'); // Navigate to Home after successful authentication
+      navigation.navigate('(tabs)');
     } catch (error) {
       console.log(error);
       setActivityIndicator(false);
@@ -76,7 +78,6 @@ const SignInScreen = () => {
   };
 
   if (screenState === "OTP") {
-    // Display OTP verification component
     return (
       <View style={styles.container}>
         <Text style={styles.OTPtextStyle}>
@@ -110,7 +111,6 @@ const SignInScreen = () => {
       </View>
     );
   } else if (screenState === "Authenticated") {
-    // Display after authenticated component
     return (
       <View style={styles.finalContainer}>
         <Text style={styles.welcomeTextStyle}>
@@ -119,36 +119,36 @@ const SignInScreen = () => {
       </View>
     );
   } else {
-    // Display phone number input and Recaptcha Modal components
     return (
-      <View style={styles.container}>
+      <Animated.View style={[styles.container, { opacity: fadeAnim }]}>
         <FirebaseRecaptchaVerifierModal
           ref={recaptchaVerifier}
-          firebaseConfig={firebaseConfig} 
+          firebaseConfig={firebaseConfig}
         />
+        <Text style={styles.titleText}>Sign up to keep exploring the services!</Text>
+
         <Input
           label="Phone number"
           leftIcon={
-            <Entypo
-              name="phone"
-              size={22}
-              color="black"
-              style={styles.iconStyle}
+            <Image
+              source={require('../assets/images/flag.png')} // Indian flag icon
+              style={styles.flagIcon}
             />
           }
           keyboardType="numeric"
           placeholder="+91xxxxxxxxxx"
           value={phone}
           onChangeText={(number) => setPhone(number)}
+          containerStyle={styles.inputContainer}
         />
         {activityIndicator && <ActivityIndicator size="large" />}
         <Button
-          title="Signin"
+          title="Send OTP"
           onPress={signInUser}
           buttonStyle={styles.buttonStyle}
-          containerStyle={{ width: "70%", marginTop: 15 }}
+          containerStyle={{ width: "80%", marginTop: 20 }}
         />
-      </View>
+      </Animated.View>
     );
   }
 };
@@ -159,30 +159,54 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
     justifyContent: "center",
     alignItems: "center",
-    padding: 10,
-    borderTopLeftRadius: 50,
-    borderTopRightRadius: 50,
+    padding: 20,
+    borderTopLeftRadius: 30,
+    borderTopRightRadius: 30,
   },
   finalContainer: {
     flex: 1,
     backgroundColor: "#fff",
     alignItems: "center",
-    padding: 10,
+    padding: 20,
   },
-  inputStyle: {
+  titleText: {
+    fontSize: 30,
+    fontWeight: "bold",
+    textAlign: "center",
+    marginBottom: 50,
+    color: "#333",
+  },
+  subtitleText: {
+    fontSize: 14,
+    textAlign: "center",
+    color: "#666",
     marginBottom: 20,
-    borderColor: "black",
-    borderWidth: 2,
+  },
+  inputContainer: {
+    width: "100%",
+    // backgroundColor: "#f1f1f1",
+    borderRadius: 10,
+    paddingHorizontal: 10,
   },
   buttonStyle: {
-    height: 45,
-    borderRadius: 22,
+    height: 50,
+    borderRadius: 25,
+    // backgroundColor: "#ff4757",
+    backgroundColor: '#007BFF',
+
+    
   },
   iconStyle: {
     paddingEnd: 7,
     marginEnd: 3,
     borderRightWidth: 0.5,
     borderRightColor: "gray",
+  },
+  flagIcon: {
+    width: 32,
+    height: 20,
+    resizeMode: 'contain',
+    marginRight: 10,
   },
   OTPtextStyle: {
     fontSize: 15,
@@ -193,7 +217,7 @@ const styles = StyleSheet.create({
     fontSize: 18,
     textAlign: "center",
     letterSpacing: 1,
-    fontWeight: '600',
+    fontWeight: "600",
     marginTop: 100,
   },
 });
