@@ -4,6 +4,10 @@ import MainHome from '../../components/Home/MainHome';
 import GoldLive from '../../components/Home/GoldLive';
 import GoldRateNotification from '../../components/Home/GoldRateNotification';
 import UserLocation from '../../components/Home/UserLocation';
+import News from '../../components/Home/News';
+import Aboutcomp from '../../components/Home/Aboutcomp';
+import OurServices from '../../components/Home/OurServices';
+import OurCollections from '../../components/Home/OurCollections';
 
 const Stack = createStackNavigator();
 
@@ -13,6 +17,10 @@ const Home = () => (
     <Stack.Screen name="GoldLive" component={GoldLive} />
     <Stack.Screen name="GoldRateNotification" component={GoldRateNotification} />
     <Stack.Screen name="UserLocation" component={UserLocation}/>
+    <Stack.Screen name="News" component={News} />
+    <Stack.Screen name="Aboutcomp" component={Aboutcomp} />
+    <Stack.Screen name="OurServices" component={OurServices} />
+    <Stack.Screen name="OurCollections" component={OurCollections} />
   </Stack.Navigator>
 );
 
