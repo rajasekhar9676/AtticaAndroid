@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { StyleSheet, Text, View, ImageBackground, Pressable, Picker } from 'react-native';
+import { StyleSheet, Text, View, ImageBackground, Pressable } from 'react-native';
+import { Picker } from '@react-native-picker/picker';
 import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
 import * as Animatable from 'react-native-animatable';
 import AntDesign from '@expo/vector-icons/AntDesign';

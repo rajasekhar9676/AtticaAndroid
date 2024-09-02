@@ -1,10 +1,24 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { StyleSheet, Text, View, Image, Pressable, ImageBackground } from 'react-native';
 import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
 import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
 import * as Animatable from 'react-native-animatable';
+import { InteractionManager } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
 
 const MainService = ({ navigation }) => {
+const [isLoading,setIsLoading]=useState('')
+
+
+  const handleSeeLiveGoldRate = () => {
+    if (!isLoading) {
+      InteractionManager.runAfterInteractions(() => {
+        setIsLoading(true);
+        navigation.navigate('GoldRateNotification');
+      });
+    }
+  }; 
+  
   return (
     <ImageBackground
       source={require('../../assets/images/back6.png')}
@@ -46,7 +60,7 @@ const MainService = ({ navigation }) => {
 
       {/* Button Container */}
       <View style={styles.Alertbutton}>
-        <Pressable style={styles.alert} onPress={() => navigation.navigate('GoldRateNotification')}>
+        <Pressable style={styles.alert} onPress={handleSeeLiveGoldRate}>
           <Text style={styles.alertText}>SET ALERT</Text>
         </Pressable>
       </View>

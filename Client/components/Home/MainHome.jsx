@@ -9,6 +9,10 @@ import { BASE_URL } from '../../constants';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as Location from 'expo-location';
 import { InteractionManager } from 'react-native';
+import { throttle } from 'lodash';
+import GoldLive from './GoldLive'
+import GoldRateNotification from './GoldRateNotification';
+import { useAuth } from '../contexts/AuthContext';
 import Aboutcomp from './Aboutcomp';
 import OurServices from './OurServices';
 
@@ -26,6 +30,8 @@ const Home = ({ navigation }) => {
   const [loading, setLoading] = useState(false);
   const [location, setLocation] = useState({})
   const screenWidth = Dimensions.get('window').width;
+  const [isLoading,setIsLoading]=useState('')
+  const { isAuthenticated } = useAuth();
   const [isLoading, setIsLoading] = useState('')
 
   const storeLocation = async () => {
@@ -169,10 +175,16 @@ const Home = ({ navigation }) => {
 
 
   const handleSeeLiveGoldRate = () => {
-    if (!isLoading) {
+    if (!isAuthenticated) {
+      navigation.navigate('UserLocation')
+    }
+    else{
       InteractionManager.runAfterInteractions(() => {
-        setIsLoading(true);
+        // setIsLoading(true);
         navigation.navigate('GoldLive');
+    
+     
+
       });
     }
   };
@@ -484,6 +496,9 @@ const Home = ({ navigation }) => {
           </View>
         </View>
       </Modal>
+
+
+      
     </View>
   );
 };
