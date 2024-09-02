@@ -15,6 +15,8 @@ import GoldRateNotification from './GoldRateNotification';
 import { useAuth } from '../contexts/AuthContext';
 import Aboutcomp from './Aboutcomp';
 import OurServices from './OurServices';
+import OurCollections from './OurCollections';
+import News from './News';
 
 const Home = ({ navigation }) => {
   const [goldPrice, setGoldPrice] = useState(null);
@@ -30,7 +32,6 @@ const Home = ({ navigation }) => {
   const [loading, setLoading] = useState(false);
   const [location, setLocation] = useState({})
   const screenWidth = Dimensions.get('window').width;
-  const [isLoading,setIsLoading]=useState('')
   const { isAuthenticated } = useAuth();
   const [isLoading, setIsLoading] = useState('')
 
@@ -93,7 +94,6 @@ const Home = ({ navigation }) => {
   };
 
 
-
   const images = [
     require('../../assets/images/slider1.png'),
     require('../../assets/images/slider2.png'),
@@ -102,37 +102,7 @@ const Home = ({ navigation }) => {
     require('../../assets/images/slider4.png'),
   ];
 
-  useEffect(() => {
-    const fetchCategories = async () => {
-      setLoading(true);
-      try {
-        const response = await axios.get(`${BASE_URL}/api/products/getproducts`);
-        if (Array.isArray(response.data)) {
-          const uniqueCategories = {};
-          response.data.forEach(item => {
-            if (item.category) {
-              if (!uniqueCategories[item.category]) {
-                uniqueCategories[item.category] = item;
-              }
-            }
-          });
-          setCategories(Object.values(uniqueCategories));
-        } else {
-          Alert.alert('Error', 'Unexpected data format received.');
-        }
-      } catch (error) {
-        Alert.alert('Error', error.response?.data?.message || 'Failed to fetch categories');
-      } finally {
-        setLoading(false);
-      }
-    };
 
-    fetchCategories();
-  }, []);
-
-  const handleCategoryPress = (category) => {
-    navigation.navigate('CategoryPage', { category });
-  };
 
   const handleNext = () => {
     const nextIndex = currentIndex === images.length - 1 ? 0 : currentIndex + 1;
@@ -176,29 +146,17 @@ const Home = ({ navigation }) => {
 
   const handleSeeLiveGoldRate = () => {
     if (!isAuthenticated) {
-      navigation.navigate('UserLocation')
+      navigation.navigate('PhoneAuthScreen')
     }
-    else{
+    else {
       InteractionManager.runAfterInteractions(() => {
         // setIsLoading(true);
         navigation.navigate('GoldLive');
-    
-     
-
       });
     }
   };
 
 
-  const renderCategoryItem = ({ item }) => (
-    <View style={styles.categoryContainer}>
-      <TouchableOpacity style={styles.categoryItem} onPress={() => handleCategoryPress(item.category)}>
-        <Image source={{ uri: item.image ? (item.image.startsWith('http') ? item.image : `${BASE_URL}/uploads/${item.image}`) : null }} style={styles.categoryImage} />
-        <Text style={styles.categoryName}>{item.category}</Text>
-        <Text style={styles.categoryPrice}>Starts at ₹{item.price}</Text>
-      </TouchableOpacity>
-    </View>
-  );
 
   return (
     <View style={styles.container}>
@@ -264,154 +222,26 @@ const Home = ({ navigation }) => {
 
             {/* Our Services */}
             <View style={styles.contentContainer}>
-              <OurServices/>
-      
+              <OurServices />
+
 
 
               {/* OUR COLLECTIONS */}
-              {/* <View style={styles.section}>
-                <Text style={styles.sectionTitle}>Our Collection</Text>
-                {loading ? (
-                  <ActivityIndicator size="large" color="#0000ff" />
-                ) : (
-                  <FlatList
-                    data={categories}
-                    renderItem={renderCategoryItem}
-                    keyExtractor={item => (item.id ? item.id.toString() : Math.random().toString())}
-                    numColumns={2}
-                    style={styles.collection}
-                  />
-                )}
-              </View> */}
+              {/* <OurCollections /> */}
+
 
 
               {/* NEWS */}
-              <View style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', backgroundColor: '#fcecd4', }}>
-                <Text style={{ fontSize: 25, fontFamily: 'bold', color: "#8d181a", marginVertical: 5, marginTop: 10 }}>Latest Updates</Text>
-                <View style={{ flexDirection: 'row', justifyContent: 'space-around', marginVertical: 20, }}>
-                  {/* News1 */}
-                  <TouchableOpacity style={{
-                    width: 'auto', height: 'auto', alignItems: 'center', borderRadius: 10, borderWidth: 1, borderColor: '#8d181a', marginHorizontal: 10,
-                  }} onPress={() => navigation.navigate('News')}>
-                    <View style={{ display: 'flex', justifyContent: 'space-around', alignItems: 'center', flexDirection: 'row', flex: 1, }}>
-                      <View style={{ justifyContent: 'center', paddingHorizontal: 5, width: '50%', }}>
-                        <Text style={{
-                          color: '#8d181a',
-                          flexWrap: 'wrap',
-                          paddingVertical: 5,
-                          fontWeight: '600',
-                          fontSize: 20,
-                          fontFamily: 'bold',
-                        }}>Heading</Text>
-
-                        <Text style={{
-                          color: '#8d181a',
-                          flexWrap: 'wrap',
-                          paddingVertical: 5,
-                          fontWeight: '300',
-                          fontSize: 20,
-                          fontFamily: 'bold',
-                        }}>News about attica company</Text>
-                        <Text style={{
-                          color: '#8d181a',
-                          flexWrap: 'wrap',
-                          paddingVertical: 5,
-                          fontWeight: '100',
-                          fontSize: 20,
-                          textDecorationLine: 'underline',
-                          fontFamily: 'bold',
-                        }}>Read more..</Text>
-                      </View>
-                      <View style={{ display: 'flex', justifyContent: 'space-around', alignItems: 'center', flexDirection: 'row', flex: 1, width: '50%', }}>
-                        <Image source={require('../../assets/images/guaranteed.png')} style={{
-                          width: 50,
-                          height: 50,
-                        }} />
-                      </View>
-                    </View>
-                  </TouchableOpacity>
-
-                  {/* News2 */}
-                  <TouchableOpacity style={{
-                    width: 'auto', height: 'auto', alignItems: 'center', borderRadius: 10, borderWidth: 1, borderColor: '#8d181a', marginHorizontal: 10,
-                  }} onPress={() => navigation.navigate('GoldLoan')}>
-                    <View style={{ display: 'flex', justifyContent: 'space-around', alignItems: 'center', flexDirection: 'row', flex: 1, }}>
-                      <View style={{ justifyContent: 'center', paddingHorizontal: 5, width: '50%', }}>
-                        <Text style={{
-                          color: '#8d181a',
-                          flexWrap: 'wrap',
-                          paddingVertical: 5,
-                          fontWeight: '600',
-                          fontSize: 20,
-                          fontFamily: 'bold',
-                        }}>Heading</Text>
-
-                        <Text style={{
-                          color: '#8d181a',
-                          flexWrap: 'wrap',
-                          paddingVertical: 5,
-                          fontWeight: '300',
-                          fontSize: 20,
-                          fontFamily: 'bold',
-                        }}>News about attica company</Text>
-                        <Text style={{
-                          color: '#8d181a',
-                          flexWrap: 'wrap',
-                          paddingVertical: 5,
-                          fontWeight: '100',
-                          fontSize: 20,
-                          textDecorationLine: 'underline',
-                          fontFamily: 'bold',
-                        }}>Read more..</Text>
-                      </View>
-                      <View style={{ display: 'flex', justifyContent: 'space-around', alignItems: 'center', flexDirection: 'row', flex: 1, width: '50%', }}>
-                        <Image source={require('../../assets/images/guaranteed.png')} style={{
-                          width: 50,
-                          height: 50,
-                        }} />
-                      </View>
-                    </View>
-                  </TouchableOpacity>
-                </View>
-              </View>
+              <News />
 
 
-              {/* Invest in Silver */}
-              <View style={styles.investContainer}>
-                <Text style={styles.sectionTitle}>Invest in Silver</Text>
-                <Text style={styles.investDetails}>Explore the benefits of investing in silver.</Text>
-                <TouchableOpacity style={styles.investButton}>
-                  <Text style={styles.investButtonText}>Invest Now</Text>
-                </TouchableOpacity>
-              </View>
+
+
+
             </View>
           </>
         }
       />
-
-
-      {/* Modals */}
-      {/* <Modal
-        animationType="slide"
-        transparent={true}
-        visible={modalVisible}
-        onRequestClose={() => setModalVisible(!modalVisible)}
-      >
-        <View style={styles.modalContainer}>
-          <View style={styles.modalContent}>
-            <Text style={styles.modalTitle}>Location</Text>
-            <TouchableOpacity onPress={autoDetectLocation} style={styles.modalButton}>
-              <Text style={styles.modalButtonText}>Auto-detect Location</Text>
-            </TouchableOpacity>
-            <TouchableOpacity onPress={handleManualLocation} style={styles.modalButton}>
-              <Text style={styles.modalButtonText}>Select Location Manually</Text>
-            </TouchableOpacity>
-            <Pressable onPress={() => setModalVisible(false)} style={styles.modalCloseButton}>
-              <AntDesign name="closecircleo" size={24} color="black" />
-            </Pressable>
-          </View>
-        </View>
-      </Modal> */}
 
 
       <Modal
@@ -498,7 +328,7 @@ const Home = ({ navigation }) => {
       </Modal>
 
 
-      
+
     </View>
   );
 };
@@ -616,114 +446,21 @@ const styles = StyleSheet.create({
     left: 10,
     zIndex: 1,
   },
+  scrollView: {
+    flex: 1,
+  },
+
+  image: {
+    width: Dimensions.get('window').width,
+    height: 200,
+  },
   arrowRight: {
     position: 'absolute',
     top: '50%',
     right: 10,
     zIndex: 1,
   },
-  //  {/* Content Below Sliding */}
-  constantImage: {
-    width: '100%',
-    height: 200,
-    marginTop: 10,
-  },
-
-  // {/* About Company */}
-  About: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    color: '#8d181a',
-    marginVertical: 10,
-    textAlign: 'center',
-  },
-  content: {
-    fontSize: 16,
-    color: 'black',
-    marginVertical: 10,
-    marginHorizontal: 10,
-    textAlign: 'center',
-  },
-  //  {/* ATTICA ASSURE */}
-  assureContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    paddingVertical: 20,
-  },
-  assureButton: {
-    width: 80,
-    alignItems: 'center',
-    borderRadius: 10,
-    borderWidth: 1,
-    borderColor: '#8d181a',
-    marginHorizontal: 10,
-  },
-  getloan: {
-    width: 50,
-    height: 50,
-    marginVertical: 10,
-  },
-  loan: {
-    width: 150,
-    height: 150,
-    marginVertical: 10,
-  },
-  buttonText: {
-    marginTop: 5,
-    color: '#8d181a',
-    marginBottom: 5,
-    marginHorizontal: 10,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-
-  scrollView: {
-    flex: 1,
-  },
-  image: {
-    width: Dimensions.get('window').width,
-    height: 200,
-  },
-  categorySection: {
-    padding: 15,
-  },
-  categoryHeading: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    color: '#8d181a',
-    marginBottom: 10,
-  },
-  categoryContainer: {
-    marginRight: 10,
-  },
-  categoryItem: {
-    backgroundColor: '#f5f5f5',
-    borderRadius: 10,
-    overflow: 'hidden',
-    width: 150,
-    alignItems: 'center',
-    padding: 10,
-  },
-  categoryImage: {
-    width: 130,
-    height: 100,
-    borderRadius: 5,
-  },
-  categoryName: {
-    fontSize: 16,
-    fontWeight: 'bold',
-    marginVertical: 5,
-  },
-  categoryPrice: {
-    color: '#8d181a',
-  },
-
-
-  constantImage: {
-    width: '100%',
-    height: 200,
-    marginTop: 10,
-  },
+  // MODAL
   modalContainer: {
     flex: 1,
     justifyContent: 'center',
@@ -758,6 +495,59 @@ const styles = StyleSheet.create({
     top: 10,
     right: 10,
   },
+
+
+
+
+
+
+
+
+
+
+  //  {/* ATTICA ASSURE */}
+  assureContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    paddingVertical: 20,
+  },
+  assureButton: {
+    width: 80,
+    alignItems: 'center',
+    borderRadius: 10,
+    borderWidth: 1,
+    borderColor: '#8d181a',
+    marginHorizontal: 10,
+  },
+  getloan: {
+    width: 50,
+    height: 50,
+    marginVertical: 10,
+  },
+  loan: {
+    width: 150,
+    height: 150,
+    marginVertical: 10,
+  },
+  buttonText: {
+    marginTop: 5,
+    color: '#8d181a',
+    marginBottom: 5,
+    marginHorizontal: 10,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+
+
+  image: {
+    width: Dimensions.get('window').width,
+    height: 200,
+  },
+
+
+
+
+
   input: {
     borderBottomWidth: 1,
     borderBottomColor: '#ddd',
