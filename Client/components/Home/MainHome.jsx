@@ -4,16 +4,13 @@ import axios from 'axios';
 import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
 import AntDesign from '@expo/vector-icons/AntDesign';
 import EvilIcons from '@expo/vector-icons/EvilIcons';
-import SimpleLineIcons from '@expo/vector-icons/SimpleLineIcons';
 import Entypo from '@expo/vector-icons/Entypo';
-import { useNavigation } from '@react-navigation/native';
 import { BASE_URL } from '../../constants';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as Location from 'expo-location';
 import { InteractionManager } from 'react-native';
-import { throttle } from 'lodash';
-import GoldLive from './GoldLive'
-import GoldRateNotification from './GoldRateNotification';
+import Aboutcomp from './Aboutcomp';
+import OurServices from './OurServices';
 
 const Home = ({ navigation }) => {
   const [goldPrice, setGoldPrice] = useState(null);
@@ -29,7 +26,7 @@ const Home = ({ navigation }) => {
   const [loading, setLoading] = useState(false);
   const [location, setLocation] = useState({})
   const screenWidth = Dimensions.get('window').width;
-  const [isLoading,setIsLoading]=useState('')
+  const [isLoading, setIsLoading] = useState('')
 
   const storeLocation = async () => {
     try {
@@ -60,24 +57,24 @@ const Home = ({ navigation }) => {
         Alert.alert('Permission denied', 'Location permission is required');
         return;
       }
-      
+
       // Get the current location
       const location = await Location.getCurrentPositionAsync({});
       const { latitude, longitude } = location.coords;
-  
+
       // Perform reverse geocoding to get the address
       const reverseGeocode = await Location.reverseGeocodeAsync({
         latitude,
         longitude,
       });
-  
+
       if (reverseGeocode.length > 0) {
         const address = reverseGeocode[0]; // Get the first result
         const formattedAddress = `${address.name}, ${address.street}, ${address.city}, ${address.region}, ${address.postalCode}, ${address.country}`;
-  
+
         // Update location with latitude and longitude
         updateLocation({ latitude, longitude });
-  
+
         // Update the state with the formatted address
         setCurrentLocation(formattedAddress);
       } else {
@@ -89,7 +86,7 @@ const Home = ({ navigation }) => {
     }
   };
 
-  
+
 
   const images = [
     require('../../assets/images/slider1.png'),
@@ -178,8 +175,8 @@ const Home = ({ navigation }) => {
         navigation.navigate('GoldLive');
       });
     }
-  }; 
-  
+  };
+
 
   const renderCategoryItem = ({ item }) => (
     <View style={styles.categoryContainer}>
@@ -193,6 +190,7 @@ const Home = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
+
       {/* Header */}
       <View style={styles.headerContainer}>
         <FontAwesome6 name="bars" size={24} color="white" />
@@ -201,132 +199,183 @@ const Home = ({ navigation }) => {
       </View>
 
       <FlatList
-  contentContainerStyle={styles.scrollableContent}
-  ListHeaderComponent={
-    <>
-      {/* Fixed Location and Rate */}
-      <View style={styles.locationRateContainer}>
-        <TouchableOpacity style={styles.rateSection} onPress={handleSeeLiveGoldRate}>
-          <Text style={styles.rateText}>See Live Gold Rate</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.locationSection} onPress={() => setModalVisible(true)}>
-          <EvilIcons name="location" size={24} color="#8d181a" />
-          <Text style={styles.locationText}><Text style={{ fontWeight: 'bold' }}>You are in </Text>{'\n'}{currentLocation}</Text>
-        </TouchableOpacity>
-      </View>
+        contentContainerStyle={styles.scrollableContent}
+        ListHeaderComponent={
+          <>
 
-      {/* Sliding Content */}
-      <View style={styles.sliderContainer}>
-        <Text style={{ fontSize: 20, color: "#8d181a", marginVertical: 5, marginHorizontal: 10 }}>TRENDING <Text style={{ fontWeight: 'bold' }}>NOW</Text></Text>
-        <TouchableOpacity style={styles.arrowLeft} onPress={handlePrev}>
-          <Entypo name="chevron-thin-left" size={24} color="white" />
-        </TouchableOpacity>
-        <ScrollView
-          ref={scrollViewRef}
-          horizontal
-          pagingEnabled
-          showsHorizontalScrollIndicator={false}
-          style={styles.scrollView}
-          onScroll={(event) => {
-            const index = Math.round(event.nativeEvent.contentOffset.x / screenWidth);
-            setCurrentIndex(index);
-          }}
-        >
-          {images.map((image, index) => (
-            <Image key={index} source={image} style={styles.image} resizeMode="cover" />
-          ))}
-        </ScrollView>
-        <TouchableOpacity style={styles.arrowRight} onPress={handleNext}>
-          <Entypo name="chevron-thin-right" size={24} color="white" />
-        </TouchableOpacity>
-      </View>
 
-      {/* Content Below Sliding */}
-      <Image source={require('../../assets/images/constants.png')} style={styles.constantImage} />
+            {/* Location and Rate */}
+            <View style={styles.locationRateContainer}>
+              <TouchableOpacity style={styles.rateSection} onPress={handleSeeLiveGoldRate}>
+                <Text style={styles.rateText}>See Live Gold Rate</Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={styles.locationSection} onPress={() => setModalVisible(true)}>
+                <EvilIcons name="location" size={24} color="#8d181a" />
+                <Text style={styles.locationText}><Text style={{ fontWeight: 'bold' }}>You are in </Text>{'\n'}{currentLocation}</Text>
+              </TouchableOpacity>
+            </View>
 
-      {/* About Company */}
-      <View>
-        <Text style={styles.About}>Attica Gold Company</Text>
-        <View style={styles.content}>
-          <Text>
-            The Attica gold company is the pioneer and the No.1 Gold Buying Company. We buy all types of gold coins, jewellery, and biscuits and lend money to release pledged gold from financial institutes/pawns and brokers/NBFCs. We offer instant spot cash for gold and silver. Selling gold at Attica gold company is fast, simple and easy.
-          </Text>
-        </View>
-      </View>
 
-      {/* ATTICA ASSURE */}
-      <View style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', backgroundColor: '#fcecd4' }}>
-        <Text style={{ fontSize: 15, color: "#8d181a", marginVertical: 5, marginTop: 10 }}>ATTICA</Text>
-        <Text style={{ fontSize: 25, color: "black", marginBottom: 20 }}>ASSURE</Text>
-        <View style={styles.assureContainer}>
-          <TouchableOpacity style={styles.assureButton} onPress={() => navigation.navigate('GoldLoan')}>
-            <Image source={require('../../assets/images/guaranteed.png')} style={styles.getloan} />
-            <Text style={styles.buttonText}>Guaranteed</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.assureButton} onPress={() => navigation.navigate('GoldLoan')}>
-            <Image source={require('../../assets/images/softwareverification.png')} style={styles.getloan} />
-            <Text style={styles.buttonText}>Software Verification</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.assureButton} onPress={() => navigation.navigate('GoldLoan')}>
-            <Image source={require('../../assets/images/anyaliticaltesting.png')} style={styles.getloan} />
-            <Text style={styles.buttonText}>Best Analytical Testing</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.assureButton} onPress={() => navigation.navigate('GoldLoan')}>
-            <Image source={require('../../assets/images/banktransfer.png')} style={styles.getloan} />
-            <Text style={styles.buttonText}>Instant Bank Transfer</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.assureButton} onPress={() => navigation.navigate('GoldLoan')}>
-            <Image source={require('../../assets/images/certified.png')} style={styles.getloan} />
-            <Text style={styles.buttonText}>Tested & Certified</Text>
-          </TouchableOpacity>
-        </View>
-      </View>
 
-      {/* Loan Services */}
-      <View style={styles.contentContainer}>
-        <View style={styles.getStartedContainer}>
-          <TouchableOpacity
-            style={styles.getStartedButton}
-            onPress={() => navigation.navigate('GoldLoan')}>
-            <Text style={styles.buttonText}>Get gold loan at lowest interest rates</Text>
-            <Text style={styles.getstarted}>Get Started</Text>
-            <Image source={require('../../assets/images/getloan.png')} style={styles.loan} />
-          </TouchableOpacity>
+            {/* TRANDING NOW */}
+            <View style={styles.sliderContainer}>
+              <Text style={{ fontSize: 20, color: "#8d181a", marginVertical: 5, marginHorizontal: 10 }}>TRENDING <Text style={{ fontWeight: 'bold' }}>NOW</Text></Text>
+              <TouchableOpacity style={styles.arrowLeft} onPress={handlePrev}>
+                <Entypo name="chevron-thin-left" size={24} color="white" />
+              </TouchableOpacity>
+              <ScrollView
+                ref={scrollViewRef}
+                horizontal
+                pagingEnabled
+                showsHorizontalScrollIndicator={false}
+                style={styles.scrollView}
+                onScroll={(event) => {
+                  const index = Math.round(event.nativeEvent.contentOffset.x / screenWidth);
+                  setCurrentIndex(index);
+                }} >
+                {images.map((image, index) => (
+                  <Image key={index} source={image} style={styles.image} resizeMode="cover" />
+                ))}
+              </ScrollView>
+              <TouchableOpacity style={styles.arrowRight} onPress={handleNext}>
+                <Entypo name="chevron-thin-right" size={24} color="white" />
+              </TouchableOpacity>
+            </View>
 
-          <TouchableOpacity style={styles.getStartedButton} onPress={() => navigation.navigate('GoldLoan')}>
-            <Text style={styles.buttonText}>Sell your gold at the best possible price</Text>
-            <Text style={styles.getstarted}>Get Started</Text>
-            <Image source={require('../../assets/images/sellgold.png')} style={styles.loan} />
-          </TouchableOpacity>
-        </View>
 
-        <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Our Collection</Text>
-          {loading ? (
-            <ActivityIndicator size="large" color="#0000ff" />
-          ) : (
-            <FlatList
-              data={categories}
-              renderItem={renderCategoryItem}
-              keyExtractor={item => (item.id ? item.id.toString() : Math.random().toString())}
-              numColumns={2}
-              style={styles.collection}
-            />
-          )}
-        </View>
 
-        {/* Invest in Silver */}
-        <View style={styles.investContainer}>
-          <Text style={styles.sectionTitle}>Invest in Silver</Text>
-          <Text style={styles.investDetails}>Explore the benefits of investing in silver.</Text>
-          <TouchableOpacity style={styles.investButton}>
-            <Text style={styles.investButtonText}>Invest Now</Text>
-          </TouchableOpacity>
-        </View>
-      </View>
-    </>
-  }
-/>
+
+            {/* ABOUT COMPANY */}
+            <Aboutcomp />
+
+
+
+            {/* Our Services */}
+            <View style={styles.contentContainer}>
+              <OurServices/>
+      
+
+
+              {/* OUR COLLECTIONS */}
+              {/* <View style={styles.section}>
+                <Text style={styles.sectionTitle}>Our Collection</Text>
+                {loading ? (
+                  <ActivityIndicator size="large" color="#0000ff" />
+                ) : (
+                  <FlatList
+                    data={categories}
+                    renderItem={renderCategoryItem}
+                    keyExtractor={item => (item.id ? item.id.toString() : Math.random().toString())}
+                    numColumns={2}
+                    style={styles.collection}
+                  />
+                )}
+              </View> */}
+
+
+              {/* NEWS */}
+              <View style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', backgroundColor: '#fcecd4', }}>
+                <Text style={{ fontSize: 25, fontFamily: 'bold', color: "#8d181a", marginVertical: 5, marginTop: 10 }}>Latest Updates</Text>
+                <View style={{ flexDirection: 'row', justifyContent: 'space-around', marginVertical: 20, }}>
+                  {/* News1 */}
+                  <TouchableOpacity style={{
+                    width: 'auto', height: 'auto', alignItems: 'center', borderRadius: 10, borderWidth: 1, borderColor: '#8d181a', marginHorizontal: 10,
+                  }} onPress={() => navigation.navigate('News')}>
+                    <View style={{ display: 'flex', justifyContent: 'space-around', alignItems: 'center', flexDirection: 'row', flex: 1, }}>
+                      <View style={{ justifyContent: 'center', paddingHorizontal: 5, width: '50%', }}>
+                        <Text style={{
+                          color: '#8d181a',
+                          flexWrap: 'wrap',
+                          paddingVertical: 5,
+                          fontWeight: '600',
+                          fontSize: 20,
+                          fontFamily: 'bold',
+                        }}>Heading</Text>
+
+                        <Text style={{
+                          color: '#8d181a',
+                          flexWrap: 'wrap',
+                          paddingVertical: 5,
+                          fontWeight: '300',
+                          fontSize: 20,
+                          fontFamily: 'bold',
+                        }}>News about attica company</Text>
+                        <Text style={{
+                          color: '#8d181a',
+                          flexWrap: 'wrap',
+                          paddingVertical: 5,
+                          fontWeight: '100',
+                          fontSize: 20,
+                          textDecorationLine: 'underline',
+                          fontFamily: 'bold',
+                        }}>Read more..</Text>
+                      </View>
+                      <View style={{ display: 'flex', justifyContent: 'space-around', alignItems: 'center', flexDirection: 'row', flex: 1, width: '50%', }}>
+                        <Image source={require('../../assets/images/guaranteed.png')} style={{
+                          width: 50,
+                          height: 50,
+                        }} />
+                      </View>
+                    </View>
+                  </TouchableOpacity>
+
+                  {/* News2 */}
+                  <TouchableOpacity style={{
+                    width: 'auto', height: 'auto', alignItems: 'center', borderRadius: 10, borderWidth: 1, borderColor: '#8d181a', marginHorizontal: 10,
+                  }} onPress={() => navigation.navigate('GoldLoan')}>
+                    <View style={{ display: 'flex', justifyContent: 'space-around', alignItems: 'center', flexDirection: 'row', flex: 1, }}>
+                      <View style={{ justifyContent: 'center', paddingHorizontal: 5, width: '50%', }}>
+                        <Text style={{
+                          color: '#8d181a',
+                          flexWrap: 'wrap',
+                          paddingVertical: 5,
+                          fontWeight: '600',
+                          fontSize: 20,
+                          fontFamily: 'bold',
+                        }}>Heading</Text>
+
+                        <Text style={{
+                          color: '#8d181a',
+                          flexWrap: 'wrap',
+                          paddingVertical: 5,
+                          fontWeight: '300',
+                          fontSize: 20,
+                          fontFamily: 'bold',
+                        }}>News about attica company</Text>
+                        <Text style={{
+                          color: '#8d181a',
+                          flexWrap: 'wrap',
+                          paddingVertical: 5,
+                          fontWeight: '100',
+                          fontSize: 20,
+                          textDecorationLine: 'underline',
+                          fontFamily: 'bold',
+                        }}>Read more..</Text>
+                      </View>
+                      <View style={{ display: 'flex', justifyContent: 'space-around', alignItems: 'center', flexDirection: 'row', flex: 1, width: '50%', }}>
+                        <Image source={require('../../assets/images/guaranteed.png')} style={{
+                          width: 50,
+                          height: 50,
+                        }} />
+                      </View>
+                    </View>
+                  </TouchableOpacity>
+                </View>
+              </View>
+
+
+              {/* Invest in Silver */}
+              <View style={styles.investContainer}>
+                <Text style={styles.sectionTitle}>Invest in Silver</Text>
+                <Text style={styles.investDetails}>Explore the benefits of investing in silver.</Text>
+                <TouchableOpacity style={styles.investButton}>
+                  <Text style={styles.investButtonText}>Invest Now</Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+          </>
+        }
+      />
 
 
       {/* Modals */}
@@ -353,27 +402,29 @@ const Home = ({ navigation }) => {
       </Modal> */}
 
 
-<Modal
-  animationType="slide"
-  transparent={true}
-  visible={modalVisible}
-  onRequestClose={() => setModalVisible(!modalVisible)}
->
-  <View style={styles.modalContainer}>
-    <View style={styles.modalContent}>
-      <Text style={styles.modalTitle}>Location</Text>
-      <TouchableOpacity onPress={autoDetectLocation} style={styles.modalButton}>
-        <Text style={styles.modalButtonText}>Auto-detect Location</Text>
-      </TouchableOpacity>
-      <TouchableOpacity onPress={handleManualLocation} style={styles.modalButton}>
-        <Text style={styles.modalButtonText}>Select Location Manually</Text>
-      </TouchableOpacity>
-      <Pressable onPress={() => setModalVisible(false)} style={styles.modalCloseButton}>
-        <AntDesign name="closecircleo" size={24} color="black" />
-      </Pressable>
-    </View>
-  </View>
-</Modal>
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={modalVisible}
+        onRequestClose={() => setModalVisible(!modalVisible)}
+      >
+        <View style={styles.modalContainer}>
+          <View style={styles.modalContent}>
+            <Text style={styles.modalTitle}>Location</Text>
+            <TouchableOpacity onPress={autoDetectLocation} style={styles.modalButton}>
+              <Text style={styles.modalButtonText}>Auto-detect Location</Text>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={handleManualLocation} style={styles.modalButton}>
+              <Text style={styles.modalButtonText}>Select Location Manually</Text>
+            </TouchableOpacity>
+            <Pressable onPress={() => setModalVisible(false)} style={styles.modalCloseButton}>
+              <AntDesign name="closecircleo" size={24} color="black" />
+            </Pressable>
+          </View>
+        </View>
+      </Modal>
+
+
 
 
       <Modal
@@ -410,8 +461,8 @@ const Home = ({ navigation }) => {
               style={styles.input}
               placeholder="Enter location"
             /> */}
-             <Text style={styles.modalTitle}>Enter Location</Text>
-                <TextInput
+            <Text style={styles.modalTitle}>Enter Location</Text>
+            <TextInput
               value={manualLocation}
               onChangeText={setManualLocation}
               style={styles.input}
@@ -423,13 +474,13 @@ const Home = ({ navigation }) => {
             <Pressable onPress={() => setManualLocationModalVisible(false)} style={styles.modalCloseButton}>
               <AntDesign name="closecircleo" size={24} color="black" />
             </Pressable> */}
-            
+
             <TouchableOpacity onPress={handleConfirmManualLocation} style={styles.modalButton}>
-            <Text style={styles.modalButtonText}>Confirm</Text>
-          </TouchableOpacity>
-          <Pressable onPress={() => setManualLocationModalVisible(false)} style={styles.modalCloseButton}>
-            <AntDesign name="closecircleo" size={24} color="black" />
-          </Pressable>
+              <Text style={styles.modalButtonText}>Confirm</Text>
+            </TouchableOpacity>
+            <Pressable onPress={() => setManualLocationModalVisible(false)} style={styles.modalCloseButton}>
+              <AntDesign name="closecircleo" size={24} color="black" />
+            </Pressable>
           </View>
         </View>
       </Modal>
@@ -505,16 +556,16 @@ const styles = StyleSheet.create({
     borderColor: '#8d181a',
     opacity: 1,
     borderWidth: 1,
-    marginVertical:10,
+    marginVertical: 10,
   },
   buttonText: {
     color: '#8d181a',
-    justifyContent:'center',
+    justifyContent: 'center',
     textAlign: 'center',
     flexWrap: 'wrap',
-    paddingHorizontal:5,
+    paddingHorizontal: 5,
   },
-    //  {/* Fixed Location and Rate */}
+  //  {/* Fixed Location and Rate */}
   locationRateContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -556,12 +607,13 @@ const styles = StyleSheet.create({
     right: 10,
     zIndex: 1,
   },
-      //  {/* Content Below Sliding */}
+  //  {/* Content Below Sliding */}
   constantImage: {
     width: '100%',
     height: 200,
     marginTop: 10,
   },
+
   // {/* About Company */}
   About: {
     fontSize: 20,
@@ -587,31 +639,30 @@ const styles = StyleSheet.create({
     width: 80,
     alignItems: 'center',
     borderRadius: 10,
-    borderWidth:1,
+    borderWidth: 1,
     borderColor: '#8d181a',
-    marginHorizontal:10,
- 
+    marginHorizontal: 10,
   },
   getloan: {
     width: 50,
     height: 50,
-    marginVertical: 10, 
+    marginVertical: 10,
   },
-loan: {
+  loan: {
     width: 150,
     height: 150,
-    marginVertical: 10, 
+    marginVertical: 10,
   },
   buttonText: {
     marginTop: 5,
     color: '#8d181a',
-    marginBottom:5,
-    marginHorizontal:10,
-    justifyContent:'center',
-    alignItems:'center',
+    marginBottom: 5,
+    marginHorizontal: 10,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 
-scrollView: {
+  scrollView: {
     flex: 1,
   },
   image: {
@@ -651,8 +702,8 @@ scrollView: {
   categoryPrice: {
     color: '#8d181a',
   },
- 
-  
+
+
   constantImage: {
     width: '100%',
     height: 200,
