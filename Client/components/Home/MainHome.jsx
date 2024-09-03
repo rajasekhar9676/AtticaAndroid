@@ -146,7 +146,7 @@ const Home = ({ navigation }) => {
 
   const handleSeeLiveGoldRate = () => {
     if (!isAuthenticated) {
-      navigation.navigate('PhoneAuthScreen')
+      navigation.navigate('GoldLive')
     }
     else {
       InteractionManager.runAfterInteractions(() => {

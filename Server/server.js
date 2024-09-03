@@ -7,6 +7,8 @@ require('dotenv').config(); // Load environment variables
 const cors = require('cors');
 const branchRoutes = require('./routes/branchRoutes');
 const productRoutes=require('./routes/productRoutes')
+const goldRateRoutes = require('./routes/goldRateRoutes');
+const newsRoutes=require('./routes/newsRoutes')
 
 const app = express();
 app.get('/', (req, res) => {
@@ -33,6 +35,8 @@ app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 app.use('/api/users', userRoutes);
 app.use('/api/branches', branchRoutes); 
 app.use('/api/products',productRoutes)
+app.use('/api/goldRates', goldRateRoutes);
+app.use('/api/news',newsRoutes)
 
 // Error handling middleware
 app.use(errorHandler);

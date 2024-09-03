@@ -1,14 +1,35 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { StyleSheet, Text, View, Image, Pressable, ImageBackground } from 'react-native';
 import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
 import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
 import * as Animatable from 'react-native-animatable';
 import { InteractionManager } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
+import { BASE_URL } from '../../constants';
+import axios from 'axios';
 
 const MainService = ({ navigation }) => {
 const [isLoading,setIsLoading]=useState('')
+const [goldRate,setGoldRate]=useState('')
 
+useEffect(() => {
+  const fetchGoldRate = async () => {
+    try {
+      const response = await axios.get(`${BASE_URL}api/goldRates/`);
+      const rates = response.data;
+
+      // Assuming rates is an array and each item has a 'date' property
+      if (Array.isArray(rates) && rates.length > 0) {
+        const sortedRates = rates.sort((a, b) => new Date(b.date) - new Date(a.date));
+        setGoldRate(sortedRates[0]);
+      }
+    } catch (error) {
+      console.log("Error", error);
+    }
+  };
+
+  fetchGoldRate();
+}, []);
 
   const handleSeeLiveGoldRate = () => {
     if (!isLoading) {
@@ -46,15 +67,15 @@ const [isLoading,setIsLoading]=useState('')
         <View style={styles.pressable}>
           <Text style={styles.Gram}>22KT PER GRAM</Text>
           <View style={styles.rate}>
-            <Text style={styles.pressableText}>INR: </Text>
+          <Text style={styles.pressableText}>INR: {goldRate.ratePerGram22k !== undefined ? goldRate.ratePerGram22k : 'loading...'}</Text>
           </View>
         </View>
         <View style={styles.pressable}>
           <Text style={styles.Gram}>24KT PER GRAM</Text>
           <View style={styles.rate}>
-            <Text style={styles.pressableText}>INR: </Text>
+            <Text style={styles.pressableText}> INR: {goldRate.ratePerGram24k !== undefined ? goldRate.ratePerGram24k : 'loading...'}</Text>
           </View>
-          <Text style={styles.Updated}>Last updated : </Text>
+          <Text style={styles.Updated}>Last updated: {goldRate.date ? new Date(goldRate.date).toLocaleString() : 'loading...'}</Text>
         </View>
       </Animatable.View>
 
