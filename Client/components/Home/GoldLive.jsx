@@ -15,7 +15,8 @@ const [goldRate,setGoldRate]=useState('')
 useEffect(() => {
   const fetchGoldRate = async () => {
     try {
-      const response = await axios.get(`${BASE_URL}api/goldRates/`);
+      const response = await axios.get(`${BASE_URL}/api/goldRates/`);
+      console.log("API Response:", response.data);
       const rates = response.data;
 
       // Assuming rates is an array and each item has a 'date' property

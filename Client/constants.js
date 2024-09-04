@@ -7,4 +7,4 @@
 
 // export const BASE_URL=' https://405c-103-139-158-138.ngrok-free.app'
 
-export const BASE_URL='https://cdf5-2401-4900-1f28-2f2d-7886-145f-9d7e-1b17.ngrok-free.app'
+export const BASE_URL='https://26d2-2401-4900-1f28-2f2d-148e-bd6f-a57e-f32a.ngrok-free.app'
