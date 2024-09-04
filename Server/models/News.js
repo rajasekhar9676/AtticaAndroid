@@ -11,14 +11,12 @@ const updateSchema = new mongoose.Schema({
     required: true,
   },
   url: {
-    type: String,
+    type: String, // Change from [String] to String
+  },
+  images: {
+    type: [String], // Array of image URLs or file paths
     required: true,
-  },
-  images: String,  // Array of image URLs
-  date: {
-    type: Date,
-    default: Date.now,
-  },
+  }
 });
 
 module.exports = mongoose.model('Update', updateSchema);
