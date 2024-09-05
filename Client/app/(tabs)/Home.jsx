@@ -8,6 +8,7 @@ import News from '../../components/Home/News';
 import Aboutcomp from '../../components/Home/Aboutcomp';
 import OurServices from '../../components/Home/OurServices';
 import OurCollections from '../../components/Home/OurCollections';
+import NewsMore from '../../components/Home/NewsMore';
 
 const Stack = createStackNavigator();
 
@@ -18,6 +19,7 @@ const Home = () => (
     <Stack.Screen name="GoldRateNotification" component={GoldRateNotification} />
     <Stack.Screen name="UserLocation" component={UserLocation}/>
     <Stack.Screen name="News" component={News} />
+    <Stack.Screen name="NewsMore" component={NewsMore} />
     <Stack.Screen name="Aboutcomp" component={Aboutcomp} />
     <Stack.Screen name="OurServices" component={OurServices} />
     <Stack.Screen name="OurCollections" component={OurCollections} />
