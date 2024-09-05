@@ -2,19 +2,17 @@ import { Text, View, TouchableOpacity, Image, Animated, FlatList, StyleSheet } f
 import React, { useRef, useEffect, useState } from 'react';
 import axios from 'axios';
 import { BASE_URL } from '../../constants';
+import { useNavigation } from '@react-navigation/native'; // Ensure you import from @react-navigation/native
 
 const ITEM_WIDTH = 240; // Adjusted width for a more balanced layout
 const SCROLL_INTERVAL = 3000; // Interval in milliseconds
 
-const News = ({ navigation }) => {
+const News = () => {
   const flatListRef = useRef(null);
   const [newsData, setNewsData] = useState([]); // State to store fetched news data
 
-  // Fetch updates from backend
+  const navigation = useNavigation(); // Use the useNavigation hook to access navigation
 
-
-
-  
   useEffect(() => {
     const fetchUpdates = async () => {
       try {
@@ -50,7 +48,7 @@ const News = ({ navigation }) => {
   const renderItem = ({ item }) => (
     <TouchableOpacity
       style={styles.newsContainer}
-      onPress={() => navigation.navigate(item.navigateTo || 'NewsMore')} // Handle navigation
+      onPress={() => navigation.navigate('NewsMore', { newsId: item._id })} // Navigate and pass the news ID
     >
       <View style={styles.newsContent}>
         <View style={styles.textContainer}>

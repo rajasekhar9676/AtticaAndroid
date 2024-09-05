@@ -1,5 +1,5 @@
-import { StyleSheet, Text, View, ScrollView, ImageBackground } from 'react-native';
 import React from 'react';
+import { StyleSheet, Text, View, ScrollView, ImageBackground, TouchableOpacity } from 'react-native';
 
 const SellGold = ({ navigation }) => {
     return (
@@ -35,17 +35,25 @@ const SellGold = ({ navigation }) => {
                 </Text>
                 <Text style={styles.importantNote}>
                     VISIT OUR NEARBY BRANCHES TO UNDERSTAND FEASIBILITY{'\n'}
-                    Call us now at 8880300300 and our Customer Support Executive will help you in fixing your doubts. We are available 24/7 to help you.
+                    Call us now and our Customer Support Executive will help you in fixing your doubts. We are available 24/7 to help you.
                 </Text>
                 <Text style={styles.highlight}>GET SPOT CASH</Text>
                 <Text onPress={() => navigation.navigate('ViewAllBranches')} style={styles.actionText}>View All Branches</Text>
+
+                {/* Connect to Customer Care Button */}
+                <TouchableOpacity 
+                    onPress={() => navigation.navigate('CustomerCare')}
+                    style={styles.button}
+                >
+                    <Text style={styles.buttonText}>Connect to Customer Care</Text>
+                </TouchableOpacity>
             </View>
 
             {/* Added Gold Purity and Weighing Section */}
             <View style={[styles.section, styles.lightSection]}>
                 <Text style={styles.subHeading}>Gold Purity and Weighing</Text>
                 <Text style={styles.content}>
-                    The next step in the process of evaluating the gold is through XRF technology with a German-made machine to check the gold purity. We ensure to offer the best value every time. At Attica Gold, we believe in complete transparency, so we check the purity and weight of gold jewellery right in front of the customer. Our German-made purity checking machine gives an accurate reading of your gold’s purity. 
+                    The next step in the process of evaluating the gold is through XRF technology with a German-made machine to check the gold purity. We ensure to offer the best value every time. At Attica Gold, we believe in complete transparency, so we check the purity and weight of gold jewellery right in front of the customer. Our German-made purity checking machine gives an accurate reading of your gold’s purity.
                 </Text>
                 <Text style={styles.content}>
                     Attica Gold does not melt or break any gold or silver items to check the purity of ornaments. After checking the purity and weighing the gold jewellery, we inform the customers about the final amount of their jewels after deducting our 3% Attica Gold fee to complete the process. If the customer is happy with the amount, we pay spot cash for the jewels instantly; otherwise, we return the gold without melting and damaging.
@@ -159,5 +167,18 @@ const styles = StyleSheet.create({
         lineHeight: 24,
         marginBottom: 15,
         paddingLeft: 15,
+    },
+    button: {
+        backgroundColor: '#007bff',
+        borderRadius: 8,
+        paddingVertical: 12,
+        paddingHorizontal: 20,
+        marginTop: 15,
+        alignItems: 'center',
+    },
+    buttonText: {
+        fontSize: 16,
+        fontWeight: 'bold',
+        color: '#ffffff',
     },
 });
