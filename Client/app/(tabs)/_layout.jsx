@@ -40,16 +40,16 @@ const RootLayout = () => {
 
       <Tabs.Screen name="Products"
         options={{
-          tabBarLabel: "News",
+          tabBarLabel: "Products",
           tabBarIcon: ({ color }) => <Entypo name="news" size={24} color={color} />
         }}
 
       />
 
 
-      <Tabs.Screen name="Profile"
+      <Tabs.Screen name="MyAccount"
         options={{
-          tabBarLabel: "Profile",
+          tabBarLabel: "My Account",
           tabBarIcon: ({ color }) => <MaterialCommunityIcons name="face-man" size={24} color={color} />
         }}
       />

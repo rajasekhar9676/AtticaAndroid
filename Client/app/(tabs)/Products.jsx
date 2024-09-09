@@ -10,99 +10,11 @@ import BuyNow from '../../components/ProductsAll/BuyNow';
 import BookOnEmi from '../../components/ProductsAll/BookOnEmi';
 
 const Stack = createStackNavigator();
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 const Products = () => {
   return (
     
      <Stack.Navigator screenOptions={{headerShown:false}}>
-      {/* <Stack.Screen name='AllProducts' component={AllProducts}/> */}
+      <Stack.Screen name='AllProducts' component={AllProducts}/>
       <Stack.Screen name='ProductCategory' component={ProductCategory}/>
       <Stack.Screen name='CategoryPage' component={CategoryPage}/>
       <Stack.Screen name="ProductDetails" component={ProductDetailsPage}/>
