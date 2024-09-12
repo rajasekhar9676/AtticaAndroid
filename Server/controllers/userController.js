@@ -1,71 +1,93 @@
-const User = require('../models/userModel');
-const jwt = require('jsonwebtoken');
-const bcrypt = require('bcryptjs');
+// controllers/userController.js
 
-// Function to generate a JWT token
-const generateToken = (id) => {
-  return jwt.sign({ id }, process.env.JWT_SECRET, { expiresIn: '1h' });
-};
+const User = require('../models/userModel'); // Make sure you have your User model imported correctly
+const bcrypt = require('bcryptjs'); // For password hashing
+const jwt = require('jsonwebtoken'); // For token generation
 
-
-// Register new user
+// Register User
 const registerUser = async (req, res) => {
-  try {
-    const { username, email, password, mobile, address } = req.body;
+  const { username, email, password, mobile, address } = req.body;
 
-    // Check if the email or mobile number already exists
-    const existingUser = await User.findOne({ $or: [{ email }, { mobile }] });
+  try {
+    // Check if the user already exists
+    const existingUser = await User.findOne({ email });
     if (existingUser) {
-      return res.status(400).json({ message: 'User with this email or mobile number already exists' });
+      return res.status(400).json({ message: 'User already exists' });
     }
 
+    // Hash the password before saving the user
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    // Create new user
     const user = new User({
       username,
       email,
-      password, // Save the plain password, it will be hashed in the pre-save hook
+      password: hashedPassword,
       mobile,
-      address
+      address,
     });
+
     await user.save();
 
-    const token = generateToken(user._id);
-    res.status(201).json({ message: 'User registered successfully', token });
+    res.status(201).json({ message: 'User registered successfully' });
   } catch (error) {
-    res.status(400).json({ message: error.message });
+    res.status(500).json({ message: error.message });
   }
 };
 
-
-// Login user
-
+// Login User
 const loginUser = async (req, res) => {
+  const { email, password } = req.body;
+
   try {
-    const { email, password } = req.body;
+    // Check if the user exists
     const user = await User.findOne({ email });
-
     if (!user) {
-      console.log('User not found');
-      return res.status(401).json({ message: 'Invalid email or password' });
+      return res.status(404).json({ message: 'User not found' });
     }
 
-    console.log('Password entered:', password);
-    console.log('Stored password (hashed):', user.password);
-
+    // Check if the password matches
     const isMatch = await bcrypt.compare(password, user.password);
-    console.log('Password match result:', isMatch);
-
     if (!isMatch) {
-      console.log('Password does not match');
-      return res.status(401).json({ message: 'Invalid email or password' });
+      return res.status(400).json({ message: 'Invalid credentials' });
     }
 
-    const token = generateToken(user._id);
-    res.json({ token, username: user.username, email: user.email, mobile: user.mobile, address: user.address });
+    // Generate JWT Token
+    const token = jwt.sign({ id: user._id }, 'your_jwt_secret_key', {
+      expiresIn: '1h',
+    });
+
+    res.json({
+      message: 'Login successful',
+      token,
+      user: {
+        id: user._id,
+        username: user.username,
+        email: user.email,
+      },
+    });
   } catch (error) {
-    console.log('Error:', error.message);
-    res.status(400).json({ message: error.message });
+    res.status(500).json({ message: error.message });
   }
 };
 
-module.exports = { registerUser, loginUser };
+// Fetch User Profile
+const getUserProfile = async (req, res) => {
+  try {
+    const user = await User.findById(req.user._id).select('-password');
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+    res.json({
+      username: user.username,
+      email: user.email,
+      mobile: user.mobile,
+      address: user.address,
+    });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
 
+// Export all controller functions
+module.exports = { registerUser, loginUser, getUserProfile };

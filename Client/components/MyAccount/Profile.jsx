@@ -6,9 +6,10 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
 import AntDesign from '@expo/vector-icons/AntDesign';
 
+
 const { width } = Dimensions.get('window');
 
-const Profile = () => {
+const Profile = ({ navigation }) => {
   const [showPopup, setShowPopup] = useState(false);
   const [initial, setInitial] = useState('');
   const router = useRouter();
@@ -57,7 +58,7 @@ const Profile = () => {
         </View>
 
         {/* Profile Info Button with Initial */}
-        <TouchableOpacity style={styles.profileInfoButton} onPress={() => Alert.alert('Profile Info', 'This is the profile info button')}>
+        <TouchableOpacity style={styles.profileInfoButton} onPress={() => navigation.navigate('MyProfileDetails')}>
           <View style={styles.initialContainer}>
             <Text style={styles.initialText}>{initial}</Text>
           </View>
@@ -101,7 +102,7 @@ export default Profile;
 
 const styles = StyleSheet.create({
   backgroundImage: {
-    marginTop:40,
+    marginTop: 40,
     flex: 1,
     width: '100%', // Full width of the screen
     height: '100%', // Full height of the screen
@@ -132,34 +133,29 @@ const styles = StyleSheet.create({
   },
   profileInfoButton: {
     position: 'absolute',
-    top: 100, // Adjust this value based on the header height
+    top: 100,
     left: 10,
-    backgroundColor: '#007BFF',
-    borderRadius: 25,
-    padding: 10,
+    borderRadius: 30,
+    overflow: 'hidden',
     elevation: 5,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 3 },
     shadowOpacity: 0.3,
     shadowRadius: 5,
     zIndex: 1000,
-    justifyContent: 'center',
-    alignItems: 'center',
+    backgroundColor: 'white',
   },
   initialContainer: {
-    backgroundColor: '#fff',
-    width: 40,
-    height: 40,
-    borderRadius: 20,
+    width: 50,
+    height: 50,
+    borderRadius: 25,
     justifyContent: 'center',
     alignItems: 'center',
-    borderWidth: 2,
-    borderColor: '#007BFF',
   },
   initialText: {
-    fontSize: 18,
+    fontSize: 20,
     fontWeight: 'bold',
-    color: '#007BFF',
+    color: '#fff',
   },
   profileBox: {
     backgroundColor: '#fff',

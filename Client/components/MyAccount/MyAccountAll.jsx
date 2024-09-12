@@ -7,10 +7,11 @@ import AntDesign from '@expo/vector-icons/AntDesign';
 const MyAccountAll = ({ navigation }) => {
   const buttons = [
     { label: 'Profiles', icon: <AntDesign name="profile" size={30} color="#333" />, onPress: () => navigation.navigate('Profile') },
-    { label: 'Price Check', icon: <FontAwesome6 name="dollar-sign" size={30} color="#333" />, onPress: () => navigation.navigate('PriceCheck') },
-    { label: 'Get Help', icon: <AntDesign name="customerservice" size={30} color="#333" />, onPress: () => navigation.navigate('GetHelp') },
+    { label: 'Price Check', icon: <FontAwesome6 name="dollar-sign" size={30} color="#333" />, onPress: () => navigation.navigate('GoldLive') },
+    { label: 'Get Help', icon: <AntDesign name="customerservice" size={30} color="#333" />, onPress: () => navigation.navigate('GetHelpScreen') },
     { label: 'Purchase', icon: <FontAwesome6 name="shopping-cart" size={30} color="#333" />, onPress: () => navigation.navigate('Purchase') },
     { label: 'Orders', icon: <AntDesign name="shoppingcart" size={30} color="#333" />, onPress: () => navigation.navigate('Orders') },
+    { label: 'Gold Caluculate', icon: <AntDesign name="shoppingcart" size={30} color="#333" />, onPress: () => navigation.navigate('GoldCalculator') },
   ];
 
   return (

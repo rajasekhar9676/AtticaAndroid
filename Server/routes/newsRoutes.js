@@ -1,34 +1,26 @@
 const express = require('express');
+const {
+  getNews,
+  getNewsById,
+  createNews,
+  updateNews,
+  deleteNews,
+} = require('../controllers/NewsControllers');
 const router = express.Router();
-const updateController = require('../controllers/newsController'); // Ensure the correct path
-const multer = require('multer');
-const path = require('path');
 
-// Configure multer for file uploads
-const storage = multer.diskStorage({
-    destination: function (req, file, cb) {
-        cb(null, 'uploads/');
-    },
-    filename: function (req, file, cb) {
-        cb(null, Date.now() + path.extname(file.originalname));
-    }
-});
+// Fetch all news items
+router.get('/', getNews);
 
-const upload = multer({ storage: storage });
+// Fetch a single news item by ID
+router.get('/:id', getNewsById);
 
-// Route to add a new update with images
-router.post('/', upload.array('images'), updateController.addUpdate);
+// Create a new news item
+router.post('/', createNews);
 
-// Route to get all updates
-router.get('/', updateController.getAllUpdates);
+// Update an existing news item by ID
+router.put('/:id', updateNews);
 
-// Route to get a single update by ID
-router.get('/:id', updateController.getUpdateById);
-
-// Route to update an existing update with images
-router.put('/:id', upload.array('images'), updateController.updateUpdate);
-
-// Route to delete an update
-router.delete('/:id', updateController.deleteUpdate);
+// Delete a news item by ID
+router.delete('/:id', deleteNews);
 
 module.exports = router;

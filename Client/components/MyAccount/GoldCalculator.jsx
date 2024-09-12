@@ -1,14 +1,14 @@
 import { StyleSheet, Text, View } from 'react-native'
 import React from 'react'
 
-const OrdersScreen = () => {
+const GoldCalculator = () => {
   return (
     <View>
-      <Text>OrdersScreen</Text>
+      <Text>GoldCalculator</Text>
     </View>
   )
 }
 
-export default OrdersScreen
+export default GoldCalculator
 
 const styles = StyleSheet.create({})
