@@ -3,7 +3,6 @@
 
 // export const BASE_URL='https://atticaandroid.onrender.com/'
 
- 
+// export const BASE_URL='https://cc0e-14-97-4-86.ngrok-free.app' 
 
-
-export const BASE_URL='https://cc0e-14-97-4-86.ngrok-free.app' 
+export const BASE_URL='https://6a95-14-97-4-86.ngrok-free.app' 

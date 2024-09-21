@@ -9,6 +9,7 @@ import Aboutcomp from '../../components/Home/Aboutcomp';
 import OurServices from '../../components/Home/OurServices';
 import OurCollections from '../../components/Home/OurCollections';
 import NewsMore from '../../components/Home/NewsMore';
+import OTPService from '../../components/Home/OTPService';
 
 const Stack = createStackNavigator();
 
@@ -23,6 +24,7 @@ const Home = () => (
     <Stack.Screen name="Aboutcomp" component={Aboutcomp} />
     <Stack.Screen name="OurServices" component={OurServices} />
     <Stack.Screen name="OurCollections" component={OurCollections} />
+    <Stack.Screen name="OTPService" component={OTPService} />
   </Stack.Navigator>
 );
 

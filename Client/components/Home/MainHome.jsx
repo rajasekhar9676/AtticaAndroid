@@ -18,6 +18,7 @@ import Aboutcomp from './Aboutcomp';
 import OurServices from './OurServices';
 import OurCollections from './OurCollections';
 import News from './News';
+import OTPService from './OTPService';
 
 const Home = ({ navigation }) => {
   const [goldPrice, setGoldPrice] = useState(null);
@@ -104,7 +105,6 @@ const Home = ({ navigation }) => {
   ];
 
 
-
   const handleNext = () => {
     const nextIndex = currentIndex === images.length - 1 ? 0 : currentIndex + 1;
     scrollViewRef.current.scrollTo({ x: nextIndex * screenWidth, animated: true });
@@ -147,7 +147,7 @@ const Home = ({ navigation }) => {
 
   const handleSeeLiveGoldRate = () => {
     if (!isAuthenticated) {
-      navigation.navigate('PhoneAuthScreen')
+      navigation.navigate('OTPService')
     }
     else {
       InteractionManager.runAfterInteractions(() => {
@@ -156,8 +156,6 @@ const Home = ({ navigation }) => {
       });
     }
   };
-
-
 
   return (
     <View style={styles.container}>
