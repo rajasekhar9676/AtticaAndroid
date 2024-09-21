@@ -1,7 +1,6 @@
 // server.js or index.js
 // In server.js
 
-
 const express = require('express');
 const path = require('path');
 const axios = require('axios');
@@ -19,6 +18,7 @@ const { BASE_URL } = require('../Client/constants');
 require('dotenv').config();
 const cors = require('cors');
 
+
 const app = express();
 app.get('/', (req, res) => {
   res.send('Server is running!');
@@ -30,25 +30,17 @@ if (!process.env.JWT_SECRET) {
   process.exit(1);
 }
 
+
 // Connect to the database
 connectToDatabase();
 
 // Middleware
-const corsOptions = {
-  origin: function (origin, callback) {
-    // Allow requests with no origin (like mobile apps, curl requests)
-    if (!origin) return callback(null, true);
-    if (['http://localhost:8081', BASE_URL].indexOf(origin) !== -1) {
-      return callback(null, true);
-    }
-    return callback(new Error('Not allowed by CORS'));
-  },
-  methods: ['GET', 'POST', 'PUT', 'DELETE'],
-};
+app.use(cors({
+  origin: 'http://localhost:8081',
+  methods: ['GET', 'POST'],
+}));
 
-// Enable CORS with the specified options
-app.use(cors(corsOptions));
-
+app.use(cors());
 
 // OTP Generate Code 
 app.post('/send-otp', async (req, res) => {
@@ -79,8 +71,6 @@ app.post('/verify-otp', (req, res) => {
     res.status(400).json({ success: false, message: result.message });
   }
 });
-
-
 
 
 // Routes
