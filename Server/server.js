@@ -20,6 +20,9 @@ require('dotenv').config();
 const cors = require('cors');
 
 const app = express();
+app.get('/', (req, res) => {
+  res.send('Server is running!');
+});
 
 // Check if JWT_SECRET is defined
 if (!process.env.JWT_SECRET) {
@@ -76,11 +79,6 @@ app.post('/verify-otp', (req, res) => {
     res.status(400).json({ success: false, message: result.message });
   }
 });
-
-
-
-
-
 
 
 
