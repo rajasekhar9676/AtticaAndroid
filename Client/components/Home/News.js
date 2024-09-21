@@ -1,25 +1,45 @@
 // News.js
-import { StyleSheet, Text, View, FlatList, Image } from 'react-native';
+import { StyleSheet, Text, View, FlatList, Image, ActivityIndicator } from 'react-native';
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import {BASE_URL} from '../../constants';
+import { BASE_URL } from '../../constants';
 
 const News = () => {
   const [news, setNews] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
-    // Fetch news data from the server
     const fetchNews = async () => {
       try {
         const response = await axios.get(`${BASE_URL}/api/news`);
         setNews(response.data);
       } catch (error) {
         console.error('Error fetching news:', error);
+        setError('Failed to fetch news.');
+      } finally {
+        setLoading(false);
       }
     };
 
     fetchNews();
   }, []);
+
+  if (loading) {
+    return (
+      <View style={styles.container}>
+        <ActivityIndicator size="large" color="#0000ff" />
+      </View>
+    );
+  }
+
+  if (error) {
+    return (
+      <View style={styles.container}>
+        <Text style={styles.error}>{error}</Text>
+      </View>
+    );
+  }
 
   return (
     <View style={styles.container}>
@@ -76,6 +96,11 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: 'blue',
     textDecorationLine: 'underline',
+  },
+  error: {
+    color: 'red',
+    textAlign: 'center',
+    marginTop: 20,
   },
 });
 
