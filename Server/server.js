@@ -107,7 +107,7 @@ app.use('/api/users', userRoutes);
 app.use('/api/branches', branchRoutes);
 app.use('/api/products', productRoutes);
 app.use('/api/goldRates', goldRateRoutes);
-app.use('/api/news', newsRoutes); // Add the news route
+app.use('/api/news', newsRoutes);
 
 // Error handling middleware
 app.use(errorHandler);
