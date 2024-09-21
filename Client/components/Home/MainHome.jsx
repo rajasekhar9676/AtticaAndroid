@@ -4,6 +4,7 @@ import axios from 'axios';
 import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
 import AntDesign from '@expo/vector-icons/AntDesign';
 import EvilIcons from '@expo/vector-icons/EvilIcons';
+import Ionicons from '@expo/vector-icons/Ionicons';
 import Entypo from '@expo/vector-icons/Entypo';
 import { BASE_URL } from '../../constants';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -165,7 +166,7 @@ const Home = ({ navigation }) => {
       <View style={styles.headerContainer}>
         <FontAwesome6 name="bars" size={24} color="white" />
         <Image source={require('../../assets/images/logo.png')} style={styles.logo} />
-        <AntDesign name="shoppingcart" size={24} color="white" />
+        <Ionicons name="notifications-outline" size={24} color="white" />
       </View>
 
       <FlatList
@@ -558,3 +559,6 @@ const styles = StyleSheet.create({
 });
 
 export default Home;
+
+
+
