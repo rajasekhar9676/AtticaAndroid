@@ -9,4 +9,9 @@
 
 // export const BASE_URL='https://a06a-14-97-4-86.ngrok-free.app' 
 
-export const BASE_URL='https://2c65-14-97-4-86.ngrok-free.app'
+
+// constants.js
+const BASE_URL = 'https://atticaandroid.onrender.com';
+module.exports = { BASE_URL };
+
+

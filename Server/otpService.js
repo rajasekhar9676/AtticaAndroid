@@ -23,7 +23,7 @@ function sendOTP(phoneNumber, otp) {
     const config = {
       method: 'post',
       maxBodyLength: Infinity,
-      url: 'api-alerts.solutionsinfini.com/v3/?method=sms',
+      url: 'https://api-alerts.solutionsinfini.com/v3/?method=sms&api_key=${apiKey}&to=${phoneNumber}&message=${message}&sender=${senderId}&sid=${sid}&type=OTP&template_id=${templateId}',
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded',
       },
@@ -40,10 +40,12 @@ function sendOTP(phoneNumber, otp) {
   
     axios(config)
       .then((response) => {
+        
         console.log('OTP Sent:', response.data);
       })
       .catch((error) => {
-        console.error('Error sending OTP:', error);
+        console.error('Error sending OTP:', error.response ? error.response.data : error.message);
+        return { success: false, error: error.response ? error.response.data : error.message };
       });
   }
 // Function to verify OTP

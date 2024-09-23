@@ -1,4 +1,6 @@
 // server.js or index.js
+// In server.js
+
 const express = require('express');
 const path = require('path');
 const axios = require('axios');
@@ -7,14 +9,20 @@ const userRoutes = require('./routes/userRoutes');
 const branchRoutes = require('./routes/branchRoutes');
 const productRoutes = require('./routes/productRoutes');
 const goldRateRoutes = require('./routes/goldRateRoutes');
-const newsRoutes = require('./routes/NewsRoutes');
+const newsRoutes = require('./routes/newsRoutes');
 const { errorHandler } = require('./middleware/errorMiddleware');
 const { sendOTP, verifyOTP } = require('./otpService');
+const { BASE_URL } = require('../Client/constants');
+
 
 require('dotenv').config();
 const cors = require('cors');
 
+
 const app = express();
+app.get('/', (req, res) => {
+  res.send('Server is running!');
+});
 
 // Check if JWT_SECRET is defined
 if (!process.env.JWT_SECRET) {
@@ -22,13 +30,17 @@ if (!process.env.JWT_SECRET) {
   process.exit(1);
 }
 
+
 // Connect to the database
 connectToDatabase();
 
 // Middleware
-app.use(express.json());
-app.use(cors());
+app.use(cors({
+  origin: 'http://localhost:8081',
+  methods: ['GET', 'POST'],
+}));
 
+app.use(cors());
 
 // OTP Generate Code 
 app.post('/send-otp', async (req, res) => {
@@ -59,13 +71,6 @@ app.post('/verify-otp', (req, res) => {
     res.status(400).json({ success: false, message: result.message });
   }
 });
-
-
-
-
-
-
-
 
 
 // Routes
